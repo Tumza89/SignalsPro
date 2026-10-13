@@ -148,7 +148,7 @@ let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
 const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
 
 // access (email + one device, checked by your Google Apps Script)
-const API='PASTE_YOUR_APPS_SCRIPT_URL_HERE',GATED=API.startsWith('https');
+const API='https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnSODefi4GN9gh36if75lo6tDY_b7Am7xEbVHjQ3CZobbX0XO_fGmdkMoYwGNpuzJRMkDnO1DC1I8bHp8835L-b3p4S59nHljipCTwOsivyBaWvpAoyMxxvJIyw8wqeWNJxY4fU_PnvvfRyOwmt8JHrPyEhRtZrI8PPA22CJmSCakjKwe_oDPEaL0AmepRo0csbFBWLtGH_ANHdeEh3ALeUk7kZk4qi1_WdS-tiC-trpgXJW8rHNkmvMLTe_KizC3CpIRzxSb2ZsbzeSuMnGrGgiNxshtg&lib=MdtAc1dcRBLMn9LxVhBvP7ur5hi0I4ZWv',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
