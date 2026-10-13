@@ -123,7 +123,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 
 <section class="page" id="p-set"><div class="card">
 <div id="gBox"><label>Data source</label><select class="inp" id="src"><option value="twelve">Forex / metals / indices (Twelve Data)</option><option value="binance">Test only: crypto (no key)</option></select>
-<label>Twelve Data API key</label><input class="inp" id="key" type="password" placeholder="Paste your key"></div>
+<label>Your Twelve Data API key (free at twelvedata.com)</label><input class="inp" id="key" type="password" placeholder="Paste your key"></div>
 <label>Refresh</label><select class="inp" id="iv"><option value="60">Every 1 min</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option></select>
 <label>Webhook URL (optional)</label><input class="inp" id="hook" placeholder="https://…">
 <button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button>
@@ -153,15 +153,16 @@ let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.ra
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
 function showLock(m){if(run)setRun(false);$('lock').classList.remove('hidden');$('lerr').textContent=m||'';$('lerr').style.display=m?'block':'none';$('btnU').disabled=false;$('btnU').textContent='Unlock'}
-async function check(email){
- EM=email.trim().toLowerCase();if(!EM){showLock('Enter your email.');return}
- $('btnU').disabled=true;$('btnU').textContent='Checking…';
+async function check(email,silent){
+ EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
+ if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in · '+EM}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in · '+EM;if(!S.key)page('set')}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
- }catch(e){showLock('Cannot reach the server. Check your internet and try again.')}}
+ }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
-if(!GATED)$('lock').classList.add('hidden');else{$('gBox').style.display='none';if(EM){$('emailIn').value=EM;check(EM)}}
+if(!GATED)$('lock').classList.add('hidden');else if(EM){$('emailIn').value=EM;check(EM)}
+setInterval(()=>{if(GATED&&EM)check(EM,true)},900000);
 // theme
 function theme(n){const[a,r]=TH[n]||TH.cobalt,s=document.documentElement.style;s.setProperty('--accent',a);s.setProperty('--glow',`rgba(${r},.35)`);s.setProperty('--pg',`rgba(${r},.45)`);S.theme=n;save();
  document.querySelectorAll('#sw b').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
@@ -176,7 +177,7 @@ const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.t
 $('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();save();tick()};
 // data
 async function load(sym,tf){
- sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=GATED;
+ sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
  if(gated)u=`${API}?action=candles&${qs()}&sym=${encodeURIComponent(sym)}&int=${TFT[tf]}`;
  else if(S.src==='binance')u=`https://api.binance.com/api/v3/klines?symbol=${sym.toUpperCase().replace('/','')}&interval=${TFB[tf]}&limit=1000`;
  else{if(!S.key)throw Error('Add your Twelve Data key in Settings');u=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=${TFT[tf]}&outputsize=1500&apikey=${S.key}`}
