@@ -148,7 +148,7 @@ let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
 const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
 
 // access (email + one device, checked by your Google Apps Script)
-const API='https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnQJTPP-Spn8QIIXdaTk118j0dnNZa_4CIDNpHD4MX-46PE97LH0Uc1-ertTmFUAA8qib75DRdyif1JLCcVxJsCNwnLupqwl4VCoGOSYyiiiJzXMFNXoBLQsEEk6VY5wrVzEndjLNsKqcAlrbvSRu6UpPsFznJHLTCTs1N4oNxMpquTp2_LR5KUmoIUSm1mDgrGVUWM0pFemB6_nWsdjdI5MlbiW-XrmPDO5kl7298js6lWgGBGBU34YmfRwtSzrqFJs6Rg1g9rh6m0m7SKlpEZo8Ib1-EwJU5wIlF5CriW_77-_oP7aK42V_aJ8EpQ6SFDp-GFlzfxgsgRh5DIQC68fgKXQ9an8Ao-gmKLJ&lib=MdtAc1dcRBLMn9LxVhBvP7ur5hi0I4ZWv',GATED=API.startsWith('https');
+const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
