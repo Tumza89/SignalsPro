@@ -107,7 +107,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div class="g"><div class="k">Zones found</div><div id="zc">—</div></div><div class="g"><div class="k">Last signal</div><div id="ls">—</div></div></div>
 <div id="st">Open Settings to add your data key.</div></div>
 <div class="card"><div style="font-size:16px;font-weight:800;margin-bottom:12px">Trade plan</div><div id="plans"><div class="empty">Load a chart to see entries and targets.</div></div>
-<div class="note">Rule-based levels: entry at the zone, stop a quarter ATR beyond the far edge of the zone, targets at the next opposite zones (or 1.5R and 3R if none). A plan marked ACTIVE means price is in the zone now. Not financial advice.</div></div></section>
+<div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></section>
 
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
@@ -126,7 +126,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <label>Your Twelve Data API key (free at twelvedata.com)</label><input class="inp" id="key" type="password" placeholder="Paste your key"></div>
 <label>Refresh</label><select class="inp" id="iv"><option value="60">Every 1 min</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option></select>
 <label>Webhook URL (optional)</label><input class="inp" id="hook" placeholder="https://…">
-<button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button>
+<button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button><button class="btn red" id="logout">Log out</button>
 <div class="note">Alerts fire only while the app is open and started.</div></div></section>
 
 <nav id="nav">
@@ -136,6 +136,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button data-p="sig"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Signals</button>
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
+<script src="config.js"></script>
 <script>
 const $=id=>document.getElementById(id);
 const TH={cobalt:['#3b82f6','59,130,246'],structure:['#ff6b1a','255,107,26'],cyan:['#22d3ee','34,211,238'],violet:['#a855f7','168,85,247'],emerald:['#10b981','16,185,129'],crimson:['#f43f5e','244,63,94'],amber:['#f59e0b','245,158,11'],rose:['#fb7185','251,113,133'],lime:['#a3e635','163,230,53'],arctic:['#e2e8f0','226,232,240']};
@@ -148,7 +149,7 @@ let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
 const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
 
 // access (email + one device, checked by your Google Apps Script)
-const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
+const API=window.API_URL||'https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
@@ -161,7 +162,7 @@ async function check(email,silent){
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
-if(!GATED)$('lock').classList.add('hidden');else if(EM){$('emailIn').value=EM;check(EM)}
+if(!GATED){$('lerr').textContent='App is not configured yet. Contact support.';$('lerr').style.display='block'}else if(EM){$('emailIn').value=EM;check(EM)}
 setInterval(()=>{if(GATED&&EM)check(EM,true)},900000);
 // theme
 function theme(n){const[a,r]=TH[n]||TH.cobalt,s=document.documentElement.style;s.setProperty('--accent',a);s.setProperty('--glow',`rgba(${r},.35)`);s.setProperty('--pg',`rgba(${r},.45)`);S.theme=n;save();
@@ -212,19 +213,32 @@ function compute(d){
 function plans(px,Rr){
  Rr=Rr||R;const z=Rr.zones,a=Rr.atr,out={};
  const sup=z.filter(x=>!x.res&&x.lo<px).sort((p,q)=>q.hi-p.hi)[0],res=z.filter(x=>x.res&&x.hi>px).sort((p,q)=>p.lo-q.lo)[0];
- if(sup){const e=Math.min(px,sup.hi),sl=sup.lo-.25*a,k=e-sl,up=z.filter(x=>x.res&&x.lo>e).sort((p,q)=>p.lo-q.lo);
-  const t1=up[0]?up[0].lo:e+1.5*k,t2=up[1]?up[1].lo:Math.max(e+3*k,t1+k);out.buy={side:'BUY',z:sup,e,sl,t1,t2,r1:(t1-e)/k,r2:(t2-e)/k,on:Rr.b}}
- if(res){const e=Math.max(px,res.lo),sl=res.hi+.25*a,k=sl-e,dn=z.filter(x=>!x.res&&x.hi<e).sort((p,q)=>q.hi-p.hi);
-  const t1=dn[0]?dn[0].hi:e-1.5*k,t2=dn[1]?dn[1].hi:Math.min(e-3*k,t1-k);out.sell={side:'SELL',z:res,e,sl,t1,t2,r1:(e-t1)/k,r2:(e-t2)/k,on:Rr.s}}
+ if(sup){const e=Math.min(px,sup.hi+.15*a),sl=sup.lo-.25*a,k=e-sl,up=z.filter(x=>x.res&&x.lo>e).sort((p,q)=>p.lo-q.lo);
+  const t1=up[0]?up[0].lo:e+1.5*k,t2=up[1]?up[1].lo:Math.max(e+3*k,t1+k);out.buy={side:'BUY',z:sup,e,sl,t1,t2,r1:(t1-e)/k,r2:(t2-e)/k,on:Rr.b,dist:(px-e)/a}}
+ if(res){const e=Math.max(px,res.lo-.15*a),sl=res.hi+.25*a,k=sl-e,dn=z.filter(x=>!x.res&&x.hi<e).sort((p,q)=>q.hi-p.hi);
+  const t1=dn[0]?dn[0].hi:e-1.5*k,t2=dn[1]?dn[1].hi:Math.min(e-3*k,t1-k);out.sell={side:'SELL',z:res,e,sl,t1,t2,r1:(e-t1)/k,r2:(e-t2)/k,on:Rr.s,dist:(e-px)/a}}
  return out}
+function react(p,d,px){
+ const{o,h,l,c}=d;let conf=false,late=false,msg='No reaction candle yet';
+ const z=p.z,rg=h[1]-l[1]||1e-9,lw=Math.min(o[1],c[1])-l[1],uw=h[1]-Math.max(o[1],c[1]);
+ if(p.side==='BUY'&&l[1]<=z.hi&&h[1]>=z.lo&&c[1]>z.lo){if(lw>=.5*rg){conf=true;msg='Rejection wick at support'}else if(c[1]>o[1]&&c[1]>=z.hi){conf=true;msg='Bullish close out of support'}}
+ if(p.side==='SELL'&&h[1]>=z.lo&&l[1]<=z.hi&&c[1]<z.hi){if(uw>=.5*rg){conf=true;msg='Rejection wick at resistance'}else if(c[1]<o[1]&&c[1]<=z.lo){conf=true;msg='Bearish close out of resistance'}}
+ if(conf){const k=p.side==='BUY'?px-p.sl:p.sl-px,past=p.side==='BUY'?px>=p.t1:px<=p.t1;
+  if(k<=0||past){conf=false;late=true;msg='Reaction already played out'}else{p.e=px;p.dist=0;p.r1=Math.abs(p.t1-px)/k;p.r2=Math.abs(p.t2-px)/k}}
+ return{conf,late,msg}}
 function renderPlans(px){
  const P2=plans(px),f=v=>v.toFixed(D.dec);
- const card=p=>!p?'':`<div class="pl ${p.side==='SELL'?'sell':''} ${p.on?'on':''}"><h4><span>${p.side} plan · ${SN[p.z.s]} zone</span><em>${p.on?'ACTIVE NOW':'WAIT FOR PRICE'}</em></h4>
- <div class="pr"><span>${p.on?'Entry (now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
- <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
- <div class="pr"><span>Target 1</span><span class="tp">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div>
- <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div>
- ${p.r1<1?'<div class="note" style="color:var(--wait)">TP1 is under 1R, so this setup is weak. Consider skipping it.</div>':''}</div>`;
+ const card=p=>{if(!p)return'';const rc=react(p,D,px),conf=rc.conf,far=!conf&&!p.on&&p.dist>2;p.conf=conf;
+  const st=conf?'ENTER NOW':p.on?'IN ZONE':far?'TOO FAR · WATCH':p.dist<=1?'NEAR ENTRY':'WAIT FOR PRICE';
+  return `<div class="pl ${p.side==='SELL'?'sell':''} ${conf||p.on?'on':''}" style="${far?'opacity:.55':''}"><h4><span>${p.side} plan · ${SN[p.z.s]} zone</span><em>${st}</em></h4>
+  <div class="note" style="margin:0 0 6px">${conf?'✓ ':''}${rc.msg}${p.on&&!conf?'. Wait for a candle to close with a reaction, then enter at market.':''}</div>
+  <div class="pr"><span>${conf?'Entry (market, now)':p.on?'Entry (after reaction)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
+  <div class="pr"><span>Distance to entry</span><span>${conf?'at market':p.dist.toFixed(1)+' ATR'}</span></div>
+  <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
+  <div class="pr"><span>Target 1</span><span class="tp">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div>
+  <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div>
+  ${far?'<div class="note">Entry is more than 2 ATR away, so it is unlikely to fill soon. Treat it as a level to watch, not a trade.</div>':!conf&&!p.on?'<div class="note">Limit order: valid for about 12 candles. Cancel it if a candle closes beyond the stop level before it fills.</div>':''}
+  ${p.r1<1?'<div class="note" style="color:var(--wait)">TP1 is under 1R, so this setup is weak. Consider skipping it.</div>':''}</div>`};
  $('plans').innerHTML=card(P2.buy)+card(P2.sell)||'<div class="empty">No zones near price.</div>';return P2}
 // chart
 function fit(){const cv=$('cv'),r=devicePixelRatio||1;cv.width=cv.clientWidth*r;cv.height=cv.clientHeight*r}
@@ -271,16 +285,11 @@ function ema(a,n){const k=2/(n+1);let e=a[a.length-1];for(let i=a.length-2;i>=0;
 function rate(sym,d,Rr){
  const{o,h,l,c}=d,px=c[0],a=Rr.atr,cs=c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),dir=e20>e50?1:-1,sep=Math.abs(e20-e50)/a,al=dir>0?px>e20:px<e20;
  const pl=plans(px,Rr),p=dir>0?pl.buy:pl.sell,cc=sym.replace(/[^A-Za-z]/g,'').toUpperCase();
- let conf=false,late=false,cmsg='No reaction candle yet';
- if(p){const z=p.z,rg=h[1]-l[1]||1e-9,lw=Math.min(o[1],c[1])-l[1],uw=h[1]-Math.max(o[1],c[1]);
-  if(p.side==='BUY'&&l[1]<=z.hi&&h[1]>=z.lo&&c[1]>z.lo){if(lw>=.5*rg){conf=true;cmsg='Rejection wick at support'}else if(c[1]>o[1]&&c[1]>=z.hi){conf=true;cmsg='Bullish close out of support'}}
-  if(p.side==='SELL'&&h[1]>=z.lo&&l[1]<=z.hi&&c[1]<z.hi){if(uw>=.5*rg){conf=true;cmsg='Rejection wick at resistance'}else if(c[1]<o[1]&&c[1]<=z.lo){conf=true;cmsg='Bearish close out of resistance'}}
-  if(conf){const k=p.side==='BUY'?px-p.sl:p.sl-px,past=p.side==='BUY'?px>=p.t1:px<=p.t1;
-   if(k<=0||past){conf=false;late=true;cmsg='Reaction already played out'}else{p.e=px;p.r1=Math.abs(p.t1-px)/k;p.r2=Math.abs(p.t2-px)/k}}}
+ const rc=p?react(p,d,px):{conf:false,late:false,msg:'No reaction candle yet'},conf=rc.conf,late=rc.late,cmsg=rc.msg;
  const ok=p&&p.r1>=1&&!late;
  const raw=Math.min(100,Math.min(sep,3)/3*40+(al?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&conf?15:ok&&p.on?5:0));
  let why='',v='NO TRADE';
- if(!al)why='Price is not moving with the trend';else if(sep<.5)why='No clear trend';else if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(!ok)why='Target is too close to the stop';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE';
+ if(!al)why='Price is not moving with the trend';else if(sep<.5)why='No clear trend';else if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(!ok)why='Target is too close to the stop';else if(!conf&&!p.on&&p.dist>2)why='Entry is '+p.dist.toFixed(1)+' ATR away, too far to expect a fill';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE';
  const b=c[Math.min(48,c.length-1)];
  return{sym,dec:d.dec,dir,p,v,why,cmsg,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,trend:(dir>0?'Uptrend':'Downtrend')+(sep>1.5&&al?' (strong)':' (moderate)')}}
 function renderScan(list){
@@ -291,7 +300,8 @@ function renderScan(list){
   const p=r.p,f=v=>v.toFixed(r.dec),now=r.v==='CONFIRMED',cs=r.csa==null?'':r.csa>.15?'<span style="color:var(--buy)">Currency strength supports this trade</span>':r.csa<-.15?'<span style="color:var(--sell)">Currency strength is against this trade</span>':'Currency strength is neutral';
   return `<div class="pl ${p.side==='SELL'?'sell':''} ${now?'on':''}" onclick="openSym('${r.sym}')"><h4><span>${r.sym} · ${p.side}</span><em>${r.v} · ${r.score}</em></h4>
   <div class="note" style="margin:0 0 6px">${r.trend} · ${SN[p.z.s]} zone<br>${now?'✓ ':''}${r.cmsg}${r.v==='IN ZONE'?'. Wait for a candle to close with a reaction.':''}${cs?'<br>'+cs:''}${r.dup&&r.dup.length?'<br><span style="color:var(--wait)">Overlaps: '+r.dup.join(', ')+'</span>':''}</div>
-  <div class="pr"><span>${now?'Entry (now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
+  <div class="pr"><span>${now?'Entry (market, now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
+  <div class="pr"><span>Distance to entry</span><span>${now?'at market':p.dist.toFixed(1)+' ATR'}</span></div>
   <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
   <div class="pr"><span>Target 1</span><span class="tp">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div>
   <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div></div>`}).join('')}
@@ -328,6 +338,7 @@ $('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').t
 // settings
 $('src').value=S.src;$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();save();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
+$('logout').onclick=()=>{if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{window.Notification?Notification.requestPermission().then(p=>$('notif').textContent=p==='granted'?'Alerts on':'Alerts blocked'):$('notif').textContent='Not supported'};
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 addEventListener('resize',draw);
