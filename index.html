@@ -114,8 +114,8 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <label>Timeframe</label><select class="inp" id="scTf"><option>M15</option><option>M30</option><option>H1</option><option>H4</option></select>
 <button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
 <div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit.</div><div class="note" id="scCr"></div></div>
-<div id="scList"></div>
-<div class="note" style="padding:0 6px 10px">Ranking = trend (EMA20 vs EMA50 and price side), movement versus normal, and trade-plan quality. It only shows trades that go with the trend. Not backtested and not financial advice.</div></section>
+<div id="scStr"></div><div id="scList"></div>
+<div class="note" style="padding:0 6px 10px">Ranking = trend (EMA20 vs EMA50 and price side), movement versus normal, trade-plan quality, candle confirmation (a reaction candle closed at the zone) and currency strength. It only shows trades that go with the trend. Not backtested and not financial advice.</div></section>
 
 <section class="page" id="p-sig"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
 <div style="font-size:18px;font-weight:800">Signal History</div><div class="k" id="cnt">0 signals</div></div><div id="list"></div>
@@ -148,7 +148,7 @@ let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
 const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
 
 // access (email + one device, checked by your Google Apps Script)
-const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
+const API='https://script.googleusercontent.com/macros/echo?user_content_key=AUkAhnQJTPP-Spn8QIIXdaTk118j0dnNZa_4CIDNpHD4MX-46PE97LH0Uc1-ertTmFUAA8qib75DRdyif1JLCcVxJsCNwnLupqwl4VCoGOSYyiiiJzXMFNXoBLQsEEk6VY5wrVzEndjLNsKqcAlrbvSRu6UpPsFznJHLTCTs1N4oNxMpquTp2_LR5KUmoIUSm1mDgrGVUWM0pFemB6_nWsdjdI5MlbiW-XrmPDO5kl7298js6lWgGBGBU34YmfRwtSzrqFJs6Rg1g9rh6m0m7SKlpEZo8Ib1-EwJU5wIlF5CriW_77-_oP7aK42V_aJ8EpQ6SFDp-GFlzfxgsgRh5DIQC68fgKXQ9an8Ao-gmKLJ&lib=MdtAc1dcRBLMn9LxVhBvP7ur5hi0I4ZWv',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
@@ -269,24 +269,44 @@ $('go').onclick=()=>{setRun(!run);if(run)page('ind')};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={};
 function ema(a,n){const k=2/(n+1);let e=a[a.length-1];for(let i=a.length-2;i>=0;i--)e=a[i]*k+e*(1-k);return e}
 function rate(sym,d,Rr){
- const px=d.c[0],a=Rr.atr,cs=d.c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),dir=e20>e50?1:-1,sep=Math.abs(e20-e50)/a,al=dir>0?px>e20:px<e20;
- const pl=plans(px,Rr),p=dir>0?pl.buy:pl.sell,ok=p&&p.r1>=1;
- const sc=Math.min(sep,3)/3*40+(al?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&p.on?10:0);
+ const{o,h,l,c}=d,px=c[0],a=Rr.atr,cs=c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),dir=e20>e50?1:-1,sep=Math.abs(e20-e50)/a,al=dir>0?px>e20:px<e20;
+ const pl=plans(px,Rr),p=dir>0?pl.buy:pl.sell,cc=sym.replace(/[^A-Za-z]/g,'').toUpperCase();
+ let conf=false,late=false,cmsg='No reaction candle yet';
+ if(p){const z=p.z,rg=h[1]-l[1]||1e-9,lw=Math.min(o[1],c[1])-l[1],uw=h[1]-Math.max(o[1],c[1]);
+  if(p.side==='BUY'&&l[1]<=z.hi&&h[1]>=z.lo&&c[1]>z.lo){if(lw>=.5*rg){conf=true;cmsg='Rejection wick at support'}else if(c[1]>o[1]&&c[1]>=z.hi){conf=true;cmsg='Bullish close out of support'}}
+  if(p.side==='SELL'&&h[1]>=z.lo&&l[1]<=z.hi&&c[1]<z.hi){if(uw>=.5*rg){conf=true;cmsg='Rejection wick at resistance'}else if(c[1]<o[1]&&c[1]<=z.lo){conf=true;cmsg='Bearish close out of resistance'}}
+  if(conf){const k=p.side==='BUY'?px-p.sl:p.sl-px,past=p.side==='BUY'?px>=p.t1:px<=p.t1;
+   if(k<=0||past){conf=false;late=true;cmsg='Reaction already played out'}else{p.e=px;p.r1=Math.abs(p.t1-px)/k;p.r2=Math.abs(p.t2-px)/k}}}
+ const ok=p&&p.r1>=1&&!late;
+ const raw=Math.min(100,Math.min(sep,3)/3*40+(al?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&conf?15:ok&&p.on?5:0));
  let why='',v='NO TRADE';
- if(!al)why='Price is not moving with the trend';else if(sep<.5)why='No clear trend';else if(!p)why='No zone to trade from';else if(!ok)why='Target is too close to the stop';else v=p.on?'ACTIVE NOW':'WAIT FOR PRICE';
- return{sym,dec:d.dec,dir,p,v,why,score:Math.round(Math.min(sc,100)),trend:(dir>0?'Uptrend':'Downtrend')+(sep>1.5&&al?' (strong)':' (moderate)')}}
+ if(!al)why='Price is not moving with the trend';else if(sep<.5)why='No clear trend';else if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(!ok)why='Target is too close to the stop';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE';
+ const b=c[Math.min(48,c.length-1)];
+ return{sym,dec:d.dec,dir,p,v,why,cmsg,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,trend:(dir>0?'Uptrend':'Downtrend')+(sep>1.5&&al?' (strong)':' (moderate)')}}
 function renderScan(list){
- const L=list.slice().sort((x,y)=>y.score-x.score);
+ const L=list.slice().sort((x,y)=>(y.score||0)-(x.score||0));
  $('scList').innerHTML=L.map(r=>{
   if(r.err)return `<div class="sg" style="border-left-color:var(--wait)"><div class="t"><span>${r.sym}</span><em style="background:rgba(255,204,0,.15);color:var(--wait)">Error</em></div><div class="m">${r.err}</div></div>`;
   if(r.v==='NO TRADE')return `<div class="sg" style="opacity:.6;border-left-color:#555"><div class="t"><span>${r.sym}</span><em style="background:rgba(255,255,255,.08);color:var(--t2)">No trade</em></div><div class="m">${r.why}</div></div>`;
-  const p=r.p,f=v=>v.toFixed(r.dec);
-  return `<div class="pl ${p.side==='SELL'?'sell':''} ${p.on?'on':''}" onclick="openSym('${r.sym}')"><h4><span>${r.sym} · ${p.side}</span><em>${r.v} · ${r.score}</em></h4>
-  <div class="note" style="margin:0 0 6px">${r.trend} · ${SN[p.z.s]} zone</div>
-  <div class="pr"><span>${p.on?'Entry (now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
+  const p=r.p,f=v=>v.toFixed(r.dec),now=r.v==='CONFIRMED',cs=r.csa==null?'':r.csa>.15?'<span style="color:var(--buy)">Currency strength supports this trade</span>':r.csa<-.15?'<span style="color:var(--sell)">Currency strength is against this trade</span>':'Currency strength is neutral';
+  return `<div class="pl ${p.side==='SELL'?'sell':''} ${now?'on':''}" onclick="openSym('${r.sym}')"><h4><span>${r.sym} · ${p.side}</span><em>${r.v} · ${r.score}</em></h4>
+  <div class="note" style="margin:0 0 6px">${r.trend} · ${SN[p.z.s]} zone<br>${now?'✓ ':''}${r.cmsg}${r.v==='IN ZONE'?'. Wait for a candle to close with a reaction.':''}${cs?'<br>'+cs:''}${r.dup&&r.dup.length?'<br><span style="color:var(--wait)">Overlaps: '+r.dup.join(', ')+'</span>':''}</div>
+  <div class="pr"><span>${now?'Entry (now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
   <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
   <div class="pr"><span>Target 1</span><span class="tp">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div>
   <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div></div>`}).join('')}
+function renderStr(st){
+ const L=Object.entries(st).sort((a,b)=>b[1]-a[1]);
+ $('scStr').innerHTML=`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Currency strength</div>${L.map(([c,v])=>`<div class="pr" style="align-items:center"><span style="width:44px;color:var(--text)">${c}</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.07);position:relative;margin:0 10px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${v>=0?'var(--buy)':'var(--sell)'};${v>=0?'left:50%':'right:50%'};width:${Math.abs(v)*50}%"></i></span><span style="width:40px;text-align:right;color:${v>=0?'var(--buy)':'var(--sell)'}">${Math.round(v*100)}</span></div>`).join('')}<div class="note">From the price change of the pairs you scanned. Best trades pair a strong currency with a weak one.</div></div>`}
+function finalize(out){
+ const ok=out.filter(x=>!x.err),sum={},cnt={};
+ ok.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
+ const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9);
+ if(ok.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);
+  ok.forEach(x=>{if(!x.p)return;x.csa=(x.p.side==='BUY'?st[x.base]-st[x.quote]:st[x.quote]-st[x.base])/2;x.score=Math.max(0,Math.min(100,Math.round(x.raw+x.csa*10)))})}
+ const seen={};ok.slice().sort((a,b)=>b.score-a.score).forEach(x=>{if(!x.p||x.v==='NO TRADE')return;const sg=x.p.side==='BUY'?1:-1;x.dup=[];
+  [[x.base,sg],[x.quote,-sg]].forEach(([c,s])=>{const k=c+s;if(seen[k])x.dup.push(`${c} ${s>0?'long':'short'}, same as ${seen[k]}`);else seen[k]=x.sym})});
+ renderScan(out)}
 function addCred(){const t=new Date().toDateString();let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}if(c.d!==t)c={d:t,n:0};c.n++;try{localStorage.setItem('sp_cr',JSON.stringify(c))}catch(e){}showCred()}
 function showCred(){let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}$('scCr').textContent=`Scanner credits used today: ${c.d===new Date().toDateString()?c.n:0} (the daily limit of 800 is shared with the Indicator page)`}
 function notify(msg){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
@@ -298,7 +318,7 @@ async function scan(){
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
   renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'?8000:300)}
- const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='ACTIVE NOW'&&x.score>=60&&now-(notified[x.sym]||0)>3600).forEach(x=>{notified[x.sym]=now;const f=v=>v.toFixed(x.dec);notify(`${x.sym} ${x.p.side} ACTIVE · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
+ finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym]||0)>3600).forEach(x=>{notified[x.sym]=now;const f=v=>v.toFixed(x.dec);notify(`${x.sym} ${x.p.side} CONFIRMED · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent='Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
 function openSym(sym){S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
 $('scWl').value=S.wl;$('scTf').value=S.stf;showCred();
