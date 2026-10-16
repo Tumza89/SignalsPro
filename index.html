@@ -72,6 +72,12 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .emb .a{stroke:var(--accent)}.emb .b{fill:var(--buy)}.emb .s{fill:var(--sell)}.emb .ring{transform-origin:60px 60px;animation:spin 16s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
 .wm{font-size:36px;font-weight:900;letter-spacing:-1.2px}.wm span{background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}.chips b{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--t2)}
+.lab{font-size:12px;color:var(--t2);letter-spacing:1px;text-transform:uppercase}
+#thTab{position:fixed;top:calc(100px + env(safe-area-inset-top));right:0;width:30px;height:58px;border-radius:16px 0 0 16px;border:1px solid var(--bd);border-right:0;background:rgba(18,18,28,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:60;box-shadow:-4px 0 18px var(--glow);color:var(--accent);font-size:24px;padding:0 0 3px}
+#thBack{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:150}
+#thPanel{position:fixed;top:0;right:0;bottom:0;width:min(280px,78vw);padding:calc(76px + env(safe-area-inset-top)) 22px 22px;background:rgba(14,14,22,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1px solid var(--bd);transform:translateX(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);z-index:160}
+#thPanel .sw{justify-content:flex-start;gap:14px;margin:14px 0}
+body.th #thBack{opacity:1;pointer-events:auto}body.th #thPanel{transform:none}body.th #thTab{opacity:0;pointer-events:none}
 nav{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:360px;background:rgba(18,18,28,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:40px;display:flex;justify-content:space-around;padding:10px 8px 12px;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.45)}
 nav button{display:flex;flex-direction:column;align-items:center;gap:4px;color:rgba(255,255,255,.45);font-size:10px;background:none;border:none;min-width:52px}
 nav button span{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.25s}
@@ -94,7 +100,8 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div class="chips"><b>Live zones</b><b>Trade plans</b><b>Market scanner</b></div>
 <button class="go" id="go" aria-label="Start or stop"><i></i></button>
 <div class="hint" id="hint">Tap to start live signals</div>
-<div class="lab">Colour theme</div><div class="sw" id="sw"></div></div></section>
+<div class="note" style="text-align:center;margin:-10px 0 20px">Tap the tab on the right edge for colour themes</div>
+</div></section>
 
 <section class="page" id="p-ind">
 <div class="card"><div class="dash"><div><div class="k" id="sym">Symbol</div><div class="px" id="px">—</div></div>
@@ -115,11 +122,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
 <div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit.</div><div class="note" id="scCr"></div></div>
 <div id="scStr"></div><div id="scList"></div>
-<div class="note" style="padding:0 6px 10px">Ranking = trend (EMA20 vs EMA50 and price side), movement versus normal, trade-plan quality, candle confirmation (a reaction candle closed at the zone) and currency strength. It only shows trades that go with the trend. Not backtested and not financial advice.</div></section>
-
-<section class="page" id="p-sig"><div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
-<div style="font-size:18px;font-weight:800">Signal History</div><div class="k" id="cnt">0 signals</div></div><div id="list"></div>
-<button class="btn red" id="clr" style="display:none">Clear history</button></div></section>
+<div class="note" style="padding:0 6px 10px">Each market is classed as trending or ranging (efficiency ratio plus the EMA20/EMA50 gap). Trending markets get pullback trades with the trend, and ranging markets get bounce trades between the zones. Ranking = regime fit, movement versus normal, trade-plan quality, candle confirmation (a reaction candle closed at the zone) and currency strength. Not backtested and not financial advice.</div></section>
 
 <section class="page" id="p-set"><div class="card">
 <div id="gBox"><label>Data source</label><select class="inp" id="src"><option value="twelve">Forex / metals / indices (Twelve Data)</option><option value="binance">Test only: crypto (no key)</option></select>
@@ -133,10 +136,10 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button class="on" data-p="home"><span><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>Home</button>
 <button data-p="scan"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/></svg></span>Scanner</button>
 <button data-p="ind"><span><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 3 6-8 3 3"/><path d="M3 21h18"/></svg></span>Indicator</button>
-<button data-p="sig"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></span>Signals</button>
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
-<script src="config.js"></script>
+<div id="thBack"></div><button id="thTab" aria-label="Colour themes">‹</button>
+<aside id="thPanel"><div class="lab">Colour theme</div><div class="sw" id="sw"></div><div class="note">Tap a colour to preview it. Tap outside the panel, or swipe right, to close. Swipe left from the right edge of the screen to open it.</div></aside>
 <script>
 const $=id=>document.getElementById(id);
 const TH={cobalt:['#3b82f6','59,130,246'],structure:['#ff6b1a','255,107,26'],cyan:['#22d3ee','34,211,238'],violet:['#a855f7','168,85,247'],emerald:['#10b981','16,185,129'],crimson:['#f43f5e','244,63,94'],amber:['#f59e0b','245,158,11'],rose:['#fb7185','251,113,133'],lime:['#a3e635','163,230,53'],arctic:['#e2e8f0','226,232,240']};
@@ -149,7 +152,7 @@ let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
 const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
 
 // access (email + one device, checked by your Google Apps Script)
-const API=window.API_URL||'https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
+const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
@@ -164,13 +167,19 @@ async function check(email,silent){
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
 if(!GATED){$('lerr').textContent='App is not configured yet. Contact support.';$('lerr').style.display='block'}else if(EM){$('emailIn').value=EM;check(EM)}
 setInterval(()=>{if(GATED&&EM)check(EM,true)},900000);
+// theme panel
+const thOpen=v=>document.body.classList.toggle('th',v);
+$('thTab').onclick=()=>thOpen(true);$('thBack').onclick=()=>thOpen(false);
+let tx=null;addEventListener('touchstart',e=>{tx=e.touches[0].clientX},{passive:true});
+addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].clientX-tx,open=document.body.classList.contains('th');
+ if(!open&&tx>innerWidth-30&&dx<-50)thOpen(true);if(open&&dx>60)thOpen(false);tx=null},{passive:true});
 // theme
 function theme(n){const[a,r]=TH[n]||TH.cobalt,s=document.documentElement.style;s.setProperty('--accent',a);s.setProperty('--glow',`rgba(${r},.35)`);s.setProperty('--pg',`rgba(${r},.45)`);S.theme=n;save();
  document.querySelectorAll('#sw b').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
 Object.keys(TH).forEach(n=>{const b=document.createElement('b');b.dataset.t=n;b.style.background=TH[n][0];b.onclick=()=>theme(n);$('sw').append(b)});theme(S.theme);
 // nav
 function page(n){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));if(n==='sig')renderSigs();if(n==='ind'){fit();tick()}}
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));if(n==='ind'){fit();tick()}}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;save();mark();tick()};$('tfs').append(b)});
@@ -262,9 +271,6 @@ function fire(type,price,p){
  beep();navigator.vibrate&&navigator.vibrate([200,100,200]);
  if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro',{body:msg,icon:'icon-192.png'})).catch(()=>{});
  if(S.hook)fetch(S.hook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({symbol:S.sym,timeframe:S.tf,signal:type,price,plan:pl,time:t.toISOString().slice(0,19),indicator:'SignalsPro'})}).catch(()=>{})}
-function renderSigs(){$('cnt').textContent=sigs.length+(sigs.length===1?' signal':' signals');$('clr').style.display=sigs.length?'block':'none';
- $('list').innerHTML=sigs.length?sigs.map(s=>`<div class="sg ${s.type}"><div class="t"><span>${s.sym} · ${s.tf}</span><em>${s.type}</em></div><div class="m">Price ${s.price} · ${s.t}</div>${s.pl?`<div class="m">Entry ${s.pl.e} · SL ${s.pl.sl} · TP1 ${s.pl.t1} · TP2 ${s.pl.t2}</div>`:''}</div>`).join(''):'<div class="empty">No signals yet.<br>Start the app and they will appear here.</div>'}
-$('clr').onclick=()=>{if(confirm('Clear all signal history?')){sigs=[];localStorage.removeItem('sp_sig');renderSigs()}};
 // main loop
 async function tick(){
  try{D=await load();R=compute(D);const px=D.c[0],PL=renderPlans(px);PLN=PL;
@@ -283,15 +289,21 @@ $('go').onclick=()=>{setRun(!run);if(run)page('ind')};
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={};
 function ema(a,n){const k=2/(n+1);let e=a[a.length-1];for(let i=a.length-2;i>=0;i--)e=a[i]*k+e*(1-k);return e}
 function rate(sym,d,Rr){
- const{o,h,l,c}=d,px=c[0],a=Rr.atr,cs=c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),dir=e20>e50?1:-1,sep=Math.abs(e20-e50)/a,al=dir>0?px>e20:px<e20;
- const pl=plans(px,Rr),p=dir>0?pl.buy:pl.sell,cc=sym.replace(/[^A-Za-z]/g,'').toUpperCase();
+ const{c}=d,px=c[0],a=Rr.atr,cs=c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),dir=e20>e50?1:-1,sep=Math.abs(e20-e50)/a;
+ let path=0;for(let i=0;i<30;i++)path+=Math.abs(c[i]-c[i+1]);const er=path?Math.abs(c[0]-c[30])/path:0;
+ const trending=er>=.3&&sep>=.5,intact=dir>0?px>e50-.5*a:px<e50+.5*a,pl=plans(px,Rr),cc=sym.replace(/[^A-Za-z]/g,'').toUpperCase();
+ const mode=trending?(intact?'TREND':'BROKEN'):'RANGE';let p=null,why='',v='NO TRADE';
+ if(mode==='TREND')p=dir>0?pl.buy:pl.sell;
+ else if(mode==='RANGE'){if(pl.buy&&pl.sell){const w=(pl.sell.z.lo-pl.buy.z.hi)/a;if(w>=2)p=pl.buy.dist<=pl.sell.dist?pl.buy:pl.sell;else why='Range too tight to trade ('+w.toFixed(1)+' ATR wide)'}else why='No clear range (a zone is missing on one side)'}
+ else why='Trend is breaking down, wait for it to settle';
  const rc=p?react(p,d,px):{conf:false,late:false,msg:'No reaction candle yet'},conf=rc.conf,late=rc.late,cmsg=rc.msg;
  const ok=p&&p.r1>=1&&!late;
- const raw=Math.min(100,Math.min(sep,3)/3*40+(al?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&conf?15:ok&&p.on?5:0));
- let why='',v='NO TRADE';
- if(!al)why='Price is not moving with the trend';else if(sep<.5)why='No clear trend';else if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(!ok)why='Target is too close to the stop';else if(!conf&&!p.on&&p.dist>2)why='Entry is '+p.dist.toFixed(1)+' ATR away, too far to expect a fill';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE';
+ const fit=mode==='TREND'?Math.min(sep,3)/3*40:mode==='RANGE'?Math.max(0,.3-er)/.3*40:0;
+ const raw=Math.min(100,fit+(p?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&conf?15:ok&&p.on?5:0));
+ if(!why){if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(!ok)why='Target is too close to the stop';else if(!conf&&!p.on&&p.dist>2)why='Entry is '+p.dist.toFixed(1)+' ATR away, too far to expect a fill';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE'}
  const b=c[Math.min(48,c.length-1)];
- return{sym,dec:d.dec,dir,p,v,why,cmsg,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,trend:(dir>0?'Uptrend':'Downtrend')+(sep>1.5&&al?' (strong)':' (moderate)')}}
+ return{sym,dec:d.dec,dir,p,v,why,cmsg,mode,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,
+  trend:mode==='TREND'?(dir>0?'Uptrend':'Downtrend')+(sep>1.5?' (strong)':' (moderate)')+' · pullback trade':mode==='RANGE'?'Ranging market · bounce trade between zones':''}}
 function renderScan(list){
  const L=list.slice().sort((x,y)=>(y.score||0)-(x.score||0));
  $('scList').innerHTML=L.map(r=>{
