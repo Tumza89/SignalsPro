@@ -73,6 +73,7 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .wm{font-size:36px;font-weight:900;letter-spacing:-1.2px}.wm span{background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}.chips b{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--t2)}
 .lab{font-size:12px;color:var(--t2);letter-spacing:1px;text-transform:uppercase}
+.copy{text-align:center;font-size:11px;color:var(--t2);opacity:.75;padding:4px 16px 10px}
 #thTab{position:fixed;top:calc(100px + env(safe-area-inset-top));right:0;width:30px;height:58px;border-radius:16px 0 0 16px;border:1px solid var(--bd);border-right:0;background:rgba(18,18,28,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:60;box-shadow:-4px 0 18px var(--glow);color:var(--accent);font-size:24px;padding:0 0 3px}
 #thBack{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:150}
 #thPanel{position:fixed;top:0;right:0;bottom:0;width:min(280px,78vw);padding:calc(76px + env(safe-area-inset-top)) 22px 22px;background:rgba(14,14,22,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1px solid var(--bd);transform:translateX(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);z-index:160}
@@ -90,7 +91,8 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <input type="email" class="inp" id="emailIn" placeholder="Your subscriber email" autocapitalize="none" autocomplete="email" style="max-width:300px;text-align:center">
 <button class="btn" style="max-width:300px" id="btnU">Unlock</button>
 <div id="lerr" style="color:var(--sell);font-size:13px;margin-top:14px;max-width:300px;display:none"></div>
-<div class="note" style="max-width:300px;text-align:center">Subscriber access only. One device per subscription.</div></div>
+<div class="note" style="max-width:300px;text-align:center">Subscriber access only. One device per subscription.</div>
+<div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
 
 <header><div class="brand"><div class="logo">SP</div>SignalsPro</div><div class="pill" id="pill">Stopped</div></header>
 
@@ -119,10 +121,10 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
 <label>Timeframe</label><select class="inp" id="scTf"><option>M15</option><option>M30</option><option>H1</option><option>H4</option></select>
-<button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
+<button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
 <div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit.</div><div class="note" id="scCr"></div></div>
 <div id="scStr"></div><div id="scList"></div>
-<div class="note" style="padding:0 6px 10px">Each market is classed as trending or ranging (efficiency ratio plus the EMA20/EMA50 gap). Trending markets get pullback trades with the trend, and ranging markets get bounce trades between the zones. Ranking = regime fit, movement versus normal, trade-plan quality, candle confirmation (a reaction candle closed at the zone) and currency strength. Not backtested and not financial advice.</div></section>
+<div class="note" style="padding:0 6px 10px">Each market is classed as trending or ranging (efficiency ratio plus the EMA20/EMA50 gap). Trending markets get pullback trades with the trend, and ranging markets get bounce trades between the zones. Ranking = regime fit, movement versus normal, zone strength, trade-plan quality, trading session, optional higher-timeframe agreement, candle confirmation (a reaction candle closed at the zone) and currency strength. Not backtested and not financial advice.</div></section>
 
 <section class="page" id="p-set"><div class="card">
 <div id="gBox"><label>Data source</label><select class="inp" id="src"><option value="twelve">Forex / metals / indices (Twelve Data)</option><option value="binance">Test only: crypto (no key)</option></select>
@@ -132,6 +134,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button><button class="btn red" id="logout">Log out</button>
 <div class="note">Alerts fire only while the app is open and started.</div></div></section>
 
+<footer class="copy">© 2026 SignalsPro. All rights reserved.</footer>
 <nav id="nav">
 <button class="on" data-p="home"><span><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>Home</button>
 <button data-p="scan"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/></svg></span>Scanner</button>
@@ -286,23 +289,27 @@ function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v)
  $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
 $('go').onclick=()=>{setRun(!run);if(run)page('ind')};
 // scanner
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={},scanForce=false;const HT={M15:'H1',M30:'H4',H1:'H4',H4:'D1'};
 function ema(a,n){const k=2/(n+1);let e=a[a.length-1];for(let i=a.length-2;i>=0;i--)e=a[i]*k+e*(1-k);return e}
-function rate(sym,d,Rr){
+function htfDir(d){const cs=d.c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),a=atr7(d.h,d.l,d.c,d.n)[0];return Math.abs(e20-e50)/a<.3?0:e20>e50?1:-1}
+function rate(sym,d,Rr,hd){
  const{c}=d,px=c[0],a=Rr.atr,cs=c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),dir=e20>e50?1:-1,sep=Math.abs(e20-e50)/a;
  let path=0;for(let i=0;i<30;i++)path+=Math.abs(c[i]-c[i+1]);const er=path?Math.abs(c[0]-c[30])/path:0;
  const trending=er>=.3&&sep>=.5,intact=dir>0?px>e50-.5*a:px<e50+.5*a,pl=plans(px,Rr),cc=sym.replace(/[^A-Za-z]/g,'').toUpperCase();
- const mode=trending?(intact?'TREND':'BROKEN'):'RANGE';let p=null,why='',v='NO TRADE';
+ const mode=trending?(intact?'TREND':'BROKEN'):'RANGE';let p=null,why='',v='NO TRADE';const notes=[];
  if(mode==='TREND')p=dir>0?pl.buy:pl.sell;
  else if(mode==='RANGE'){if(pl.buy&&pl.sell){const w=(pl.sell.z.lo-pl.buy.z.hi)/a;if(w>=2)p=pl.buy.dist<=pl.sell.dist?pl.buy:pl.sell;else why='Range too tight to trade ('+w.toFixed(1)+' ATR wide)'}else why='No clear range (a zone is missing on one side)'}
  else why='Trend is breaking down, wait for it to settle';
  const rc=p?react(p,d,px):{conf:false,late:false,msg:'No reaction candle yet'},conf=rc.conf,late=rc.late,cmsg=rc.msg;
- const ok=p&&p.r1>=1&&!late;
+ const ok=p&&p.r1>=1&&!late,kk=p?Math.abs(p.e-p.sl)/a:0;
+ let adj=0;
+ if(p){adj+={4:10,3:6,2:0,1:-5}[p.z.s]||0;const hr=new Date().getUTCHours();if(hr<7||hr>=20){adj-=8;notes.push('Quiet session')}
+  if(hd!=null){const T=HT[S.stf]||'higher';if(hd===0)notes.push(T+' trend is neutral');else{const ag=(p.side==='BUY')===(hd>0);adj+=ag?8:-12;notes.push(T+' trend '+(ag?'agrees':'disagrees'));if(!ag&&mode==='TREND'&&!why)why='Higher-timeframe trend disagrees'}}}
  const fit=mode==='TREND'?Math.min(sep,3)/3*40:mode==='RANGE'?Math.max(0,.3-er)/.3*40:0;
- const raw=Math.min(100,fit+(p?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&conf?15:ok&&p.on?5:0));
- if(!why){if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(!ok)why='Target is too close to the stop';else if(!conf&&!p.on&&p.dist>2)why='Entry is '+p.dist.toFixed(1)+' ATR away, too far to expect a fill';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE'}
+ const raw=Math.max(0,Math.min(100,fit+(p?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&conf?15:ok&&p.on?5:0)+(ok?adj:0)));
+ if(!why){if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(Rr.rv<.5)why='Market is too quiet right now';else if(Rr.rv>2.5)why='Volatility spike, wait for it to calm down';else if(kk<.5)why='Stop would be too tight ('+kk.toFixed(1)+' ATR)';else if(kk>5)why='Stop would be too wide ('+kk.toFixed(1)+' ATR)';else if(!ok)why='Target is too close to the stop';else if(!conf&&!p.on&&p.dist>2)why='Entry is '+p.dist.toFixed(1)+' ATR away, too far to expect a fill';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE'}
  const b=c[Math.min(48,c.length-1)];
- return{sym,dec:d.dec,dir,p,v,why,cmsg,mode,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,
+ return{sym,dec:d.dec,dir,p,v,why,cmsg,mode,notes,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,
   trend:mode==='TREND'?(dir>0?'Uptrend':'Downtrend')+(sep>1.5?' (strong)':' (moderate)')+' · pullback trade':mode==='RANGE'?'Ranging market · bounce trade between zones':''}}
 function renderScan(list){
  const L=list.slice().sort((x,y)=>(y.score||0)-(x.score||0));
@@ -311,7 +318,7 @@ function renderScan(list){
   if(r.v==='NO TRADE')return `<div class="sg" style="opacity:.6;border-left-color:#555"><div class="t"><span>${r.sym}</span><em style="background:rgba(255,255,255,.08);color:var(--t2)">No trade</em></div><div class="m">${r.why}</div></div>`;
   const p=r.p,f=v=>v.toFixed(r.dec),now=r.v==='CONFIRMED',cs=r.csa==null?'':r.csa>.15?'<span style="color:var(--buy)">Currency strength supports this trade</span>':r.csa<-.15?'<span style="color:var(--sell)">Currency strength is against this trade</span>':'Currency strength is neutral';
   return `<div class="pl ${p.side==='SELL'?'sell':''} ${now?'on':''}" onclick="openSym('${r.sym}')"><h4><span>${r.sym} · ${p.side}</span><em>${r.v} · ${r.score}</em></h4>
-  <div class="note" style="margin:0 0 6px">${r.trend} · ${SN[p.z.s]} zone<br>${now?'✓ ':''}${r.cmsg}${r.v==='IN ZONE'?'. Wait for a candle to close with a reaction.':''}${cs?'<br>'+cs:''}${r.dup&&r.dup.length?'<br><span style="color:var(--wait)">Overlaps: '+r.dup.join(', ')+'</span>':''}</div>
+  <div class="note" style="margin:0 0 6px">${r.trend} · ${SN[p.z.s]} zone<br>${now?'✓ ':''}${r.cmsg}${r.v==='IN ZONE'?'. Wait for a candle to close with a reaction.':''}${cs?'<br>'+cs:''}${r.notes&&r.notes.length?'<br><span style="color:var(--t2)">'+r.notes.join(' · ')+'</span>':''}${r.dup&&r.dup.length?'<br><span style="color:var(--wait)">Overlaps: '+r.dup.join(', ')+'</span>':''}</div>
   <div class="pr"><span>${now?'Entry (market, now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
   <div class="pr"><span>Distance to entry</span><span>${now?'at market':p.dist.toFixed(1)+' ATR'}</span></div>
   <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
@@ -332,11 +339,16 @@ function finalize(out){
 function addCred(){const t=new Date().toDateString();let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}if(c.d!==t)c={d:t,n:0};c.n++;try{localStorage.setItem('sp_cr',JSON.stringify(c))}catch(e){}showCred()}
 function showCred(){let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}$('scCr').textContent=`Scanner credits used today: ${c.d===new Date().toDateString()?c.n:0} (the daily limit of 800 is shared with the Indicator page)`}
 function notify(msg){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
-async function scan(){
- if(scanning)return;scanning=true;const list=S.wl.split(',').map(x=>x.trim()).filter(Boolean),out=[];let stop=false;$('scBtn').disabled=true;
+async function scan(auto){
+ if(scanning)return;
+ const nd=new Date(),dy=nd.getUTCDay(),hr=nd.getUTCHours();
+ if(dy===6||(dy===0&&hr<21)||(dy===5&&hr>=21)){if(auto)return;if(!scanForce){scanForce=true;$('scSt').textContent='The forex market is closed, so prices are stale. Tap Scan now again to scan anyway.';return}}
+ scanForce=false;scanning=true;const list=S.wl.split(',').map(x=>x.trim()).filter(Boolean),out=[];let stop=false;$('scBtn').disabled=true;
  for(let i=0;i<list.length&&!stop;i++){let tries=0;
   while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
-   try{const d=await load(list[i],S.stf);out.push(rate(list[i],d,compute(d)));addCred();break}
+   try{const d=await load(list[i],S.stf);addCred();let hd=null;
+    if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'?8000:300);const d2=await load(list[i],HT[S.stf]);addCred();hd=htfDir(d2)}catch(_){hd=null}}
+    out.push(rate(list[i],d,compute(d),hd));break}
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
   renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'?8000:300)}
@@ -345,8 +357,10 @@ async function scan(){
 function openSym(sym){S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
 $('scWl').value=S.wl;$('scTf').value=S.stf;showCred();
 $('scWl').onchange=()=>{S.wl=$('scWl').value;save()};$('scTf').onchange=()=>{S.stf=$('scTf').value;save()};
-$('scBtn').onclick=scan;
-$('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').textContent='Auto-scan every 30 min: Off'}else{scan();autoT=setInterval(scan,1800000);$('scAuto').textContent='Auto-scan every 30 min: On'}};
+$('scBtn').onclick=()=>scan();
+const htfLbl=()=>$('scHtf').textContent='Higher-timeframe check: '+(S.htf?'On (uses 2x credits)':'Off');
+$('scHtf').onclick=()=>{S.htf=!S.htf;save();htfLbl()};htfLbl();
+$('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').textContent='Auto-scan every 30 min: Off'}else{scan();autoT=setInterval(()=>scan(true),1800000);$('scAuto').textContent='Auto-scan every 30 min: On'}};
 // settings
 $('src').value=S.src;$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();save();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
