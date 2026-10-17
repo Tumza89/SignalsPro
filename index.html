@@ -131,7 +131,6 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div class="note" style="padding:0 6px 10px">Each market is classed as trending or ranging (efficiency ratio plus the EMA20/EMA50 gap). Trending markets get pullback trades with the trend, and ranging markets get bounce trades between the zones. Ranking = regime fit, movement versus normal, zone strength, trade-plan quality, trading session, optional higher-timeframe agreement, candle confirmation (a reaction candle closed at the zone) and currency strength. Not backtested and not financial advice.</div></section>
 
 <section class="page" id="p-set"><div class="card">
-<label>Colour theme</label><div class="sw" id="sw2" style="justify-content:flex-start;margin:6px 0 16px"></div>
 <div id="gBox"><input type="hidden" id="src" value="twelve">
 <label>Your Twelve Data API key (free at twelvedata.com)</label><input class="inp" id="key" type="password" placeholder="Paste your key"></div>
 <label>Refresh</label><select class="inp" id="iv"><option value="60">Every 1 min</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option></select>
@@ -173,16 +172,16 @@ const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
-function showLock(m){if(run)setRun(false);$('lock').classList.remove('hidden');$('lerr').textContent=m||'';$('lerr').style.display=m?'block':'none';$('btnU').disabled=false;$('btnU').textContent='Unlock'}
+function showLock(m){if(run)setRun(false);$('welcome').classList.remove('on');welcomeShown=false;$('lock').classList.remove('hidden');$('lerr').textContent=m||'';$('lerr').style.display=m?'block':'none';$('btnU').disabled=false;$('btnU').textContent='Unlock'}
 async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in · '+EM;showWelcome();if(!S.key)page('set')}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();if(!S.key)page('set')}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
-if(!GATED){$('lerr').textContent='App is not configured yet. Contact support.';$('lerr').style.display='block'}else if(EM){$('emailIn').value=EM;check(EM)}
+if(!GATED){$('lerr').textContent='App is not configured yet. Contact support.';$('lerr').style.display='block'}else if(EM){$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();check(EM,true)}
 setInterval(()=>{if(GATED&&EM)check(EM,true)},900000);
 // theme panel
 const thOpen=v=>document.body.classList.toggle('th',v);
@@ -193,7 +192,7 @@ addEventListener('touchend',e=>{if(tx==null)return;const dx=e.changedTouches[0].
 // theme
 function theme(n){const[a,r]=TH[n]||TH.cobalt,s=document.documentElement.style;s.setProperty('--accent',a);s.setProperty('--glow',`rgba(${r},.35)`);s.setProperty('--pg',`rgba(${r},.45)`);S.theme=n;save();
  document.querySelectorAll('.sw b').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
-['sw','sw2'].forEach(id=>Object.keys(TH).forEach(n=>{const b=document.createElement('b');b.dataset.t=n;b.style.background=TH[n][0];b.onclick=()=>theme(n);$(id).append(b)}));theme(S.theme);
+['sw'].forEach(id=>Object.keys(TH).forEach(n=>{const b=document.createElement('b');b.dataset.t=n;b.style.background=TH[n][0];b.onclick=()=>theme(n);$(id).append(b)}));theme(S.theme);
 // nav
 function page(n){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));if(n==='ind'){fit();tick()}}
