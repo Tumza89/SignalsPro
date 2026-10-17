@@ -74,6 +74,7 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}.chips b{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--t2)}
 .lab{font-size:12px;color:var(--t2);letter-spacing:1px;text-transform:uppercase}
 .copy{text-align:center;font-size:11px;color:var(--t2);opacity:.75;padding:4px 16px 10px}
+#welcome{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(160deg,#050508,#0b0b14)}#welcome.on{display:flex}
 #thTab{position:fixed;top:calc(100px + env(safe-area-inset-top));right:0;width:30px;height:58px;border-radius:16px 0 0 16px;border:1px solid var(--bd);border-right:0;background:rgba(18,18,28,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:60;box-shadow:-4px 0 18px var(--glow);color:var(--accent);font-size:24px;padding:0 0 3px}
 #thBack{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:150}
 #thPanel{position:fixed;top:0;right:0;bottom:0;width:min(280px,78vw);padding:calc(76px + env(safe-area-inset-top)) 22px 22px;background:rgba(14,14,22,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1px solid var(--bd);transform:translateX(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);z-index:160}
@@ -93,6 +94,10 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div id="lerr" style="color:var(--sell);font-size:13px;margin-top:14px;max-width:300px;display:none"></div>
 <div class="note" style="max-width:300px;text-align:center">Subscriber access only. One device per subscription.</div>
 <div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
+
+<div id="welcome"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">What are we trading today?</div>
+<button class="btn" id="wgo" style="max-width:300px">Let’s go</button></div>
 
 <header><div class="brand"><div class="logo">SP</div>SignalsPro</div><div class="pill" id="pill">Stopped</div></header>
 
@@ -154,15 +159,15 @@ let sigs=[];try{sigs=JSON.parse(localStorage.getItem('sp_sig')||'[]')}catch(e){}
 let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
 const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
 
-// spoken welcome
-let welcomed=false,unlocked=false;
+// spoken welcome (iPhone only allows speech right after a tap, so the welcome screen has a button)
+let welcomed=false,welcomeShown=false;
 function speakWelcome(){
- if(welcomed||!unlocked||!window.speechSynthesis)return;welcomed=true;
+ if(welcomed||!window.speechSynthesis)return;
  const u=new SpeechSynthesisUtterance('Welcome to SignalsPro. What are we trading today?');u.rate=.95;u.volume=1;
  const vs=speechSynthesis.getVoices(),v=vs.find(x=>/^en[-_](GB|US|ZA|AU)/i.test(x.lang)&&/(Samantha|Daniel|Karen|Serena|Moira|Google)/i.test(x.name))||vs.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;
- u.onerror=()=>{welcomed=false};speechSynthesis.cancel();speechSynthesis.speak(u)}
-const arm=()=>{try{const u=new SpeechSynthesisUtterance(' ');u.volume=0;speechSynthesis.speak(u)}catch(e){}setTimeout(speakWelcome,80)};
-['pointerdown','touchstart','keydown'].forEach(ev=>addEventListener(ev,arm,{once:true,passive:true}));
+ u.onstart=()=>{welcomed=true};speechSynthesis.cancel();speechSynthesis.speak(u)}
+function showWelcome(){if(welcomeShown)return;welcomeShown=true;$('welcome').classList.add('on');speakWelcome()}
+$('wgo').onclick=()=>{speakWelcome();$('welcome').classList.remove('on')};
 // access (email + one device, checked by your Google Apps Script)
 const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
@@ -173,7 +178,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in · '+EM;unlocked=true;speakWelcome();if(!S.key)page('set')}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in · '+EM;showWelcome();if(!S.key)page('set')}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
