@@ -75,6 +75,9 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .lab{font-size:12px;color:var(--t2);letter-spacing:1px;text-transform:uppercase}
 .copy{text-align:center;font-size:11px;color:var(--t2);opacity:.75;padding:4px 16px 10px}
 #welcome{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(160deg,#050508,#0b0b14)}#welcome.on{display:flex}
+.chip{display:inline-block;margin:4px 6px 0 0;padding:8px 12px;border-radius:20px;font-size:12px;font-weight:800;border:1px solid var(--bd);background:rgba(255,255,255,.05);color:var(--text)}
+.chip.BUY{border-color:rgba(0,255,85,.45);color:var(--buy)}.chip.SELL{border-color:rgba(255,59,48,.45);color:var(--sell)}
+#thPanel .btn{margin-top:10px}
 #thTab{position:fixed;top:calc(100px + env(safe-area-inset-top));right:0;width:30px;height:58px;border-radius:16px 0 0 16px;border:1px solid var(--bd);border-right:0;background:rgba(18,18,28,.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;z-index:60;box-shadow:-4px 0 18px var(--glow);color:var(--accent);font-size:24px;padding:0 0 3px}
 #thBack{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:150}
 #thPanel{position:fixed;top:0;right:0;bottom:0;width:min(280px,78vw);padding:calc(76px + env(safe-area-inset-top)) 22px 22px;background:rgba(14,14,22,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-left:1px solid var(--bd);transform:translateX(100%);transition:transform .3s cubic-bezier(.22,1,.36,1);z-index:160}
@@ -122,6 +125,14 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div class="card"><div style="font-size:16px;font-weight:800;margin-bottom:12px">Trade plan</div><div id="plans"><div class="empty">Load a chart to see entries and targets.</div></div>
 <div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></section>
 
+<section class="page" id="p-fund">
+<button class="btn ghost" id="fBack" style="width:auto;padding:10px 18px;margin:0 0 12px">← Back</button>
+<div style="font-size:22px;font-weight:900;margin:0 0 4px">Fundamentals</div>
+<div class="sub" style="margin:0 0 14px">NFP, CPI, PPI and FOMC with the Fed and macro picture and currency strength</div>
+<div id="fMacro"></div><div id="fCS"></div><div id="fEvents"></div>
+<div class="note" id="fSt" style="text-align:center">Loading…</div>
+<div class="note" style="padding:0 6px 10px">Rule-based reading of news data. It is not a prediction. Spreads widen and prices gap around releases, so stops can slip. Calendar data comes from a free public feed and can be late or wrong, so always check the official release. Not financial advice.</div></section>
+
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
 <label>Timeframe</label><select class="inp" id="scTf"><option>M15</option><option>M30</option><option>H1</option><option>H4</option></select>
@@ -146,7 +157,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div><button id="thTab" aria-label="Colour themes">‹</button>
-<aside id="thPanel"><div class="lab">Colour theme</div><div class="sw" id="sw"></div></aside>
+<aside id="thPanel"><div class="lab">Colour theme</div><div class="sw" id="sw"></div><button class="btn" id="fundBtn">Fundamentals</button></aside>
 <script>
 const $=id=>document.getElementById(id);
 const TH={cobalt:['#3b82f6','59,130,246'],structure:['#ff6b1a','255,107,26'],cyan:['#22d3ee','34,211,238'],violet:['#a855f7','168,85,247'],emerald:['#10b981','16,185,129'],crimson:['#f43f5e','244,63,94'],amber:['#f59e0b','245,158,11'],rose:['#fb7185','251,113,133'],lime:['#a3e635','163,230,53'],arctic:['#e2e8f0','226,232,240']};
@@ -195,7 +206,7 @@ function theme(n){const[a,r]=TH[n]||TH.cobalt,s=document.documentElement.style;s
 ['sw'].forEach(id=>Object.keys(TH).forEach(n=>{const b=document.createElement('b');b.dataset.t=n;b.style.background=TH[n][0];b.onclick=()=>theme(n);$(id).append(b)}));theme(S.theme);
 // nav
 function page(n){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));if(n==='ind'){fit();tick()}}
+ document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));if(n==='ind'){fit();tick()}if(n==='fund')loadFund()}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;save();mark();tick()};$('tfs').append(b)});
@@ -347,7 +358,7 @@ function finalize(out){
  const ok=out.filter(x=>!x.err),sum={},cnt={};
  ok.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
  const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9);
- if(ok.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);
+ if(ok.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);LASTST={st,t:Date.now()};
   ok.forEach(x=>{if(!x.p)return;x.csa=(x.p.side==='BUY'?st[x.base]-st[x.quote]:st[x.quote]-st[x.base])/2;x.score=Math.max(0,Math.min(100,Math.round(x.raw+x.csa*10)))})}
  const seen={};ok.slice().sort((a,b)=>b.score-a.score).forEach(x=>{if(!x.p||x.v==='NO TRADE')return;const sg=x.p.side==='BUY'?1:-1;x.dup=[];
   [[x.base,sg],[x.quote,-sg]].forEach(([c,s])=>{const k=c+s;if(seen[k])x.dup.push(`${c} ${s>0?'long':'short'}, same as ${seen[k]}`);else seen[k]=x.sym})});
@@ -377,6 +388,79 @@ $('scBtn').onclick=()=>scan();
 const htfLbl=()=>$('scHtf').textContent='Higher-timeframe check: '+(S.htf?'On (uses 2x credits)':'Off');
 $('scHtf').onclick=()=>{S.htf=!S.htf;save();htfLbl()};htfLbl();
 $('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').textContent='Auto-scan every 30 min: Off'}else{scan();autoT=setInterval(()=>scan(true),1800000);$('scAuto').textContent='Auto-scan every 30 min: On'}};
+// fundamentals
+let FD=null,FDT=0,LASTST=null;
+const FW={NFP:{n:'Non-Farm Payrolls',u:75,w:1,unit:'K'},CPI:{n:'CPI m/m',u:.1,w:1,unit:'%'},CORE_CPI:{n:'Core CPI m/m',u:.1,w:1.2,unit:'%'},PPI:{n:'PPI m/m',u:.2,w:.5,unit:'%'},CORE_PPI:{n:'Core PPI m/m',u:.2,w:.6,unit:'%'},FOMC:{n:'FOMC rate decision',u:.25,w:1.5,unit:'%'}};
+const PAIRS=[['EUR/USD',-1],['GBP/USD',-1],['AUD/USD',-1],['NZD/USD',-1],['USD/JPY',1],['USD/CAD',1],['USD/CHF',1],['XAU/USD',-1]];
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const num=t=>{const m=String(t==null?'':t).replace(/,/g,'').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):null};
+const getAct=()=>{try{return JSON.parse(localStorage.getItem('sp_act')||'{}')}catch(e){return{}}};
+const getTone=()=>+(localStorage.getItem('sp_tone')||0);
+function setAct(id,v){const A=getAct();A[id]=v;try{localStorage.setItem('sp_act',JSON.stringify(A))}catch(e){}renderFund()}
+function setTone(v){try{localStorage.setItem('sp_tone',v)}catch(e){}renderFund()}
+function regime(m){
+ if(!m)return null;let sc=0;const notes=[];
+ const pol=m.fedUpper-m.fed6m;if(pol>=.2){sc+=1;notes.push('The Fed has been raising rates')}else if(pol<=-.2){sc-=1;notes.push('The Fed has been cutting rates')}else notes.push('The Fed has held rates steady');
+ if(m.coreYoY>=3){sc+=1;notes.push('Core inflation is '+m.coreYoY.toFixed(1)+'%, well above the 2% target')}else if(m.coreYoY<=2.4){sc-=1;notes.push('Core inflation is '+m.coreYoY.toFixed(1)+'%, close to or under target')}else notes.push('Core inflation is '+m.coreYoY.toFixed(1)+'%, a little above target');
+ const du=m.unrate-m.unrate3m;if(du>=.3){sc-=1;notes.push('Unemployment is rising ('+m.unrate.toFixed(1)+'%)')}else if(du<=-.1){sc+=.5;notes.push('Unemployment is falling ('+m.unrate.toFixed(1)+'%)')}else notes.push('Unemployment is steady at '+m.unrate.toFixed(1)+'%');
+ if(m.pay3>=150){sc+=.5;notes.push('Job growth is strong ('+Math.round(m.pay3)+'K a month)')}else if(m.pay3<=50){sc-=1;notes.push('Job growth is weak ('+Math.round(m.pay3)+'K a month)')}else notes.push('Job growth is moderate ('+Math.round(m.pay3)+'K a month)');
+ sc=clamp(sc,-3,3);return{sc,label:sc>=1.5?'Hawkish':sc<=-1.5?'Dovish':'Balanced',notes}}
+function autoActual(e){
+ if(!FD||!FD.act||!FD.act[e.k])return null;const d=new Date(e.date);if(d>new Date())return null;
+ if(e.k==='FOMC')return Date.now()-d.getTime()>26*36e5?FD.act.FOMC.v:null;
+ const r=new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()-1,1)),ref=r.getUTCFullYear()+'-'+String(r.getUTCMonth()+1).padStart(2,'0');
+ return FD.act[e.k].ref===ref?FD.act[e.k].v:null}
+function calcStrength(items){const sum={},cnt={};items.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
+ const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9),st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);return st}
+function pairSignals(v){
+ const st=LASTST?LASTST.st:null;
+ return PAIRS.map(([sym,dir])=>{const side=v*dir>0?'BUY':'SELL',sg=side==='BUY'?1:-1,[b,q]=sym.split('/');
+  return{sym,side,edge:st&&st[b]!=null&&st[q]!=null?sg*(st[b]-st[q]):0}}).sort((a,b)=>b.edge-a.edge)}
+function verdictFor(e,a,reg){
+ const w=FW[e.k],f=num(e.forecast),p=num(e.previous);if(a==null||f==null)return null;let s;
+ if(e.k==='FOMC'){if(p==null)return null;s=clamp(((a-p)-(f-p))/w.u,-2,2)*w.w+getTone()}else s=clamp((a-f)/w.u,-2,2)*w.w;
+ const M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,total=s+.4*M+.8*cs;
+ const sg=[s,M,cs].map(x=>Math.abs(x)<.3?0:Math.sign(x)),dn=Math.sign(total),ag=sg.filter(x=>x===dn).length,op=sg.filter(x=>x===-dn).length;
+ return{s,M,cs,total,dir:total>=1?1:total<=-1?-1:0,conv:Math.abs(total)<1?'Low':ag===3?'High':ag>=2&&!op?'Medium':'Low'}}
+async function loadFund(force){
+ if(!force&&FD&&Date.now()-FDT<600000){renderFund();return}
+ $('fSt').textContent='Loading fundamentals…';
+ try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){showLock(j.msg);return}FD=j;FDT=Date.now();renderFund()}
+ catch(e){$('fSt').textContent='Cannot load fundamentals. Check your internet and try again.'}}
+async function priceCheck(){
+ const L=['EUR/USD','GBP/USD','USD/JPY','AUD/USD'],it=[];
+ for(let i=0;i<L.length;i++){$('fSt').textContent='Checking '+L[i]+' ('+(i+1)+'/4)…';
+  try{const d=await load(L[i],'H1');addCred();const c=d.c,b=c[Math.min(48,c.length-1)],cc=L[i].replace('/','');it.push({base:cc.slice(0,3),quote:cc.slice(3),chg:(c[0]-b)/b})}catch(e){$('fSt').textContent=e.message;break}
+  if(i<L.length-1)await sleep(8000)}
+ if(it.length>=3)LASTST={st:calcStrength(it),t:Date.now()};renderFund()}
+function renderFund(){
+ if(!FD)return;const reg=regime(FD.macro),m=FD.macro,col=v=>v>0?'var(--buy)':v<0?'var(--sell)':'var(--wait)';
+ $('fMacro').innerHTML=reg?`<div class="card"><div class="k">Fed and macro regime</div><div class="adv" style="font-size:30px;color:${col(reg.sc)}">${reg.label}</div>
+  <div class="note" style="margin:6px 0 8px">${reg.sc>=1.5?'Leans USD bullish':reg.sc<=-1.5?'Leans USD bearish':'No strong USD lean from the macro picture'}. Fed funds upper limit ${m.fedUpper}%. Headline CPI ${m.cpiYoY.toFixed(1)}% y/y, PPI ${m.ppiYoY.toFixed(1)}% y/y.</div>${reg.notes.map(n=>'<div class="pr"><span style="color:var(--text)">'+n+'</span></div>').join('')}</div>`
+  :`<div class="card"><div class="k">Fed and macro regime</div><div class="note">Macro data isn't connected yet, so only the news surprise and price strength are used. Add a free FRED API key to your Google script to enable the Fed and macro view.</div></div>`;
+ const age=LASTST?Math.round((Date.now()-LASTST.t)/6e4):null,usd=LASTST?LASTST.st.USD:null;
+ $('fCS').innerHTML=`<div class="card"><div class="k">Currency strength (price)</div>${LASTST?`<div class="pr" style="align-items:center"><span style="color:var(--text)">USD strength</span><span style="color:${col(usd)};font-weight:800">${Math.round((usd||0)*100)}</span></div><div class="note">Checked ${age<1?'just now':age+' min ago'}, from recent price moves. It is included in every signal below.</div>`:'<div class="note">Not checked yet. Run the price check (or a Scanner scan) so signals can use currency strength.</div>'}
+  <button class="btn ghost" onclick="priceCheck()">Check price strength (4 credits)</button></div>`;
+ const now=Date.now(),A=getAct(),ev=(FD.events||[]).filter(e=>{const t=new Date(e.date).getTime();return t>now-3*864e5&&t<now+8*864e5}).sort((a,b)=>new Date(a.date)-new Date(b.date));
+ $('fEvents').innerHTML=ev.length?ev.map(e=>{
+  const w=FW[e.k],d=new Date(e.date),past=d<new Date(),id=e.k+'|'+e.date.slice(0,10),man=A[id]!=null&&A[id]!=='',au=autoActual(e),a=man?num(A[id]):au,V=verdictFor(e,a,reg);
+  const when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'});
+  const sfx=w.unit==='%'?'%':'K',row=(l,v)=>`<div class="pr"><span>${l}</span><span>${v}</span></div>`;
+  let body=row('Forecast',e.forecast||'—')+row('Previous',e.previous||'—')+row('Actual',a!=null?a+sfx+(man?' (you)':' (auto)'):'—');
+  if(past)body+=`<input class="inp" style="margin:10px 0 0" inputmode="decimal" placeholder="Enter the actual number" value="${man?A[id]:''}" onchange="setAct('${id}',this.value)">`;
+  if(e.k==='FOMC')body+=`<label>Fed tone (your read of the statement)</label><select class="inp" onchange="setTone(this.value)"><option value="-1" ${getTone()<0?'selected':''}>Dovish</option><option value="0" ${getTone()===0?'selected':''}>Neutral</option><option value="1" ${getTone()>0?'selected':''}>Hawkish</option></select>`;
+  let sig='';
+  if(V){const ch=pairSignals(V.dir||1);
+   sig=`<div class="adv" style="font-size:24px;margin-top:12px;color:${col(V.dir)}">${V.dir>0?'USD BULLISH':V.dir<0?'USD BEARISH':'NO CLEAR USD BIAS'}</div><div class="note" style="margin:2px 0 8px">Conviction: ${V.conv}</div>
+   ${row('News surprise',(V.s>=0?'+':'')+V.s.toFixed(1))}${row('Fed and macro regime',reg?reg.label+' ('+(V.M>=0?'+':'')+(V.M*.4).toFixed(1)+')':'not connected')}${row('Price strength',LASTST?(V.cs>=0?'+':'')+(V.cs*.8).toFixed(1):'not checked')}
+   ${V.dir?'<div class="k" style="margin-top:10px">Pairs to look at (★ = best fit with price strength)</div>'+ch.map((c,i)=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym}${i<2&&c.edge>.2?' ★':''}</button>`).join('')+'<div class="note">Tap a pair to open its chart. Take entries, stop and targets from the Indicator zone plan, and let the first 15 minutes after the news settle.</div>':'<div class="note">The signals are mixed. Skip the news trade and let price choose a direction.</div>'}`}
+  else if(!past){const up=pairSignals(1).slice(0,4).map(c=>c.side+' '+c.sym).join(', '),dn=pairSignals(-1).slice(0,4).map(c=>c.side+' '+c.sym).join(', ');
+   sig=`<div class="note" style="margin-top:10px">${reg?'Macro lean: '+reg.label+'. ':''}Scenarios once it is released:<br>Better than forecast (USD bullish): ${up}<br>Worse than forecast (USD bearish): ${dn}<br>Stay out from 10 minutes before until about 15 minutes after the release.</div>`}
+  else sig='<div class="note" style="margin-top:10px">Waiting for the actual number. It fills in by itself when the data source updates, or enter it above for an instant signal.</div>';
+  return `<div class="card"><div style="display:flex;justify-content:space-between;align-items:center"><div style="font-size:16px;font-weight:800">${w.n}</div><div class="k">${past?'Released':'Upcoming'}</div></div><div class="note" style="margin:2px 0 8px">${when} (SAST)</div>${body}${sig}</div>`}).join('')
+  :'<div class="card"><div class="note">No NFP, CPI, PPI or FOMC events in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>';
+ $('fSt').innerHTML='Updated '+new Date(FDT).toLocaleTimeString()+' · <a href="#" style="color:var(--accent)" onclick="loadFund(true);return false">Refresh</a>'}
+$('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();save();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
