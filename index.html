@@ -140,7 +140,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div style="text-align:right"><div class="k">Advice</div><div class="adv" id="adv">WAIT</div></div></div></div>
 <div class="card"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
 <datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>SPX</option><option>NDX</option><option>DJI</option></datalist>
-<div class="tfs" id="tfs"></div><div style="position:relative"><canvas id="cv"></canvas><button class="chip" id="cvLatest" style="display:none;position:absolute;top:8px;left:8px;margin:0">Latest ›</button></div>
+<div class="tfs" id="tfs"></div><div style="position:relative"><canvas id="cv"></canvas><button class="chip" id="cvLatest" style="display:none;position:absolute;top:8px;left:8px;margin:0">Latest ›</button><div style="position:absolute;top:8px;right:60px;display:flex;gap:6px"><button class="chip" id="zOut" style="margin:0;padding:6px 14px" aria-label="Zoom out">−</button><button class="chip" id="zIn" style="margin:0;padding:6px 14px" aria-label="Zoom in">+</button></div></div>
 <div class="legend"><span style="--c:var(--buy)">Buy / support</span><span style="--c:var(--sell)">Sell / resistance</span></div>
 <div class="grid"><div class="g s"><div class="k">Nearest support</div><div id="ns">—</div></div><div class="g r"><div class="k">Nearest resistance</div><div id="nr">—</div></div>
 <div class="g"><div class="k">Zones found</div><div id="zc">—</div></div><div class="g"><div class="k">Last signal</div><div id="ls">—</div></div></div>
@@ -165,6 +165,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <section class="page" id="p-set"><div class="card">
 <div id="gBox"><input type="hidden" id="src" value="twelve">
 <label>Your Twelve Data API key (free at twelvedata.com)</label><input class="inp" id="key" type="password" placeholder="Paste your key"></div>
+<label>Chart time zone</label><select class="inp" id="tz"><option value="Africa/Johannesburg">South Africa time (UTC+2)</option><option value="Etc/GMT-3">UTC+3 (many brokers in summer)</option><option value="UTC">UTC</option></select>
 <label>Refresh</label><select class="inp" id="iv"><option value="60">Every 1 min</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option></select>
 <label>Webhook URL (optional)</label><input class="inp" id="hook" placeholder="https://…">
 <button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button><button class="btn red" id="logout">Log out</button>
@@ -184,7 +185,7 @@ const $=id=>document.getElementById(id);
 const TH={cobalt:['#3b82f6','59,130,246'],structure:['#ff6b1a','255,107,26'],cyan:['#22d3ee','34,211,238'],violet:['#a855f7','168,85,247'],emerald:['#10b981','16,185,129'],crimson:['#f43f5e','244,63,94'],amber:['#f59e0b','245,158,11'],rose:['#fb7185','251,113,133'],lime:['#a3e635','163,230,53'],arctic:['#e2e8f0','226,232,240']};
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
 const TFB={M1:'1m',M5:'5m',M15:'15m',M30:'30m',H1:'1h',H4:'4h',D1:'1d'},TFT={M1:'1min',M5:'5min',M15:'15min',M30:'30min',H1:'1h',H4:'4h',D1:'1day'},SN={4:'Proven',3:'Verified',2:'Untested',1:'Turncoat'};
-let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'cobalt',wl:'EUR/USD,GBP/USD,USD/JPY,AUD/USD,USD/CAD,NZD/USD,USD/CHF,EUR/JPY',stf:'H1'};
+let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'cobalt',wl:'EUR/USD,GBP/USD,USD/JPY,AUD/USD,USD/CAD,NZD/USD,USD/CHF,EUR/JPY',stf:'H1',tz:'Africa/Johannesburg'};
 try{Object.assign(S,JSON.parse(localStorage.getItem('sp_cfg')||'{}'))}catch(e){}
 let sigs=[];try{sigs=JSON.parse(localStorage.getItem('sp_sig')||'[]')}catch(e){}
 let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
@@ -297,10 +298,10 @@ function renderPlans(px){
 // chart
 function fit(){const cv=$('cv'),r=devicePixelRatio||1;cv.width=cv.clientWidth*r;cv.height=cv.clientHeight*r}
 let VN=70,VO=0;
-const fT=new Intl.DateTimeFormat('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'}),fD=new Intl.DateTimeFormat('en-ZA',{day:'numeric',month:'short',timeZone:'Africa/Johannesburg'});
+let fT,fD;function mkFmt(){const z=S.tz||'Africa/Johannesburg';fT=new Intl.DateTimeFormat('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:z});fD=new Intl.DateTimeFormat('en-ZA',{day:'numeric',month:'short',timeZone:z})}mkFmt();
 function draw(){
  const cv=$('cv');fit();const W=cv.width,H=cv.height,g=cv.getContext('2d'),r=devicePixelRatio||1;g.clearRect(0,0,W,H);if(!D)return;
- const{h,l,c,o}=D,n=D.n,N=VN,i0=Math.floor(VO),i1=Math.min(n-1,i0+N+1),gut=52*r,bw=(W-gut)/N,X=i=>(W-gut)-(i-VO+.5)*bw;
+ const{h,l,c,o}=D,n=D.n,N=VN,i0=Math.floor(VO),i1=Math.min(n-1,i0+Math.ceil(N)+1),gut=52*r,bw=(W-gut)/N,X=i=>(W-gut)-(i-VO+.5)*bw;
  $('cvLatest').style.display=VO>.5?'block':'none';
  let mx=-1e18,mn=1e18;for(let i=i0;i<=i1;i++){mx=Math.max(mx,h[i]);mn=Math.min(mn,l[i])}
  const pad=(mx-mn)*.14;mx+=pad;mn-=pad;const bm=D.t?32*r:0,Y=v=>(H-bm)-(v-mn)/(mx-mn)*(H-bm);
@@ -332,7 +333,7 @@ function draw(){
   else if(pts.size===2){const d=dist();if(ld){VN=VN*ld/d;ld=d;view();draw()}}});
  const up=e=>{pts.delete(e.pointerId);if(pts.size===1){const q=[...pts.values()][0];sx=q.x;sv=VO}ld=0};
  ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,up));
- $('cvLatest').onclick=()=>{VO=0;draw()}})();
+ $('cvLatest').onclick=()=>{VO=0;draw()};$('zIn').onclick=()=>{VN*=.75;view();draw()};$('zOut').onclick=()=>{VN*=1.33;view();draw()}})();
 // alerts
 function beep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(),t=a.currentTime,m=a.createGain();m.gain.value=.9;m.connect(a.destination);
  [[523.25,0],[659.25,.17],[783.99,.34]].forEach(([f,d])=>{const o=a.createOscillator(),e=a.createGain();o.type='sine';o.frequency.value=f;o.connect(e);e.connect(m);
@@ -353,7 +354,7 @@ async function tick(){
   $('sym').textContent=`${S.sym} · ${S.tf}`;$('px').textContent=px.toFixed(D.dec);
   const sup=R.zones.filter(z=>!z.res&&z.lo<px).sort((a,b)=>b.hi-a.hi)[0],res=R.zones.filter(z=>z.res&&z.hi>px).sort((a,b)=>a.lo-b.lo)[0],f=z=>z?`${z.lo.toFixed(D.dec)}–${z.hi.toFixed(D.dec)} · ${SN[z.s]}`:'None';
   $('ns').textContent=f(sup);$('nr').textContent=f(res);$('zc').textContent=R.zones.length;$('ls').textContent=sigs[0]?`${sigs[0].type} ${sigs[0].price}`:'None yet';
-  $('st').textContent=`${D.n} candles · updated ${new Date().toLocaleTimeString()}`;draw()
+  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;draw()
  }catch(e){$('st').textContent='Error: '+e.message}}
 function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
  $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
@@ -509,8 +510,8 @@ function renderFund(){
  $('fSt').innerHTML='Updated '+new Date(FDT).toLocaleTimeString()+' · <a href="#" style="color:var(--accent)" onclick="loadFund(true);return false">Refresh</a>'}
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
 // settings
-S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;
-$('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();save();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
+S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
+$('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
 $('logout').onclick=()=>{if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{window.Notification?Notification.requestPermission().then(p=>$('notif').textContent=p==='granted'?'Alerts on':'Alerts blocked'):$('notif').textContent='Not supported'};
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
