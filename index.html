@@ -78,6 +78,13 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .chip{display:inline-block;margin:4px 6px 0 0;padding:8px 12px;border-radius:20px;font-size:12px;font-weight:800;border:1px solid var(--bd);background:rgba(255,255,255,.05);color:var(--text)}
 .chip.BUY{border-color:rgba(0,255,85,.45);color:var(--buy)}.chip.SELL{border-color:rgba(255,59,48,.45);color:var(--sell)}
 #thPanel .btn{margin-top:10px}
+#news{margin-top:6px}
+.nrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06)}.nrow:last-of-type{border:0}
+.nt{font-weight:900;font-size:17px;min-width:54px}.nm{flex:1;min-width:0}.nm b{display:block;font-size:14px}.nm span{font-size:11.5px;color:var(--t2)}
+.imp{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
+.pillx.hot{background:rgba(255,59,48,.2);color:var(--sell)}.pillx.dn{opacity:.55}
+.nbar{margin:10px 16px 0;padding:12px 14px;border-radius:16px;font-size:13px;line-height:1.4;font-weight:600;border:1px solid rgba(255,204,0,.45);background:rgba(255,204,0,.1);color:#ffe28a}
+.nbar.danger{border-color:rgba(255,59,48,.55);background:rgba(255,59,48,.12);color:#ffb3ad}
 #menuBtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--bd);background:rgba(255,255,255,.06);color:var(--text);display:flex;align-items:center;justify-content:center}
 #menuBtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
 .fh{display:flex;align-items:center;gap:12px;margin:0 0 16px}
@@ -126,14 +133,14 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button class="btn" id="wgo" style="max-width:300px">Let’s go</button></div>
 
 <header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div></header>
+<div id="newsBar" style="display:none"></div>
 
 <section class="page on" id="p-home"><div class="hero">
 <svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <div class="wm">Signals<span>Pro</span></div><div class="sub" id="who">Premium zone indicator</div>
 <div class="chips"><b>Live zones</b><b>Trade plans</b><b>Market scanner</b></div>
 <button class="go" id="go" aria-label="Start or stop"><i></i></button>
-<div class="hint" id="hint">Tap to start live signals</div>
-</div></section>
+<div class="hint" id="hint">Tap to start live signals</div></div><div id="news"></div></section>
 
 <section class="page" id="p-ind">
 <div class="card"><div class="dash"><div><div class="k" id="sym">Symbol</div><div class="px" id="px">—</div></div>
@@ -210,7 +217,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();if(!S.key)page('set')}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();if(!S.key)page('set')}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -409,7 +416,7 @@ function finalize(out){
  renderScan(out)}
 function addCred(){const t=new Date().toDateString();let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}if(c.d!==t)c={d:t,n:0};c.n++;try{localStorage.setItem('sp_cr',JSON.stringify(c))}catch(e){}showCred()}
 function showCred(){let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}$('scCr').textContent=`Scanner credits used today: ${c.d===new Date().toDateString()?c.n:0} (the daily limit of 800 is shared with the Indicator page)`}
-function notify(msg){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
+function notify(msg,ttl){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(ttl||'SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
 async function scan(auto){
  if(scanning)return;
  const nd=new Date(),dy=nd.getUTCDay(),hr=nd.getUTCHours();
@@ -508,7 +515,7 @@ function verdictFor(e,a,reg){
 async function loadFund(force){
  if(!force&&FD&&Date.now()-FDT<600000){renderFund();return}
  $('fSt').textContent='Loading fundamentals…';
- try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){showLock(j.msg);return}FD=j;FDT=Date.now();renderFund()}
+ try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){showLock(j.msg);return}FD=j;FDT=Date.now();renderFund();renderNews()}
  catch(e){$('fSt').textContent='Cannot load fundamentals. Check your internet and try again.'}}
 async function priceCheck(){
  const L=['EUR/USD','GBP/USD','USD/JPY','AUD/USD'],it=[],px={};
@@ -555,6 +562,27 @@ function renderFund(){
   return `<div class="fcard ${V&&V.dir>0?'bull':V&&V.dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${w.n}</div><div class="note" style="margin:3px 0 0">${when} · SAST</div></div><span class="pillx ${past?'':'up'}">${past?'Released':'Upcoming'}</span></div>${body}${sig}</div>`}).join('')
   :'<div class="fcard"><div class="note">No NFP, CPI, PPI or FOMC events in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>';
  $('fSt').innerHTML='Updated '+new Date(FDT).toLocaleTimeString()+' · <a href="#" style="color:var(--accent)" onclick="loadFund(true);return false">Refresh</a>'}
+// today's news: card on Home, warning bar everywhere, and a chime 15 minutes before
+const sastKey=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Johannesburg'}).format(d),sastHM=d=>d.toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
+function inTxt(ms){const m=Math.max(0,Math.round(Math.abs(ms)/6e4)),h=Math.floor(m/60),t=h?h+'h '+String(m%60).padStart(2,'0')+'m':m+'m';return ms>0?'in '+t:t+' ago'}
+const getNA=()=>{try{return JSON.parse(localStorage.getItem('sp_na')||'{}')}catch(e){return{}}};
+function renderNews(){
+ const card=$('news'),bar=$('newsBar');if(!card)return;
+ if(!FD||!FD.events){card.innerHTML='';bar.style.display='none';return}
+ const now=Date.now(),evs=FD.events.map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
+ const dayTxt=new Date().toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',timeZone:'Africa/Johannesburg'});
+ const row=e=>{const d=e.t-now,soon=d>0&&d<36e5,done=d<=0&&d<-36e5*3,tag=d>0?inTxt(d):d>-36e5*3?'Released '+inTxt(d):'Released',w=FW[e.k];
+  return `<div class="nrow"><div class="nt">${sastHM(new Date(e.t))}</div><div class="nm"><b><i class="imp" style="background:${e.impact==='High'?'var(--sell)':'var(--wait)'}"></i>${w.n}</b><span>Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}</span></div><span class="pillx ${soon?'hot':d>0?'up':'dn'}">${tag}</span></div>`};
+ card.innerHTML=`<div class="fcard" style="text-align:left"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="fk">Today's news · SAST</div><div style="font-size:16px;font-weight:800;margin-top:3px">${dayTxt}</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="page('fund');return false">All events ›</a></div>
+  <div style="margin-top:8px">${td.length?td.map(row).join(''):'<div class="note" style="margin:10px 0 4px">'+(FD.evErr?'The calendar feed is unavailable right now.':'No NFP, CPI, PPI or FOMC releases today.')+'</div>'}</div>
+  ${!td.length&&next?'<div class="note">Next: <b style="color:var(--text)">'+FW[next.k].n+'</b> · '+new Date(next.t).toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' ('+inTxt(next.t-now)+')</div>':''}
+  <div class="note" style="margin-top:8px"><i class="imp" style="background:var(--sell)"></i>High impact <i class="imp" style="background:var(--wait);margin-left:10px"></i>Medium impact</div></div>`;
+ const hot=evs.filter(e=>e.t-now<=36e5&&e.t-now>=-9e5).sort((a,b)=>Math.abs(a.t-now)-Math.abs(b.t-now))[0];
+ if(hot){const d=hot.t-now,nm=FW[hot.k].n;bar.className='nbar'+(d>0&&d<6e5?' danger':'');bar.style.display='block';
+  bar.textContent=d>0?`High-impact news: ${nm} ${inTxt(d)} (${sastHM(new Date(hot.t))} SAST). Stay out of new trades until about 15 minutes after it.`:`${nm} was released ${inTxt(d)}. Let the first 15 minutes settle before trading.`}
+ else bar.style.display='none';
+ const NA=getNA();evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date;if(d>0&&d<=9e5&&!NA[id]){NA[id]=1;try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}notify(`${FW[e.k].n} in ${Math.max(1,Math.round(d/6e4))} minutes. Stay out of new trades.`,'High-impact news')}})}
+setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
