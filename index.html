@@ -208,7 +208,7 @@ function speakWelcome(){
 function showWelcome(){if(welcomeShown)return;welcomeShown=true;$('welcome').classList.add('on');speakWelcome()}
 $('wgo').onclick=()=>{speakWelcome();$('welcome').classList.remove('on')};
 // access (email + one device, checked by your Google Apps Script)
-const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
+const API=https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec'',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
@@ -443,7 +443,7 @@ $('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').t
 let FD=null,FDT=0,LASTST=null,RX=null,SHOWALL=false;
 const FW={NFP:{n:'Non-Farm Payrolls',u:75,w:1,unit:'K',alert:1},ADP:{n:'ADP Employment',u:50,w:.4,unit:'K'},CLAIMS:{n:'Jobless Claims',u:10,w:.5,unit:'K',inv:1},UNRATE:{n:'Unemployment Rate',u:.1,w:.8,unit:'%',inv:1},AHE:{n:'Avg Hourly Earnings m/m',u:.1,w:.6,unit:'%'},JOLTS:{n:'JOLTS Job Openings',u:.25,w:.4,unit:'M',off:2},
  CPI:{n:'CPI m/m',u:.1,w:1,unit:'%',alert:1},CORE_CPI:{n:'Core CPI m/m',u:.1,w:1.2,unit:'%',alert:1},PPI:{n:'PPI m/m',u:.2,w:.5,unit:'%',alert:1},CORE_PPI:{n:'Core PPI m/m',u:.2,w:.6,unit:'%',alert:1},CORE_PCE:{n:'Core PCE m/m',u:.1,w:1,unit:'%'},PCE:{n:'PCE m/m',u:.1,w:.6,unit:'%'},
- RS:{n:'Retail Sales m/m',u:.3,w:.6,unit:'%'},CORE_RS:{n:'Core Retail Sales m/m',u:.3,w:.6,unit:'%'},GDP:{n:'GDP q/q',u:.3,w:.7,unit:'%'},ISM_MFG:{n:'ISM Manufacturing PMI',u:1,w:.6,unit:''},ISM_SVC:{n:'ISM Services PMI',u:1,w:.6,unit:''},FOMC:{n:'FOMC rate decision',u:.25,w:1.5,unit:'%',alert:1}};
+ RS:{n:'Retail Sales m/m',u:.3,w:.6,unit:'%'},CORE_RS:{n:'Core Retail Sales m/m',u:.3,w:.6,unit:'%'},GDP:{n:'GDP q/q',u:.3,w:.7,unit:'%'},ISM_MFG:{n:'ISM Manufacturing PMI',u:1,w:.6,unit:''},ISM_SVC:{n:'ISM Services PMI',u:1,w:.6,unit:''},FOMC:{n:'FOMC rate decision',u:.25,w:1.5,unit:'%',alert:1},X_RATE:{n:'Rate decision',u:.25,w:1.5,unit:'%',alert:1,x:1},X_CPI:{n:'CPI',u:.1,w:1,unit:'%',alert:1,x:1},X_EMP:{n:'Employment change',u:15,w:.8,unit:'K',x:1},X_UNR:{n:'Unemployment rate',u:.1,w:.8,unit:'%',inv:1,x:1},X_GDP:{n:'GDP',u:.2,w:.8,unit:'%',x:1},X_RS:{n:'Retail sales',u:.3,w:.6,unit:'%',x:1}};
 const GROUP={NFP:'L',ADP:'L',CLAIMS:'L',UNRATE:'L',AHE:'L',JOLTS:'L',CPI:'I',CORE_CPI:'I',PPI:'I',CORE_PPI:'I',CORE_PCE:'I',PCE:'I',RS:'G',CORE_RS:'G',GDP:'G',ISM_MFG:'G',ISM_SVC:'G'};
 const PAIRS=[['EUR/USD',-1],['GBP/USD',-1],['AUD/USD',-1],['NZD/USD',-1],['USD/JPY',1],['USD/CAD',1],['USD/CHF',1],['XAU/USD',-1]];
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -512,13 +512,14 @@ function pairSignals(v){
   const safe=(sym==='USD/JPY'||sym==='USD/CHF')?-sg:sym==='XAU/USD'?sg:0,risky=(sym==='AUD/USD'||sym==='NZD/USD')?sg:0;
   edge+=mood<0?.4*safe:mood>0?.3*risky:0;return{sym,side,edge}}).sort((a,b)=>b.edge-a.edge)}
 // 3) what price did after the release (5, 15 and 60 minutes, from 5-minute candles)
-function reactionFor(e){
+function reactionFor(e,list){
  if(!RX)return null;const evt=Date.parse(e.date);if(!evt||evt>Date.now())return null;const t0=Math.floor(evt/3e5)*3e5,legs=[0,2,11],sum=[0,0,0],cnt=[0,0,0];
- for(const[sym,dir]of[['EUR/USD',-1],['GBP/USD',-1],['AUD/USD',-1],['USD/JPY',1]]){const q=RX.px[sym];if(!q)continue;const i=q.t.indexOf(t0);if(i<0)continue;const op=q.o[i];
+ for(const[sym,dir]of(list||[['EUR/USD',-1],['GBP/USD',-1],['AUD/USD',-1],['USD/JPY',1]])){const q=RX.px[sym];if(!q)continue;const i=q.t.indexOf(t0);if(i<0)continue;const op=q.o[i];
   legs.forEach((k,j)=>{const ix=i-k;if(ix<0)return;sum[j]+=(q.c[ix]/op-1)*100*dir;cnt[j]++})}
  if(!cnt[0])return null;const u=sum.map((x,j)=>cnt[j]?x/cnt[j]:null),w=[.3,.5,.2];let sc=0,ws=0;u.forEach((x,j)=>{if(x!=null){sc+=w[j]*x;ws+=w[j]}});
  return{u5:u[0],u15:u[1],u60:u[2],score:clamp(sc/ws/.2,-1,1),fade:u[1]!=null&&u[2]!=null&&Math.sign(u[1])!==Math.sign(u[2])&&Math.abs(u[2])>.03}}
 function verdictFor(e,a,reg){
+ if(FW[e.k]&&FW[e.k].x)return verdictCcy(e,a);
  const w=FW[e.k],f=num(e.forecast),p=num(e.previous);if(a==null||f==null)return null;let s;
  if(e.k==='FOMC'){if(p==null)return null;const P=pricing(FD&&FD.macro);s=clamp(((a-p)-(f-p))/w.u,-2,2)*w.w+getTone()+(P?.4*clamp((a-p)/.25-P.Pu,-2,2):0)}else s=clamp((w.inv?f-a:a-f)/w.u,-2,2)*w.w;
  const M=reg?reg.sc:0,lean=preLean(e).v,rx=reactionFor(e),pr=rx?rx.score:(LASTST?(LASTST.st.USD||0):0),total=s+.4*M+.6*lean+.8*pr;
@@ -537,6 +538,31 @@ async function priceCheck(){
  if(it.length>=3){LASTST={st:calcStrength(it),t:Date.now()};RX={t:Date.now(),px}}renderFund()}
 const GAUGE=(sc,l,rt)=>`<div class="gauge"><i style="left:${(sc+3)/6*100}%"></i></div><div class="gl"><span>${l}</span><span>${rt}</span></div>`;
 const colr=v=>v>0?'var(--buy)':v<0?'var(--sell)':'var(--wait)',pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
+const CCY_PAIR={EUR:['EUR/USD',1],GBP:['GBP/USD',1],AUD:['AUD/USD',1],NZD:['NZD/USD',1],JPY:['USD/JPY',-1],CAD:['USD/CAD',-1],CHF:['USD/CHF',-1]};
+const evName=e=>e.c&&e.c!=='USD'?e.c+' · '+e.title:(e.k==='GDP'&&e.title?e.title:FW[e.k].n);
+function reactionCcy(e){const pp=CCY_PAIR[e.c];return pp?reactionFor(e,[[pp[0],pp[1]]]):null}
+function verdictCcy(e,a){
+ const w=FW[e.k],f=num(e.forecast);if(a==null||f==null)return null;
+ const u=e.k==='X_EMP'&&!/K/i.test(e.forecast||'')?.2:w.u,s=clamp((a-f)/u,-2,2)*w.w*(w.inv?-1:1);
+ const rx=reactionCcy(e),st=LASTST&&LASTST.st[e.c]!=null?LASTST.st[e.c]:0,pr=rx?rx.score:st,total=s+.8*pr;
+ const sg=[s,pr].map(x=>Math.abs(x)<.3?0:Math.sign(x)),dn=Math.sign(total),ag=sg.filter(x=>x===dn).length,op=sg.filter(x=>x===-dn).length;
+ return{s,pr,rx,total,hasPrice:!!rx||(LASTST&&LASTST.st[e.c]!=null),dir:total>=1?1:total<=-1?-1:0,conv:Math.abs(total)<1?'Low':ag>=2&&!op&&Math.abs(total)>=2?'High':ag>=1&&!op?'Medium':'Low'}}
+function ccyCard(e,A){
+ const w=FW[e.k],d=new Date(e.date),past=d<new Date(),id=e.k+'|'+e.c+'|'+e.date.slice(0,10),man=A[id]!=null&&A[id]!=='',a=man?num(A[id]):null,V=verdictCcy(e,a),pp=CCY_PAIR[e.c],rx=past?reactionCcy(e):null,col=colr;
+ const when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'});
+ const sfx=e.k==='X_EMP'&&!/K/i.test(e.forecast||'')?'%':w.unit,row=(l,v)=>`<div class="pr"><span>${l}</span><span>${v}</span></div>`;
+ const side=dir=>pp?(dir*pp[1]>0?'BUY':'SELL')+' '+pp[0]:'';
+ let body=`<div class="fgrid"><div><span class="fk">Forecast</span><b>${e.forecast||'—'}</b></div><div><span class="fk">Previous</span><b>${e.previous||'—'}</b></div><div><span class="fk">Actual${a!=null?' · you':''}</span><b style="color:var(--accent)">${a!=null?a+sfx:'—'}</b></div></div>`;
+ if(past)body+=`<input class="inp" style="margin:0" inputmode="decimal" placeholder="Enter the actual number" value="${man?A[id]:''}" onchange="setAct('${id}',this.value)">`;
+ if(rx)body+=`<div class="fk" style="margin-top:14px">${e.c} price reaction</div><div class="fgrid"><div><span class="fk">5 min</span><b style="color:${col(rx.u5)}">${pc(rx.u5)}</b></div><div><span class="fk">15 min</span><b style="color:${col(rx.u15)}">${pc(rx.u15)}</b></div><div><span class="fk">60 min</span><b style="color:${col(rx.u60)}">${pc(rx.u60)}</b></div></div>${rx.fade?'<div class="note" style="color:var(--wait)">The first move is fading. Be careful chasing it.</div>':''}`;
+ let sig='';
+ if(V){const nd=V.conv==='High'?3:V.conv==='Medium'?2:1;
+  sig=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 0"><span class="vd u${V.dir}">${V.dir>0?e.c+' BULLISH':V.dir<0?e.c+' BEARISH':'NO CLEAR BIAS'}</span><span class="dots">${V.conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
+  <div style="margin-top:12px">${row('News surprise','<b style="color:'+col(V.s)+'">'+(V.s>=0?'+':'')+V.s.toFixed(1)+'</b>')}${V.rx?row('Price reaction','<b style="color:'+col(V.pr)+'">'+(V.pr>=0?'+':'')+(V.pr*.8).toFixed(1)+'</b>'):row('Price strength',V.hasPrice?'<b style="color:'+col(V.pr)+'">'+(V.pr>=0?'+':'')+(V.pr*.8).toFixed(1)+'</b>':'not available for '+e.c)}</div>
+  ${V.dir&&pp?'<div class="fk" style="margin-top:14px">Pair to look at</div><div><button class="chip '+side(V.dir).split(' ')[0]+'" onclick="openSym(\''+pp[0]+'\')">'+side(V.dir)+'</button></div><div class="note">Tap the pair to open its chart. Take entries, stop and targets from the Indicator zone plan, and let the first 15 minutes after the news settle.</div>':'<div class="note">The signals are mixed. Skip the news trade and let price choose a direction.</div>'}`}
+ else if(!past)sig=`<div class="fgrid" style="grid-template-columns:1fr 1fr;margin-bottom:6px"><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--buy)">Beats forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">${e.c} bullish${w.inv?' (lower is better)':''}</b><br>${side(1)}</div></div><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--sell)">Misses forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">${e.c} bearish</b><br>${side(-1)}</div></div></div><div class="note">Stay out from 10 minutes before until about 15 minutes after the release.</div>`;
+ else sig='<div class="note" style="margin-top:8px">Waiting for the actual number. There is no automatic source for this release, so enter it above for an instant signal.</div>';
+ return `<div class="fcard ${V&&V.dir>0?'bull':V&&V.dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST</div></div><span class="pillx ${past?'':'up'}">${past?'Released':'Upcoming'}</span></div>${body}${sig}</div>`}
 function renderFund(){
  if(!FD)return;const reg=regime(FD.macro),m=FD.macro,col=colr,L=labour(m),I=inflation(m),P=pricing(m);
  $('fMacro').innerHTML=reg?`<div class="fcard ${reg.sc>=1.5?'bull':reg.sc<=-1.5?'bear':''}"><div class="fk">Fed &amp; macro regime</div>
@@ -554,6 +580,7 @@ function renderFund(){
   <button class="btn ghost" onclick="priceCheck()">Check price reaction &amp; strength (4 credits)</button></div>`;
  const now=Date.now(),A=getAct(),lo=SHOWALL?3:1.5,hi=SHOWALL?8:3,ev=(FD.events||[]).filter(e=>FW[e.k]).filter(e=>{const t=new Date(e.date).getTime();return t>now-lo*864e5&&t<now+hi*864e5}).sort((a,b)=>new Date(a.date)-new Date(b.date));
  $('fEvents').innerHTML=ev.length?ev.map(e=>{
+  if(FW[e.k].x)return ccyCard(e,A);
   const w=FW[e.k],d=new Date(e.date),past=d<new Date(),id=e.k+'|'+e.date.slice(0,10),man=A[id]!=null&&A[id]!=='',au=autoActual(e),a=man?num(A[id]):au,V=verdictFor(e,a,reg),rx=past?reactionFor(e):null,pl=preLean(e);
   const when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'});
   const sfx=w.unit,row=(l,v)=>`<div class="pr"><span>${l}</span><span>${v}</span></div>`;
@@ -585,16 +612,16 @@ function renderNews(){
  const now=Date.now(),evs=FD.events.filter(e=>FW[e.k]).map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
  const dayTxt=new Date().toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',timeZone:'Africa/Johannesburg'});
  const row=e=>{const d=e.t-now,soon=d>0&&d<36e5,done=d<=0&&d<-36e5*3,tag=d>0?inTxt(d):d>-36e5*3?'Released '+inTxt(d):'Released',w=FW[e.k];
-  return `<div class="nrow"><div class="nt">${sastHM(new Date(e.t))}</div><div class="nm"><b><i class="imp" style="background:${e.impact==='High'?'var(--sell)':'var(--wait)'}"></i>${e.k==='GDP'&&e.title?e.title:w.n}</b><span>Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}</span></div><span class="pillx ${soon?'hot':d>0?'up':'dn'}">${tag}</span></div>`};
+  return `<div class="nrow"><div class="nt">${sastHM(new Date(e.t))}</div><div class="nm"><b><i class="imp" style="background:${e.impact==='High'?'var(--sell)':'var(--wait)'}"></i>${evName(e)}</b><span>Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}</span></div><span class="pillx ${soon?'hot':d>0?'up':'dn'}">${tag}</span></div>`};
  card.innerHTML=`<div class="fcard" style="text-align:left"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="fk">Today's news · SAST</div><div style="font-size:16px;font-weight:800;margin-top:3px">${dayTxt}</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="page('fund');return false">All events ›</a></div>
   <div style="margin-top:8px">${td.length?td.map(row).join(''):'<div class="note" style="margin:10px 0 4px">'+(FD.evErr?'The calendar feed is unavailable right now.':'No tracked US releases today.')+'</div>'}</div>
-  ${!td.length&&next?'<div class="note">Next: <b style="color:var(--text)">'+FW[next.k].n+'</b> · '+new Date(next.t).toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' ('+inTxt(next.t-now)+')</div>':''}
+  ${!td.length&&next?'<div class="note">Next: <b style="color:var(--text)">'+evName(next)+'</b> · '+new Date(next.t).toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' ('+inTxt(next.t-now)+')</div>':''}
   <div class="note" style="margin-top:8px"><i class="imp" style="background:var(--sell)"></i>High impact <i class="imp" style="background:var(--wait);margin-left:10px"></i>Medium impact</div></div>`;
  const hot=evs.filter(e=>(e.impact==='High'||FW[e.k].alert)&&e.t-now<=36e5&&e.t-now>=-9e5).sort((a,b)=>Math.abs(a.t-now)-Math.abs(b.t-now))[0];
- if(hot){const d=hot.t-now,nm=FW[hot.k].n;bar.className='nbar'+(d>0&&d<6e5?' danger':'');bar.style.display='block';
+ if(hot){const d=hot.t-now,nm=evName(hot);bar.className='nbar'+(d>0&&d<6e5?' danger':'');bar.style.display='block';
   bar.textContent=d>0?`High-impact news: ${nm} ${inTxt(d)} (${sastHM(new Date(hot.t))} SAST). Stay out of new trades until about 15 minutes after it.`:`${nm} was released ${inTxt(d)}. Let the first 15 minutes settle before trading.`}
  else bar.style.display='none';
- const NA=getNA();evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date;if(d>0&&d<=9e5&&!NA[id]&&(e.impact==='High'||FW[e.k].alert)){NA[id]=1;try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}notify(`${FW[e.k].n} in ${Math.max(1,Math.round(d/6e4))} minutes. Stay out of new trades.`,'High-impact news')}})}
+ const NA=getNA();evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date;if(d>0&&d<=9e5&&!NA[id]&&(e.impact==='High'||FW[e.k].alert)){NA[id]=1;try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}notify(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes. Stay out of new trades.`,'High-impact news')}})}
 setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
 // settings
