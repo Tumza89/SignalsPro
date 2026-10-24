@@ -209,7 +209,7 @@ function speakWelcome(){
 function showWelcome(){if(welcomeShown)return;welcomeShown=true;$('welcome').classList.add('on');speakWelcome()}
 $('wgo').onclick=()=>{speakWelcome();$('welcome').classList.remove('on')};
 // access (email + one device, checked by your Google Apps Script)
-const API='PASTE_YOUR_APPS_SCRIPT_URL_HERE',GATED=API.startsWith('https');
+const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
