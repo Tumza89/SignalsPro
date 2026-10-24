@@ -1,16 +1,16 @@
-<!doctype html>
+<!dotml>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#070a12">
-  <meta name="description" content="SignalsPro brings market zones, trade plans, market scanning and macroeconomic context into one trading analysis workspace. Subscriber access required.">
+  <meta name="description" content="SignalsPro is a premium market-analysis workspace with market zones, trade planning, scanning and macroeconomic context. Web access available; pricing is R1,000 once-off.">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-title" content="SignalsPro">
   <link rel="manifest" href="./manifest.json">
   <link rel="icon" type="image/png" href="./icon-192.png">
   <link rel="apple-touch-icon" href="./icon-192.png">
-  <title>SignalsPro — Market Analysis, With More Clarity</title>
+  <title>SignalsPro — Premium Market Analysis Workspace</title>
   <style>
     :root{color-scheme:dark;--bg:#070a12;--panel:#0d1322;--panel2:#101a2d;--line:rgba(151,180,230,.16);--text:#f4f7ff;--muted:#a4b0c7;--blue:#3988ff;--cyan:#43d9f5;--green:#4df2ad;--glow:rgba(45,130,255,.28)}
     *{box-sizing:border-box}
@@ -71,6 +71,25 @@
     footer{border-top:1px solid rgba(151,180,230,.1);padding:26px 0 35px;color:#8391a9;font-size:12px}
     .footer-row{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
     .textlink{color:#b6c5df}
+    .price-section{padding-top:20px}
+    .pricing-wrap{max-width:760px;margin:auto}
+    .pricing-card{position:relative;overflow:hidden;border:1px solid rgba(72,174,255,.38);border-radius:26px;padding:clamp(24px,5vw,42px);background:radial-gradient(ellipse at 50% 0%,rgba(49,130,246,.18),transparent 55%),linear-gradient(145deg,rgba(17,29,51,.96),rgba(8,13,24,.98));box-shadow:0 24px 80px rgba(0,0,0,.3),0 0 50px rgba(31,112,246,.09)}
+    .price-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .price-label{display:inline-flex;align-items:center;gap:8px;color:#9bcaff;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;border:1px solid rgba(68,151,255,.25);background:rgba(35,108,220,.1);border-radius:30px;padding:8px 12px}
+    .once{font-size:11px;color:var(--green);border:1px solid rgba(77,242,173,.22);background:rgba(77,242,173,.07);padding:7px 10px;border-radius:20px;font-weight:800}
+    .price{font-size:clamp(42px,8vw,64px);font-weight:900;letter-spacing:-2.5px;line-height:1.1;margin:24px 0 8px}
+    .price small{font-size:14px;font-weight:600;letter-spacing:0;color:var(--muted)}
+    .price-desc{color:var(--muted);font-size:14px;max-width:540px}
+    .included{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0}
+    .included span{display:flex;align-items:flex-start;gap:9px;color:#dbe6f8;font-size:13px}
+    .check{color:var(--green);font-weight:900}
+    .payment-note{font-size:12px;color:#8999b4;margin-top:13px;text-align:center}
+    .pricing-card .btn{width:100%;margin-top:8px}
+    .launch-note{display:flex;align-items:center;gap:9px;margin-top:18px;color:#9baac2;font-size:12px}
+    .launch-note:before{content:"";width:7px;height:7px;flex:none;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+    .card,.access-card,.pricing-card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
+    .card:hover,.access-card:hover{transform:translateY(-3px);border-color:rgba(90,160,255,.32)}
+    @media(max-width:540px){.included{grid-template-columns:1fr}.price{letter-spacing:-1.5px}}
     @media(max-width:820px){.hero{grid-template-columns:1fr;gap:35px;padding:58px 0 45px}.hero-copy{max-width:690px}.chart-shell{max-width:600px;width:100%;margin:auto}.cards{grid-template-columns:1fr 1fr}.access{grid-template-columns:1fr}.nav{gap:12px}.nav .hide-mobile{display:none}}
     @media(max-width:540px){.wrap{width:min(100% - 30px,1120px)}header{height:66px}.brand{font-size:18px}.brand-icon{width:34px;height:34px}.nav{gap:8px}.nav-cta{padding:8px 10px;font-size:12px}.hero{padding-top:45px}h1{letter-spacing:-2px;font-size:43px}.lead{font-size:15px}.actions{flex-direction:column}.btn{width:100%}.cards{grid-template-columns:1fr}.section{padding:48px 0}.chart-shell{padding:12px}.chart-stats{gap:6px}.stat{padding:8px}.stat b{font-size:12px}}
     @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
@@ -86,7 +105,8 @@
   <nav class="nav" aria-label="Main navigation">
     <a class="hide-mobile" href="#features">Features</a>
     <a class="hide-mobile" href="#how-it-works">How it works</a>
-    <a class="nav-cta" href="./app.html">Launch app ↗</a>
+    <a class="hide-mobile" href="#pricing">Pricing</a>
+    <a class="nav-cta" href="./app.html">Launch web app ↗</a>
   </nav>
 </header>
 
@@ -97,16 +117,13 @@
       <h1>See the setup.<br><span class="gradient">Plan your next move.</span></h1>
       <p class="lead">SignalsPro brings market zones, trade plans, market scanning and macroeconomic context into one focused trading analysis workspace — designed to help you study the market with more structure.</p>
       <div class="actions">
-        <a class="btn primary" href="./SignalsPro.apk" download>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          Download Android APK
-        </a>
-        <a class="btn secondary" href="./app.html">
+        <a class="btn primary" href="./app.html">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5l11 7-11 7V5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-          Launch iOS / Web App
+          Launch web app <span aria-hidden="true">↗</span>
         </a>
+        <a class="btn secondary" href="#pricing">Explore pricing ↓</a>
       </div>
-      <p class="fine">Subscriber email required to unlock the app. Android APK download will be available once the signed package is added.</p>
+      <p class="fine">Open SignalsPro in your browser. Subscriber verification remains inside the app.</p>
     </div>
 
     <div class="chart-shell" aria-label="Illustrative market chart graphic">
@@ -163,38 +180,49 @@
       </article>
       <article class="card">
         <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M10 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <h3>Mobile-friendly access</h3><p>Open the web app on your phone, or use the Android package when the signed APK is available.</p>
+        <h3>Browser-based access</h3><p>Launch SignalsPro directly from your browser on a compatible phone, tablet or computer.</p>
       </article>
     </div>
   </section>
 
-  <section class="section wrap" id="how-it-works">
+  <section class="section wrap" id="pricing">
     <div class="section-head">
-      <div class="eyebrow">Get started</div>
-      <h2>Choose how you want to access SignalsPro</h2>
-      <p>The public website introduces the platform. Subscriber verification remains inside the existing app.</p>
+      <div class="eyebrow">Simple, transparent pricing</div>
+      <h2>One payment. Your SignalsPro access.</h2>
+      <p>Premium market-analysis tools in one focused workspace. No monthly price is being advertised.</p>
     </div>
-    <div class="access">
-      <article class="access-card">
-        <h3>Android app</h3>
-        <p>Install SignalsPro on a compatible Android phone using the official signed APK.</p>
-        <div class="step"><span class="num">1</span><span>Download the APK from this website once it has been published.</span></div>
-        <div class="step"><span class="num">2</span><span>Follow Android's installation prompts. Only install packages from a source you trust.</span></div>
-        <div class="step"><span class="num">3</span><span>Open SignalsPro and enter your subscriber email to unlock access.</span></div>
-        <a class="btn primary" href="./SignalsPro.apk" download>Download Android APK ↓</a>
-        <p class="fine" style="margin:12px 0 0">The download link will work after `SignalsPro.apk` is added to this repository.</p>
-      </article>
-      <article class="access-card">
-        <h3>iPhone, iPad &amp; web</h3>
-        <p>Launch the existing web app in your browser. No iOS App Store app is implied by this button.</p>
-        <div class="step"><span class="num">1</span><span>Open the SignalsPro app using the button below.</span></div>
-        <div class="step"><span class="num">2</span><span>Enter the email associated with your subscription.</span></div>
-        <div class="step"><span class="num">3</span><span>After access is verified, use the available analysis tools.</span></div>
-        <a class="btn secondary" href="./app.html">Launch iOS / Web App ↗</a>
-        <p class="fine" style="margin:12px 0 0">Subscriber email is required to unlock the existing app.</p>
+    <div class="pricing-wrap">
+      <article class="pricing-card">
+        <div class="price-top"><span class="price-label">SignalsPro Premium</span><span class="once">ONCE-OFF PAYMENT</span></div>
+        <div class="price">R1,000 <small>/ once-off</small></div>
+        <p class="price-desc">A single once-off price for access to the SignalsPro analysis workspace. Payment processing is not active yet and will be added later.</p>
+        <div class="included">
+          <span><b class="check">✓</b> Market zones and chart analysis</span>
+          <span><b class="check">✓</b> Trade planning tools</span>
+          <span><b class="check">✓</b> Supported market scanner</span>
+          <span><b class="check">✓</b> Fundamental and news context</span>
+          <span><b class="check">✓</b> Mobile-friendly web access</span>
+          <span><b class="check">✓</b> Subscriber email verification</span>
+        </div>
+        <a class="btn primary" href="./app.html">Launch web app <span aria-hidden="true">↗</span></a>
+        <p class="payment-note">Payment gateway coming soon · No payment is collected on this website yet.</p>
+        <div class="launch-note">Already have subscriber access? Launch the app and sign in with your registered email.</div>
       </article>
     </div>
     <div class="disclaimer"><strong style="color:#c7d5ed">Risk notice:</strong> SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading. You are responsible for your own trading decisions.</div>
+  </section>
+
+  <section class="section wrap" id="how-it-works">
+    <div class="section-head">
+      <div class="eyebrow">Start in seconds</div>
+      <h2>Your workspace, one launch away</h2>
+      <p>Use SignalsPro in your browser. Subscriber verification remains inside the existing app.</p>
+    </div>
+    <div class="cards">
+      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Launch</h3><p>Open the web app from this page on your phone, tablet or computer.</p></article>
+      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Verify access</h3><p>Enter the email associated with your SignalsPro subscriber access.</p></article>
+      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 21h20" stroke="currentColor" stroke-width="1.5"/></svg></div><h3>Analyse</h3><p>Explore the available analysis tools and make your own informed decisions.</p></article>
+    </div>
   </section>
 </main>
 
@@ -202,7 +230,7 @@
   <div class="wrap footer-row">
     <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:30px;height:30px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<span>Pro</span></a>
     <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>
-    <a class="textlink" href="./app.html">Subscriber login ↗</a>
+    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><a class="textlink" href="#pricing">Pricing</a><a class="textlink" href="./app.html">Launch web app ↗</a></div>
   </div>
 </footer>
 <script>
@@ -216,4 +244,4 @@
   }
 </script>
 </body>
-</html>
+</html>ctype h
