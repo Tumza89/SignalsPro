@@ -166,8 +166,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <label>Entry timeframe</label><select class="inp" id="scTf"><option>M5</option><option>M15</option></select>
 <button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
 <div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit.</div><div class="note" id="scCr"></div></div>
-<div id="scStr"></div><div id="scList"></div>
-<div class="note" style="padding:0 6px 10px">Power of 3 scan. 1) Accumulation: the Asian range (00:00 to 06:00 UTC, 02:00 to 08:00 SAST). 2) Manipulation: after 06:00 UTC price sweeps one side of that range and closes back inside. 3) Distribution: price then breaks structure the other way, and the card shows the entry, stop beyond the sweep and targets at the other side of the range and the previous day's high or low. Run it during London and New York hours. Ranking uses reward-to-risk, range and sweep quality, optional higher-timeframe agreement and currency strength. Not backtested and not financial advice.</div></section>
+<div id="scStr"></div><div id="scList"></div></section>
 
 <section class="page" id="p-set"><div class="card">
 <div id="gBox"><input type="hidden" id="src" value="twelve">
@@ -659,7 +658,7 @@ function renderFund(){
  const age=LASTST?Math.round((Date.now()-LASTST.t)/6e4):null,usd=LASTST?(LASTST.st.USD||0):0;
  $('fCS').innerHTML=`<div class="fcard ${usd>.15?'bull':usd<-.15?'bear':''}"><div class="fk">Price check · strength &amp; reaction</div>${LASTST?`<div class="pr" style="align-items:center;border:0"><span style="width:44px;color:var(--text);font-weight:800">USD</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.08);position:relative;margin:0 12px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${usd>=0?'var(--buy)':'var(--sell)'};${usd>=0?'left:50%':'right:50%'};width:${Math.abs(usd)*50}%"></i></span><span style="font-weight:900;color:${col(usd)}">${Math.round(usd*100)}</span></div><div class="note">Checked ${age<1?'just now':age+' min ago'}. USD strength is the last 24 hours of price. The same check measures how price moved in the 5, 15 and 60 minutes after each release below.</div>`:'<div class="note" style="margin-top:8px">Not checked yet. Run the check so signals can use currency strength and the real price reaction to each release.</div>'}
   <button class="btn ghost" onclick="priceCheck()">Check price reaction &amp; strength (4 credits)</button></div>`;
- const now=Date.now(),A=getAct(),lo=SHOWALL?3:1.5,hi=SHOWALL?8:3,ev=(FD.events||[]).filter(e=>FW[e.k]).filter(e=>{const t=new Date(e.date).getTime();return t>now-lo*864e5&&t<now+hi*864e5}).sort((a,b)=>new Date(a.date)-new Date(b.date));
+ const now=Date.now(),A=getAct(),hi=SHOWALL?8:3,ev=(FD.events||[]).filter(e=>FW[e.k]).filter(e=>{const t=new Date(e.date).getTime();return t>now&&t<now+hi*864e5&&(e.impact==='High'||FW[e.k].alert)}).sort((a,b)=>new Date(a.date)-new Date(b.date));
  $('fEvents').innerHTML=ev.length?ev.map(e=>{
   if(FW[e.k].info)return infoCard(e);
   if(FW[e.k].x)return ccyCard(e,A);
@@ -681,7 +680,7 @@ function renderFund(){
    <div class="note">${w.inv?'For this release a lower number is better for the dollar. ':''}${reg?'Macro lean: '+reg.label+'.':''}</div>`}
   else sig='<div class="note" style="margin-top:8px">Waiting for the actual number. It fills in by itself when the data source updates, or enter it above for an instant signal.</div>';
   return `<div class="fcard ${V&&V.dir>0?'bull':V&&V.dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST</div></div><span class="pillx ${past?'':'up'}">${past?'Released':'Upcoming'}</span></div>${body}${sig}</div>`}).join('')
-  :'<div class="fcard"><div class="note">No tracked US releases in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>';
+  :'<div class="fcard"><div class="note">No upcoming high-impact US releases in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>';
  $('fEvents').innerHTML+='<button class="btn ghost" onclick="SHOWALL=!SHOWALL;renderFund()">'+(SHOWALL?'Show fewer events':'Show the full week')+'</button>';
  $('fSt').innerHTML='Updated '+new Date(FDT).toLocaleTimeString()+' · <a href="#" style="color:var(--accent)" onclick="loadFund(true);return false">Refresh</a>'}
 // today's news: card on Home, warning bar everywhere, and a chime 15 minutes before
