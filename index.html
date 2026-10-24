@@ -1,661 +1,219 @@
-<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<link rel="apple-touch-icon" href="icon-192.png"><link rel="icon" type="image/png" href="icon-192.png"><link rel="manifest" href="manifest.json">
-<meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="SignalsPro">
-<meta name="theme-color" content="#050508"><title>SignalsPro</title>
-<style>
-:root{--accent:#3b82f6;--glow:rgba(59,130,246,.35);--pg:rgba(59,130,246,.45);--text:#fff;--t2:#a0a0b0;--bd:rgba(255,255,255,.09);--buy:#00ff55;--sell:#ff3b30;--wait:#ffcc00}
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#050508;color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;min-height:100vh;padding-bottom:120px;overflow-x:hidden}
-body::before{content:'';position:fixed;inset:0;z-index:-2;background:radial-gradient(ellipse 80% 50% at 20% 40%,var(--pg),transparent 50%),radial-gradient(ellipse 60% 40% at 80% 60%,var(--glow),transparent 50%),linear-gradient(160deg,#050508,#0a0a12 40%,#080812);animation:bg 12s ease-in-out infinite alternate}
-@keyframes bg{to{opacity:.85;transform:scale(1.05)}}
-#lock{position:fixed;inset:0;background:linear-gradient(160deg,#050508,#0b0b14);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px;text-align:center}
-#lock.hidden{display:none}
-.logo{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;box-shadow:0 0 18px var(--glow)}
-.logo.big{width:96px;height:96px;border-radius:26px;font-size:28px;margin-bottom:22px;box-shadow:0 0 40px var(--glow);animation:fl 4s ease-in-out infinite}
-@keyframes fl{50%{transform:translateY(-12px)}}
-.inp{width:100%;background:rgba(255,255,255,.05);border:1px solid var(--bd);color:#fff;padding:14px 15px;border-radius:14px;font-size:15px;outline:none;margin-bottom:12px}
-.inp:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--glow)}
-.btn{width:100%;border:none;padding:15px;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;background:linear-gradient(90deg,var(--accent),#06b6d4);color:#000;box-shadow:0 8px 25px var(--glow);margin-top:6px}
-.btn.ghost{background:transparent;border:1px solid var(--bd);color:var(--text);box-shadow:none}
-.btn.red{background:transparent;border:1px solid rgba(255,59,48,.45);color:var(--sell);box-shadow:none}
-header{display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;position:sticky;top:0;z-index:50;background:rgba(7,7,12,.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(255,255,255,.06)}
-.brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800}
-.pill{font-size:11px;color:var(--wait);display:flex;align-items:center;gap:6px;background:rgba(255,204,0,.1);padding:5px 12px;border-radius:20px;border:1px solid rgba(255,204,0,.2)}
-.pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
-.pill.live{color:var(--buy);background:rgba(0,255,85,.1);border-color:rgba(0,255,85,.2)}
-.page{display:none;padding:16px}.page.on{display:block;animation:pi .45s cubic-bezier(.22,1,.36,1)}
-@keyframes pi{from{opacity:0;transform:translateY(16px)}}
-.card{background:rgba(255,255,255,.04);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 8px 32px rgba(0,0,0,.2)}
-.hero{text-align:center;padding:10px 0;display:flex;flex-direction:column;align-items:center}
-.avatar{width:70vw;max-width:280px;aspect-ratio:1;object-fit:cover;border-radius:28px;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 0 50px var(--pg),0 16px 32px rgba(0,0,0,.4);margin-bottom:18px;animation:fl 5s ease-in-out infinite}
-.name{font-size:24px;font-weight:800;background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.sub{font-size:12px;color:var(--t2);margin:4px 0 22px}
-.go{width:76px;height:76px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--accent),#06b6d4);display:flex;align-items:center;justify-content:center;animation:pl 2.4s infinite;margin-bottom:12px}
-@keyframes pl{0%{box-shadow:0 0 0 0 var(--glow)}70%{box-shadow:0 0 0 18px transparent}}
-.go i{width:0;height:0;border:13px solid transparent;border-left:22px solid #fff;border-right:0;margin-left:5px}
-.go.stop{background:linear-gradient(135deg,#ff3b30,#ff9500);animation:none}.go.stop i{width:20px;height:20px;background:#fff;border:0;border-radius:3px;margin:0}
-.hint{font-size:12px;color:var(--t2);margin-bottom:22px}
-.sw{display:flex;gap:10px;flex-wrap:wrap;justify-content:center}
-.sw b{width:34px;height:34px;border-radius:50%;border:2px solid rgba(255,255,255,.15);cursor:pointer}
-.sw b.on{border-color:#fff;box-shadow:0 0 0 3px var(--glow);transform:scale(1.12)}
-.lab{font-size:12px;color:var(--t2);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px;text-align:center}
-.dash{display:flex;justify-content:space-between;align-items:center}
-.k{font-size:11px;color:var(--t2);text-transform:uppercase;letter-spacing:.4px}
-.adv{font-size:38px;font-weight:900;letter-spacing:-.5px;color:var(--wait)}.adv.buy{color:var(--buy)}.adv.sell{color:var(--sell)}
-.px{font-size:20px;font-weight:800;margin-top:2px}
-.tfs{display:flex;gap:6px;margin-bottom:12px}
-.tfs button{flex:1;padding:9px 0;border-radius:12px;border:1px solid var(--bd);background:rgba(255,255,255,.03);color:var(--t2);font-size:12px;font-weight:700}
-.tfs button.on{background:rgba(255,255,255,.08);border-color:var(--accent);color:var(--accent);box-shadow:0 0 16px var(--glow)}
-canvas{width:100%;height:340px;display:block;border-radius:16px;background:rgba(0,0,0,.25);touch-action:pan-y;cursor:grab}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
-.g{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px}
-.g div:last-child{font-size:14px;font-weight:700;margin-top:4px}
-.g.s div:last-child{color:var(--buy)}.g.r div:last-child{color:var(--sell)}
-#st{font-size:12px;color:var(--t2);margin-top:10px;text-align:center}
-.legend{display:flex;gap:14px;justify-content:center;font-size:11px;color:var(--t2);margin-top:10px}
-.legend span::before{content:'';display:inline-block;width:11px;height:11px;border-radius:50%;margin-right:6px;vertical-align:-1px;border:2px solid var(--c);box-sizing:border-box}
-.sg{border-left:4px solid var(--buy);background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-left-width:4px;border-radius:16px;padding:13px;margin-bottom:10px}
-.sg.SELL{border-left-color:var(--sell)}.sg.BUY{border-left-color:var(--buy)}
-.sg .t{display:flex;justify-content:space-between;font-weight:800}.sg .t em{font-style:normal;font-size:12px;padding:3px 10px;border-radius:20px}
-.sg.BUY em{background:rgba(0,255,85,.15);color:var(--buy)}.sg.SELL em{background:rgba(255,59,48,.15);color:var(--sell)}
-.sg .m{font-size:12px;color:var(--t2);margin-top:6px}
-.empty{text-align:center;padding:40px 10px;color:var(--t2);font-size:14px}
-label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
-.note{font-size:12px;color:var(--t2);line-height:1.5;margin-top:10px}
-.pl{border-radius:16px;padding:14px;margin-bottom:10px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-left:4px solid var(--buy)}.pl.sell{border-left-color:var(--sell)}.pl.on{background:rgba(255,255,255,.07);box-shadow:0 0 22px var(--glow)}
-.pl h4{display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:8px}.pl h4 em{font-style:normal;font-size:10px;padding:3px 10px;border-radius:20px;background:rgba(255,255,255,.08);color:var(--t2)}.pl.on h4 em{background:var(--glow);color:#fff}
-.pr{display:flex;justify-content:space-between;padding:7px 0;font-size:14px;border-bottom:1px solid rgba(255,255,255,.05)}.pr:last-of-type{border:0}.pr span:first-child{color:var(--t2)}.pr .sl{color:var(--sell);font-weight:700}.pr .tp{color:var(--buy);font-weight:700}.pr .en{color:var(--accent);font-weight:700}
-.emb{width:150px;height:150px;margin-bottom:14px;filter:drop-shadow(0 0 26px var(--pg));animation:fl 5s ease-in-out infinite}
-.emb .a{stroke:var(--accent)}.emb .b{fill:var(--buy)}.emb .s{fill:var(--sell)}.emb .ring{transform-origin:60px 60px;animation:spin 16s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-.wm{font-size:36px;font-weight:900;letter-spacing:-1.2px}.wm span{background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:0 0 24px}.chips b{font-size:11px;font-weight:600;padding:6px 12px;border-radius:20px;border:1px solid var(--bd);background:rgba(255,255,255,.04);color:var(--t2)}
-.lab{font-size:12px;color:var(--t2);letter-spacing:1px;text-transform:uppercase}
-.copy{text-align:center;font-size:11px;color:var(--t2);opacity:.75;padding:4px 16px 10px}
-#welcome{position:fixed;inset:0;z-index:9000;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:30px;background:linear-gradient(160deg,#050508,#0b0b14)}#welcome.on{display:flex}
-.chip{display:inline-block;margin:4px 6px 0 0;padding:8px 12px;border-radius:20px;font-size:12px;font-weight:800;border:1px solid var(--bd);background:rgba(255,255,255,.05);color:var(--text)}
-.chip.BUY{border-color:rgba(0,255,85,.45);color:var(--buy)}.chip.SELL{border-color:rgba(255,59,48,.45);color:var(--sell)}
-#thPanel .btn{margin-top:10px}
-#news{margin-top:6px}
-.nrow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.06)}.nrow:last-of-type{border:0}
-.nt{font-weight:900;font-size:17px;min-width:54px}.nm{flex:1;min-width:0}.nm b{display:block;font-size:14px}.nm span{font-size:11.5px;color:var(--t2)}
-.imp{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px;vertical-align:1px}
-.pillx.hot{background:rgba(255,59,48,.2);color:var(--sell)}.pillx.dn{opacity:.55}
-.nbar{margin:10px 16px 0;padding:12px 14px;border-radius:16px;font-size:13px;line-height:1.4;font-weight:600;border:1px solid rgba(255,204,0,.45);background:rgba(255,204,0,.1);color:#ffe28a}
-.nbar.danger{border-color:rgba(255,59,48,.55);background:rgba(255,59,48,.12);color:#ffb3ad}
-#menuBtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--bd);background:rgba(255,255,255,.06);color:var(--text);display:flex;align-items:center;justify-content:center}
-#menuBtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
-.fh{display:flex;align-items:center;gap:12px;margin:0 0 16px}
-.fb{width:42px;height:42px;border-radius:50%;border:1px solid var(--bd);background:rgba(255,255,255,.06);color:var(--text);display:flex;align-items:center;justify-content:center;flex:none}
-.fb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
-.fi{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),#06b6d4);box-shadow:0 0 22px var(--glow);flex:none}
-.fi svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.ft{font-size:26px;font-weight:900;letter-spacing:-.6px;background:linear-gradient(90deg,#fff,var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.fcard{position:relative;overflow:hidden;background:rgba(255,255,255,.045);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.09);border-radius:22px;padding:18px 18px 18px 22px;margin-bottom:14px;box-shadow:0 10px 34px rgba(0,0,0,.28)}
-.fcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--accent),#06b6d4)}
-.fcard.bull::before{background:linear-gradient(var(--buy),#0a8a55)}.fcard.bear::before{background:linear-gradient(var(--sell),#a02020)}
-.fk{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);font-weight:700}
-.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}
-.fgrid>div{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:10px 6px;text-align:center}
-.fgrid b{display:block;font-size:17px;margin-top:4px}
-.gauge{position:relative;height:10px;border-radius:8px;margin:18px 8px 10px;background:linear-gradient(90deg,var(--sell),#4a4a64 50%,var(--buy))}
-.gauge i{position:absolute;top:50%;width:20px;height:20px;border-radius:50%;background:#fff;transform:translate(-50%,-50%);box-shadow:0 0 0 4px var(--glow),0 0 14px rgba(255,255,255,.8)}
-.gl{display:flex;justify-content:space-between;font-size:11px;color:var(--t2)}
-.vd{display:inline-block;padding:10px 18px;border-radius:18px;font-size:20px;font-weight:900;letter-spacing:.3px;border:1px solid}
-.vd.u1{color:var(--buy);border-color:rgba(0,255,85,.5);background:rgba(0,255,85,.08);box-shadow:0 0 22px rgba(0,255,85,.18)}
-.vd.u-1{color:var(--sell);border-color:rgba(255,59,48,.5);background:rgba(255,59,48,.08);box-shadow:0 0 22px rgba(255,59,48,.18)}
-.vd.u0{color:var(--wait);border-color:rgba(255,204,0,.45);background:rgba(255,204,0,.07)}
-.dots{font-size:12px;color:var(--t2);margin-left:12px;white-space:nowrap}.dots i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px;background:rgba(255,255,255,.15)}.dots i.on{background:var(--accent);box-shadow:0 0 8px var(--glow)}
-.pillx{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:20px;background:rgba(255,255,255,.07);color:var(--t2);white-space:nowrap}.pillx.up{background:var(--glow);color:#fff}
-.chip{padding:9px 14px;font-size:12.5px}
-#thBack{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:150}
-#thPanel{position:fixed;top:0;left:0;bottom:0;width:min(290px,80vw);padding:calc(76px + env(safe-area-inset-top)) 22px 22px;background:rgba(14,14,22,.93);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid var(--bd);transform:translateX(-100%);transition:transform .3s cubic-bezier(.22,1,.36,1);z-index:160}
-#thPanel .sw{justify-content:flex-start;gap:14px;margin:14px 0}
-body.th #thBack{opacity:1;pointer-events:auto}body.th #thPanel{transform:none}nav{position:fixed;bottom:calc(16px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:360px;background:rgba(18,18,28,.92);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(255,255,255,.1);border-radius:40px;display:flex;justify-content:space-around;padding:10px 8px 12px;z-index:100;box-shadow:0 8px 32px rgba(0,0,0,.45)}
-nav button{display:flex;flex-direction:column;align-items:center;gap:4px;color:rgba(255,255,255,.45);font-size:10px;background:none;border:none;min-width:52px}
-nav button span{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.25s}
-nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-shadow:0 0 20px var(--glow)}
-</style></head>
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#070a12">
+  <meta name="description" content="SignalsPro brings market zones, trade plans, market scanning and macroeconomic context into one trading analysis workspace. Subscriber access required.">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="SignalsPro">
+  <link rel="manifest" href="./manifest.json">
+  <link rel="icon" type="image/png" href="./icon-192.png">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  <title>SignalsPro — Market Analysis, With More Clarity</title>
+  <style>
+    :root{color-scheme:dark;--bg:#070a12;--panel:#0d1322;--panel2:#101a2d;--line:rgba(151,180,230,.16);--text:#f4f7ff;--muted:#a4b0c7;--blue:#3988ff;--cyan:#43d9f5;--green:#4df2ad;--glow:rgba(45,130,255,.28)}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;overflow-x:hidden}
+    a{color:inherit;text-decoration:none}
+    .bgfx{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 15% 15%,rgba(28,93,207,.2),transparent 38%),radial-gradient(ellipse at 90% 35%,rgba(0,192,255,.09),transparent 35%),linear-gradient(180deg,#070a12,#080d18 65%,#070a12)}
+    .wrap{width:min(1120px,calc(100% - 40px));margin:auto}
+    header{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(151,180,230,.1)}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.5px;font-size:20px}
+    .brand-icon{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--blue),#14c6e8);display:grid;place-items:center;box-shadow:0 0 28px var(--glow)}
+    .brand-icon svg{width:25px;height:25px}
+    .brand span{color:#67b9ff}
+    .nav{display:flex;align-items:center;gap:25px;color:var(--muted);font-size:13px}
+    .nav a:hover,.textlink:hover{color:#fff}
+    .nav-cta{border:1px solid var(--line);padding:9px 14px;border-radius:10px;color:#fff!important}
+    .hero{padding:80px 0 65px;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:45px;min-height:570px}
+    .eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(68,151,255,.28);background:rgba(35,108,220,.09);color:#9bcaff;border-radius:30px;padding:7px 12px;font-size:11px;letter-spacing:1.5px;font-weight:800;text-transform:uppercase}
+    .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
+    h1{font-size:clamp(42px,6vw,68px);line-height:1.04;letter-spacing:-3px;margin:23px 0 20px;font-weight:850}
+    .gradient{background:linear-gradient(100deg,#fff 12%,#8fc6ff 53%,#48ddf5);-webkit-background-clip:text;background-clip:text;color:transparent}
+    .lead{font-size:17px;color:var(--muted);max-width:570px;line-height:1.8}
+    .actions{display:flex;gap:12px;flex-wrap:wrap;margin:29px 0 17px}
+    .btn{display:inline-flex;justify-content:center;align-items:center;gap:10px;border-radius:12px;padding:14px 18px;font-size:14px;font-weight:800;transition:transform .2s,box-shadow .2s;border:1px solid transparent}
+    .btn:hover{transform:translateY(-2px)}
+    .primary{background:linear-gradient(100deg,#2878f6,#27bfe8);color:#fff;box-shadow:0 9px 30px rgba(35,120,255,.24)}
+    .secondary{background:rgba(255,255,255,.025);border-color:var(--line);color:#f4f7ff}
+    .fine{font-size:12px;color:#8593ad}
+    .chart-shell{position:relative;border:1px solid rgba(111,163,245,.22);border-radius:24px;padding:17px;background:linear-gradient(145deg,rgba(17,29,51,.96),rgba(8,13,24,.95));box-shadow:0 25px 90px rgba(0,0,0,.38),0 0 55px rgba(31,112,246,.1);overflow:hidden}
+    .chart-shell:before{content:"";position:absolute;inset:-50% 20% auto;height:180px;background:rgba(32,120,255,.16);filter:blur(65px);pointer-events:none}
+    .chart-top{display:flex;justify-content:space-between;gap:10px;align-items:center;position:relative}
+    .chart-title{font-size:12px;color:#a8b8d4;font-weight:700}
+    .chart-tag{font-size:10px;color:var(--green);border:1px solid rgba(77,242,173,.2);background:rgba(77,242,173,.07);padding:5px 8px;border-radius:20px}
+    .chart{display:block;width:100%;height:auto;margin:20px 0 5px;position:relative}
+    .chart-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+    .stat{border:1px solid rgba(151,180,230,.12);background:rgba(255,255,255,.025);border-radius:12px;padding:11px}
+    .stat small{display:block;color:#8999b4;font-size:10px}
+    .stat b{display:block;font-size:14px;margin-top:4px}
+    .up{color:var(--green)}.down{color:#ff748b}
+    .section{padding:66px 0}
+    .section-head{text-align:center;max-width:680px;margin:0 auto 34px}
+    .section-head h2{font-size:clamp(28px,4vw,40px);letter-spacing:-1.3px;line-height:1.15;margin:12px 0}
+    .section-head p{color:var(--muted);margin:0}
+    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
+    .card{border:1px solid var(--line);border-radius:18px;padding:23px;background:linear-gradient(145deg,rgba(17,27,47,.8),rgba(10,15,27,.85));min-height:190px}
+    .card-icon{width:43px;height:43px;border-radius:13px;display:grid;place-items:center;color:#8cc6ff;background:rgba(47,129,255,.12);border:1px solid rgba(68,151,255,.2);margin-bottom:18px}
+    .card-icon svg{width:23px;height:23px}
+    .card h3{font-size:17px;margin:0 0 8px}
+    .card p{font-size:13px;color:var(--muted);margin:0}
+    .access{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+    .access-card{border:1px solid var(--line);border-radius:20px;padding:26px;background:rgba(13,19,34,.8)}
+    .access-card h3{margin:0 0 8px;font-size:20px}
+    .access-card p{color:var(--muted);font-size:14px;margin:0 0 19px}
+    .access-card .btn{width:100%}
+    .step{display:flex;gap:13px;margin:18px 0;color:var(--muted);font-size:14px}
+    .num{width:27px;height:27px;flex:none;display:grid;place-items:center;border-radius:9px;background:rgba(55,133,255,.14);color:#9acaff;font-size:12px;font-weight:800}
+    .disclaimer{border:1px solid rgba(151,180,230,.13);border-radius:14px;padding:15px 17px;color:#95a3bc;font-size:12px;background:rgba(255,255,255,.02);margin-top:30px}
+    footer{border-top:1px solid rgba(151,180,230,.1);padding:26px 0 35px;color:#8391a9;font-size:12px}
+    .footer-row{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+    .textlink{color:#b6c5df}
+    @media(max-width:820px){.hero{grid-template-columns:1fr;gap:35px;padding:58px 0 45px}.hero-copy{max-width:690px}.chart-shell{max-width:600px;width:100%;margin:auto}.cards{grid-template-columns:1fr 1fr}.access{grid-template-columns:1fr}.nav{gap:12px}.nav .hide-mobile{display:none}}
+    @media(max-width:540px){.wrap{width:min(100% - 30px,1120px)}header{height:66px}.brand{font-size:18px}.brand-icon{width:34px;height:34px}.nav{gap:8px}.nav-cta{padding:8px 10px;font-size:12px}.hero{padding-top:45px}h1{letter-spacing:-2px;font-size:43px}.lead{font-size:15px}.actions{flex-direction:column}.btn{width:100%}.cards{grid-template-columns:1fr}.section{padding:48px 0}.chart-shell{padding:12px}.chart-stats{gap:6px}.stat{padding:8px}.stat b{font-size:12px}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
+  </style>
+</head>
 <body>
-<div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-<div class="wm">Signals<span>Pro</span></div><div class="sub" style="margin:6px 0 26px">Premium market zones. Live.</div>
-<input type="email" class="inp" id="emailIn" placeholder="Your subscriber email" autocapitalize="none" autocomplete="email" style="max-width:300px;text-align:center">
-<button class="btn" style="max-width:300px" id="btnU">Unlock</button>
-<div id="lerr" style="color:var(--sell);font-size:13px;margin-top:14px;max-width:300px;display:none"></div>
-<div class="note" style="max-width:300px;text-align:center">Subscriber access only. One device per subscription.</div>
-<div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
+<div class="bgfx" aria-hidden="true"></div>
+<header class="wrap">
+  <a class="brand" href="./" aria-label="SignalsPro home">
+    <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>
+    Signals<span>Pro</span>
+  </a>
+  <nav class="nav" aria-label="Main navigation">
+    <a class="hide-mobile" href="#features">Features</a>
+    <a class="hide-mobile" href="#how-it-works">How it works</a>
+    <a class="nav-cta" href="./app.html">Launch app ↗</a>
+  </nav>
+</header>
 
-<div id="welcome"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-<div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">What are we trading today?</div>
-<button class="btn" id="wgo" style="max-width:300px">Let’s go</button></div>
+<main>
+  <section class="hero wrap">
+    <div class="hero-copy">
+      <div class="eyebrow"><i class="pulse"></i> Market analysis workspace</div>
+      <h1>See the setup.<br><span class="gradient">Plan your next move.</span></h1>
+      <p class="lead">SignalsPro brings market zones, trade plans, market scanning and macroeconomic context into one focused trading analysis workspace — designed to help you study the market with more structure.</p>
+      <div class="actions">
+        <a class="btn primary" href="./SignalsPro.apk" download>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Download Android APK
+        </a>
+        <a class="btn secondary" href="./app.html">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5l11 7-11 7V5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
+          Launch iOS / Web App
+        </a>
+      </div>
+      <p class="fine">Subscriber email required to unlock the app. Android APK download will be available once the signed package is added.</p>
+    </div>
 
-<header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div></header>
-<div id="newsBar" style="display:none"></div>
+    <div class="chart-shell" aria-label="Illustrative market chart graphic">
+      <div class="chart-top"><span class="chart-title">SIGNAL OVERVIEW <span style="color:#647796">/ ILLUSTRATION</span></span><span class="chart-tag">● ANALYSIS VIEW</span></div>
+      <svg class="chart" viewBox="0 0 520 330" role="img" aria-label="Illustrative candlestick chart with blue support and resistance zones">
+        <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3988ff" stop-opacity=".25"/><stop offset="1" stop-color="#3988ff" stop-opacity="0"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+        <g stroke="#8aa6d4" stroke-opacity=".11" stroke-width="1"><path d="M0 45H520M0 95H520M0 145H520M0 195H520M0 245H520M0 295H520"/><path d="M50 20V310M120 20V310M190 20V310M260 20V310M330 20V310M400 20V310M470 20V310"/></g>
+        <rect x="8" y="92" width="504" height="42" rx="7" fill="#3988ff" fill-opacity=".09" stroke="#3988ff" stroke-opacity=".28" stroke-dasharray="5 5"/>
+        <rect x="8" y="220" width="504" height="37" rx="7" fill="#4df2ad" fill-opacity=".06" stroke="#4df2ad" stroke-opacity=".25" stroke-dasharray="5 5"/>
+        <path d="M12 266 L42 246 L66 254 L91 218 L116 228 L139 184 L166 198 L190 164 L215 178 L239 143 L264 153 L288 124 L312 148 L336 111 L360 123 L385 81 L408 100 L433 66 L457 80 L483 48 L510 56 L510 310 L12 310Z" fill="url(#area)"/>
+        <g stroke-linecap="round" stroke-width="2">
+          <path d="M42 225V270M66 231V263M91 198V237M116 210V246M139 164V207M166 178V218M190 146V189M215 157V197M239 125V165M264 135V174M288 106V151M312 126V166M336 91V138M360 102V143M385 63V104M408 82V121M433 48V91M457 61V99M483 32V71" stroke="#4df2ad"/>
+        </g>
+        <g>
+          <rect x="36" y="236" width="12" height="24" rx="2" fill="#4df2ad"/><rect x="60" y="239" width="12" height="14" rx="2" fill="#ff748b"/><rect x="85" y="207" width="12" height="22" rx="2" fill="#4df2ad"/><rect x="110" y="217" width="12" height="19" rx="2" fill="#ff748b"/><rect x="133" y="175" width="12" height="22" rx="2" fill="#4df2ad"/><rect x="160" y="187" width="12" height="19" rx="2" fill="#ff748b"/><rect x="184" y="156" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="209" y="165" width="12" height="18" rx="2" fill="#ff748b"/><rect x="233" y="132" width="12" height="20" rx="2" fill="#4df2ad"/><rect x="258" y="143" width="12" height="17" rx="2" fill="#ff748b"/><rect x="282" y="113" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="306" y="132" width="12" height="17" rx="2" fill="#ff748b"/><rect x="330" y="99" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="354" y="110" width="12" height="17" rx="2" fill="#ff748b"/><rect x="379" y="71" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="402" y="89" width="12" height="17" rx="2" fill="#ff748b"/><rect x="427" y="56" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="451" y="69" width="12" height="17" rx="2" fill="#ff748b"/><rect x="477" y="39" width="12" height="21" rx="2" fill="#4df2ad"/>
+        </g>
+        <path d="M12 145 C90 144 130 139 190 141 S300 138 360 140 S450 136 510 139" stroke="#3988ff" stroke-width="2" stroke-dasharray="4 5" fill="none" filter="url(#glow)"/>
+        <circle cx="483" cy="48" r="5" fill="#fff" stroke="#3988ff" stroke-width="3" filter="url(#glow)"/>
+      </svg>
+      <div class="chart-stats">
+        <div class="stat"><small>WORKSPACE</small><b>Market zones</b></div>
+        <div class="stat"><small>PLANNING</small><b>Trade plans</b></div>
+        <div class="stat"><small>CONTEXT</small><b class="up">Fundamentals</b></div>
+      </div>
+    </div>
+  </section>
 
-<section class="page on" id="p-home"><div class="hero">
-<svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-<div class="wm">Signals<span>Pro</span></div><div class="sub" id="who">Premium zone indicator</div>
-<div class="chips"><b>Live zones</b><b>Trade plans</b><b>Market scanner</b></div>
-<button class="go" id="go" aria-label="Start or stop"><i></i></button>
-<div class="hint" id="hint">Tap to start live signals</div></div><div id="news"></div></section>
+  <section class="section wrap" id="features">
+    <div class="section-head">
+      <div class="eyebrow">Built for a clearer process</div>
+      <h2>Tools for your market workflow</h2>
+      <p>Explore the analysis tools available inside SignalsPro. Use them as decision support, not as a promise of results.</p>
+    </div>
+    <div class="cards">
+      <article class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Market zones</h3><p>Review price charts and identified support and resistance zones to help structure your market analysis.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/></svg></div>
+        <h3>Trade planning</h3><p>View potential entries, stop levels and target areas as part of a more structured plan.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 9h8M8 13h5M8 16h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Market scanner</h3><p>Explore supported symbols and available market setups from one focused workspace.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 21h20" stroke="currentColor" stroke-width="1.5"/></svg></div>
+        <h3>Fundamental context</h3><p>Review economic releases and macroeconomic context where the app's data sources are connected.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>News awareness</h3><p>Keep an eye on tracked economic events and in-app alerts to help you prepare for volatility.</p>
+      </article>
+      <article class="card">
+        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M10 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
+        <h3>Mobile-friendly access</h3><p>Open the web app on your phone, or use the Android package when the signed APK is available.</p>
+      </article>
+    </div>
+  </section>
 
-<section class="page" id="p-ind">
-<div class="card"><div class="dash"><div><div class="k" id="sym">Symbol</div><div class="px" id="px">—</div></div>
-<div style="text-align:right"><div class="k">Advice</div><div class="adv" id="adv">WAIT</div></div></div></div>
-<div class="card"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
-<datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>SPX</option><option>NDX</option><option>DJI</option></datalist>
-<div class="tfs" id="tfs"></div><div style="position:relative"><canvas id="cv"></canvas><button class="chip" id="cvLatest" style="display:none;position:absolute;top:8px;left:8px;margin:0">Latest ›</button><div style="position:absolute;top:8px;right:60px;display:flex;gap:6px"><button class="chip" id="zOut" style="margin:0;padding:6px 14px" aria-label="Zoom out">−</button><button class="chip" id="zIn" style="margin:0;padding:6px 14px" aria-label="Zoom in">+</button></div></div>
-<div class="legend"><span style="--c:var(--buy)">Buy / support</span><span style="--c:var(--sell)">Sell / resistance</span></div>
-<div class="grid"><div class="g s"><div class="k">Nearest support</div><div id="ns">—</div></div><div class="g r"><div class="k">Nearest resistance</div><div id="nr">—</div></div>
-<div class="g"><div class="k">Zones found</div><div id="zc">—</div></div><div class="g"><div class="k">Last signal</div><div id="ls">—</div></div></div>
-<div id="st">Open Settings to add your data key.</div></div>
-<div class="card"><div style="font-size:16px;font-weight:800;margin-bottom:12px">Trade plan</div><div id="plans"><div class="empty">Load a chart to see entries and targets.</div></div>
-<div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></section>
+  <section class="section wrap" id="how-it-works">
+    <div class="section-head">
+      <div class="eyebrow">Get started</div>
+      <h2>Choose how you want to access SignalsPro</h2>
+      <p>The public website introduces the platform. Subscriber verification remains inside the existing app.</p>
+    </div>
+    <div class="access">
+      <article class="access-card">
+        <h3>Android app</h3>
+        <p>Install SignalsPro on a compatible Android phone using the official signed APK.</p>
+        <div class="step"><span class="num">1</span><span>Download the APK from this website once it has been published.</span></div>
+        <div class="step"><span class="num">2</span><span>Follow Android's installation prompts. Only install packages from a source you trust.</span></div>
+        <div class="step"><span class="num">3</span><span>Open SignalsPro and enter your subscriber email to unlock access.</span></div>
+        <a class="btn primary" href="./SignalsPro.apk" download>Download Android APK ↓</a>
+        <p class="fine" style="margin:12px 0 0">The download link will work after `SignalsPro.apk` is added to this repository.</p>
+      </article>
+      <article class="access-card">
+        <h3>iPhone, iPad &amp; web</h3>
+        <p>Launch the existing web app in your browser. No iOS App Store app is implied by this button.</p>
+        <div class="step"><span class="num">1</span><span>Open the SignalsPro app using the button below.</span></div>
+        <div class="step"><span class="num">2</span><span>Enter the email associated with your subscription.</span></div>
+        <div class="step"><span class="num">3</span><span>After access is verified, use the available analysis tools.</span></div>
+        <a class="btn secondary" href="./app.html">Launch iOS / Web App ↗</a>
+        <p class="fine" style="margin:12px 0 0">Subscriber email is required to unlock the existing app.</p>
+      </article>
+    </div>
+    <div class="disclaimer"><strong style="color:#c7d5ed">Risk notice:</strong> SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading. You are responsible for your own trading decisions.</div>
+  </section>
+</main>
 
-<section class="page" id="p-fund">
-<div class="fh"><button class="fb" id="fBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><div><div class="ft">Fundamentals</div><div class="fk" style="margin-top:2px">US high-impact data</div></div></div>
-<div id="fMacro"></div><div id="fExtra"></div><div id="fCS"></div><div id="fEvents"></div>
-<div class="note" id="fSt" style="text-align:center">Loading…</div>
-<div class="note" style="padding:0 6px 10px">Rule-based reading of news data. It is not a prediction. Spreads widen and prices gap around releases, so stops can slip. Calendar data comes from a free public feed and can be late or wrong, so always check the official release. Not financial advice.</div></section>
-
-<section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
-<label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
-<label>Timeframe</label><select class="inp" id="scTf"><option>M15</option><option>M30</option><option>H1</option><option>H4</option></select>
-<button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
-<div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit.</div><div class="note" id="scCr"></div></div>
-<div id="scStr"></div><div id="scList"></div>
-<div class="note" style="padding:0 6px 10px">Each market is classed as trending or ranging (efficiency ratio plus the EMA20/EMA50 gap). Trending markets get pullback trades with the trend, and ranging markets get bounce trades between the zones. Ranking = regime fit, movement versus normal, zone strength, trade-plan quality, trading session, optional higher-timeframe agreement, candle confirmation (a reaction candle closed at the zone) and currency strength. Not backtested and not financial advice.</div></section>
-
-<section class="page" id="p-set"><div class="card">
-<div id="gBox"><input type="hidden" id="src" value="twelve">
-<label>Your Twelve Data API key (free at twelvedata.com)</label><input class="inp" id="key" type="password" placeholder="Paste your key"></div>
-<label>Chart time zone</label><select class="inp" id="tz"><option value="Africa/Johannesburg">South Africa time (UTC+2)</option><option value="Etc/GMT-3">UTC+3 (many brokers in summer)</option><option value="UTC">UTC</option></select>
-<label>Refresh</label><select class="inp" id="iv"><option value="60">Every 1 min</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option></select>
-<label>Webhook URL (optional)</label><input class="inp" id="hook" placeholder="https://…">
-<button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button><button class="btn red" id="logout">Log out</button>
-<div class="note">Alerts fire only while the app is open and started.</div></div></section>
-
-<footer class="copy">© 2026 SignalsPro. All rights reserved.</footer>
-<nav id="nav">
-<button class="on" data-p="home"><span><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>Home</button>
-<button data-p="scan"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/></svg></span>Scanner</button>
-<button data-p="ind"><span><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 3 6-8 3 3"/><path d="M3 21h18"/></svg></span>Indicator</button>
-<button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
-
-<div id="thBack"></div>
-<aside id="thPanel"><div class="lab">Glow Palette</div><div class="sw" id="sw"></div><div style="height:1px;background:var(--bd);margin:18px 0 6px"></div><button class="btn" id="fundBtn">Fundamentals</button></aside>
+<footer>
+  <div class="wrap footer-row">
+    <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:30px;height:30px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<span>Pro</span></a>
+    <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>
+    <a class="textlink" href="./app.html">Subscriber login ↗</a>
+  </div>
+</footer>
 <script>
-const $=id=>document.getElementById(id);
-const TH={cobalt:['#3b82f6','59,130,246'],structure:['#ff6b1a','255,107,26'],cyan:['#22d3ee','34,211,238'],violet:['#a855f7','168,85,247'],emerald:['#10b981','16,185,129'],crimson:['#f43f5e','244,63,94'],amber:['#f59e0b','245,158,11'],rose:['#fb7185','251,113,133'],lime:['#a3e635','163,230,53'],arctic:['#e2e8f0','226,232,240']};
-const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
-const TFB={M1:'1m',M5:'5m',M15:'15m',M30:'30m',H1:'1h',H4:'4h',D1:'1d'},TFT={M1:'1min',M5:'5min',M15:'15min',M30:'30min',H1:'1h',H4:'4h',D1:'1day'},SN={4:'Proven',3:'Verified',2:'Untested',1:'Turncoat'};
-let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'cobalt',wl:'EUR/USD,GBP/USD,USD/JPY,AUD/USD,USD/CAD,NZD/USD,USD/CHF,EUR/JPY',stf:'H1',tz:'Africa/Johannesburg'};
-try{Object.assign(S,JSON.parse(localStorage.getItem('sp_cfg')||'{}'))}catch(e){}
-let sigs=[];try{sigs=JSON.parse(localStorage.getItem('sp_sig')||'[]')}catch(e){}
-let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
-const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
-
-// spoken welcome (iPhone only allows speech right after a tap, so the welcome screen has a button)
-let welcomed=false,welcomeShown=false;
-function speakWelcome(){
- if(welcomed||!window.speechSynthesis)return;
- const u=new SpeechSynthesisUtterance('Welcome to SignalsPro. What are we trading today?');u.rate=.95;u.volume=1;
- const vs=speechSynthesis.getVoices(),v=vs.find(x=>/^en[-_](GB|US|ZA|AU)/i.test(x.lang)&&/(Samantha|Daniel|Karen|Serena|Moira|Google)/i.test(x.name))||vs.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;
- u.onstart=()=>{welcomed=true};speechSynthesis.cancel();speechSynthesis.speak(u)}
-function showWelcome(){if(welcomeShown)return;welcomeShown=true;$('welcome').classList.add('on');speakWelcome()}
-$('wgo').onclick=()=>{speakWelcome();$('welcome').classList.remove('on')};
-// access (email + one device, checked by your Google Apps Script)
-const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec',GATED=API.startsWith('https');
-let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
-let EM=localStorage.getItem('sp_em')||'';
-const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
-function showLock(m){if(run)setRun(false);$('welcome').classList.remove('on');welcomeShown=false;$('lock').classList.remove('hidden');$('lerr').textContent=m||'';$('lerr').style.display=m?'block':'none';$('btnU').disabled=false;$('btnU').textContent='Unlock'}
-async function check(email,silent){
- EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
- if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
- try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();if(!S.key)page('set')}
-  else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
- }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
-$('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
-if(!GATED){$('lerr').textContent='App is not configured yet. Contact support.';$('lerr').style.display='block'}else if(EM){$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();check(EM,true)}
-setInterval(()=>{if(GATED&&EM)check(EM,true)},900000);
-// theme panel
-const thOpen=v=>document.body.classList.toggle('th',v);
-$('menuBtn').onclick=()=>thOpen(true);$('thBack').onclick=()=>thOpen(false);
-// theme
-function theme(n){const[a,r]=TH[n]||TH.cobalt,s=document.documentElement.style;s.setProperty('--accent',a);s.setProperty('--glow',`rgba(${r},.35)`);s.setProperty('--pg',`rgba(${r},.45)`);S.theme=n;save();
- document.querySelectorAll('.sw b').forEach(b=>b.classList.toggle('on',b.dataset.t===n))}
-['sw'].forEach(id=>Object.keys(TH).forEach(n=>{const b=document.createElement('b');b.dataset.t=n;b.style.background=TH[n][0];b.onclick=()=>theme(n);$(id).append(b)}));theme(S.theme);
-// nav
-function page(n){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
- window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;requestAnimationFrame(()=>window.scrollTo(0,0));
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));if(n==='ind'){fit();tick()}if(n==='fund')loadFund()}
-document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
-// timeframe chips
-Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
-const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tf));mark();
-$('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO=0;save();tick()};
-// data
-async function load(sym,tf){
- sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
- if(gated)u=`${API}?action=candles&${qs()}&sym=${encodeURIComponent(sym)}&int=${TFT[tf]}`;
- else if(S.src==='binance')u=`https://api.binance.com/api/v3/klines?symbol=${sym.toUpperCase().replace('/','')}&interval=${TFB[tf]}&limit=1000`;
- else{if(!S.key)throw Error('Add your Twelve Data key in Settings');u=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=${TFT[tf]}&outputsize=1500&apikey=${S.key}`}
- let j;try{j=await(await fetch(u)).json()}catch(e){throw Error('Cannot reach the data server. Open the app from your Netlify link, not a preview window, and check your internet.')}if(j.ok===false){showLock(j.msg);throw Error(j.msg)}let rows,dec=2;
- if(S.src==='binance'&&!gated){if(!Array.isArray(j))throw Error(j.msg||'Bad symbol');rows=j.reverse().map(k=>({o:+k[1],h:+k[2],l:+k[3],c:+k[4],s:k[4],t:+k[0]}))}
- else{if(j.status==='error')throw Error(j.message);rows=j.values.map(v=>({o:+v.open,h:+v.high,l:+v.low,c:+v.close,s:v.close,t:Date.parse(v.datetime.replace(' ','T')+(v.datetime.length<=10?'T00:00:00':'')+'Z')}))}
- rows.slice(0,50).forEach(x=>{const d=(x.s.split('.')[1]||'').length;if(d>dec)dec=Math.min(d,6)});
- return{o:rows.map(x=>x.o),h:rows.map(x=>x.h),l:rows.map(x=>x.l),c:rows.map(x=>x.c),t:rows.map(x=>x.t),dec,n:rows.length}}
-// indicator engine (index 0 = newest bar)
-function atr7(h,l,c,n){const tr=[];for(let i=0;i<n;i++)tr[i]=i===n-1?h[i]-l[i]:Math.max(h[i]-l[i],Math.abs(h[i]-c[i+1]),Math.abs(l[i]-c[i+1]));
- const a=new Array(n).fill(0);for(let i=0;i<n-7;i++){let s=0;for(let k=0;k<7;k++)s+=tr[i+k];a[i]=s/7}return a}
-function fractals(h,l,n,p){const up=new Array(n).fill(0),dn=new Array(n).fill(0);
- for(let i=p;i<n-p;i++){let u=1,d=1;for(let k=1;k<=p;k++){if(h[i+k]>=h[i]||h[i-k]>h[i]){u=0;break}}
-  for(let k=1;k<=p;k++){if(l[i+k]<=l[i]||l[i-k]<l[i]){d=0;break}}if(u)up[i]=h[i];if(d)dn[i]=l[i]}return{up,dn}}
-const strength=(t,tu,w)=>t>2?4:t>0?3:tu?1:!w?2:0;
-function compute(d){
- const{h,l,c,n,dec}=d,off=P.shift*Math.pow(10,-dec),atr=atr7(h,l,c,n);
- const F=fractals(h,l,n,Math.max(2,Math.floor(P.ff*1.8))),Sl=fractals(h,l,n,Math.max(3,Math.floor(P.sf*1.8)));
- const buy=new Array(n).fill(null),sell=new Array(n).fill(null),zones=[],lim=Math.min(n-8,P.back);
- function scan(i,res){
-  const pri=res?F.up:F.dn,sec=res?F.dn:F.up,weak=(res?Sl.up[i]:Sl.dn[i])<=0,fu=atr[i]/2*P.zf;let hi,lo;
-  if(res){hi=h[i]+fu;lo=Math.max(Math.min(c[i],h[i]-fu),h[i]-fu*2)}else{lo=l[i]-fu;hi=Math.min(Math.max(c[i],l[i]+fu),l[i]+fu*2)}
-  const tch=(t,j)=>{const v=(!t?pri:sec)[j];return v>=lo&&v<=hi};let tu=false,has=false,bust=false,tests=0,bc=0;
-  for(let j=i-1;j>=0;j--){
-   if(tch(tu,j)){let ok=true;for(let k=j+1;k<=j+6&&k<i;k++)if(tch(tu,k)){ok=false;break}if(ok){bc=0;tests++}}
-   const up=res?!tu:tu;if(up?h[j]>hi:l[j]<lo){bc++;if(bc>1||weak){bust=true;break}tu=!tu;has=true;tests=0}}
-  if(bust)return;const s=strength(tests,has,weak);if(!P.show[s])return;
-  if(res)sell[i]=h[i]+off;else buy[i]=l[i]-off;zones.push({hi,lo,res,s})}
- for(let i=lim;i>=4;i--){if(F.up[i]>0)scan(i,true);if(F.dn[i]>0)scan(i,false)}
- let b=false,s=false;for(const z of zones)if(l[0]<=z.hi&&h[0]>=z.lo){if(!z.res){buy[0]=l[0]-off;b=true}else{sell[0]=h[0]+off;s=true}}
- return{buy,sell,zones,b,s,atr:atr[0],rv:atr[0]/(atr.slice(0,100).reduce((x,y)=>x+y,0)/100)}}
-function plans(px,Rr){
- Rr=Rr||R;const z=Rr.zones,a=Rr.atr,out={};
- const sup=z.filter(x=>!x.res&&x.lo<px).sort((p,q)=>q.hi-p.hi)[0],res=z.filter(x=>x.res&&x.hi>px).sort((p,q)=>p.lo-q.lo)[0];
- if(sup){const e=Math.min(px,sup.hi+.15*a),sl=sup.lo-.25*a,k=e-sl,up=z.filter(x=>x.res&&x.lo>e).sort((p,q)=>p.lo-q.lo);
-  const t1=up[0]?up[0].lo:e+1.5*k,t2=up[1]?up[1].lo:Math.max(e+3*k,t1+k);out.buy={side:'BUY',z:sup,e,sl,t1,t2,r1:(t1-e)/k,r2:(t2-e)/k,on:Rr.b,dist:(px-e)/a}}
- if(res){const e=Math.max(px,res.lo-.15*a),sl=res.hi+.25*a,k=sl-e,dn=z.filter(x=>!x.res&&x.hi<e).sort((p,q)=>q.hi-p.hi);
-  const t1=dn[0]?dn[0].hi:e-1.5*k,t2=dn[1]?dn[1].hi:Math.min(e-3*k,t1-k);out.sell={side:'SELL',z:res,e,sl,t1,t2,r1:(e-t1)/k,r2:(e-t2)/k,on:Rr.s,dist:(e-px)/a}}
- return out}
-function react(p,d,px){
- const{o,h,l,c}=d;let conf=false,late=false,msg='No reaction candle yet';
- const z=p.z,rg=h[1]-l[1]||1e-9,lw=Math.min(o[1],c[1])-l[1],uw=h[1]-Math.max(o[1],c[1]);
- if(p.side==='BUY'&&l[1]<=z.hi&&h[1]>=z.lo&&c[1]>z.lo){if(lw>=.5*rg){conf=true;msg='Rejection wick at support'}else if(c[1]>o[1]&&c[1]>=z.hi){conf=true;msg='Bullish close out of support'}}
- if(p.side==='SELL'&&h[1]>=z.lo&&l[1]<=z.hi&&c[1]<z.hi){if(uw>=.5*rg){conf=true;msg='Rejection wick at resistance'}else if(c[1]<o[1]&&c[1]<=z.lo){conf=true;msg='Bearish close out of resistance'}}
- if(conf){const k=p.side==='BUY'?px-p.sl:p.sl-px,past=p.side==='BUY'?px>=p.t1:px<=p.t1;
-  if(k<=0||past){conf=false;late=true;msg='Reaction already played out'}else{p.e=px;p.dist=0;p.r1=Math.abs(p.t1-px)/k;p.r2=Math.abs(p.t2-px)/k}}
- return{conf,late,msg}}
-function renderPlans(px){
- const P2=plans(px),f=v=>v.toFixed(D.dec);
- const card=p=>{if(!p)return'';const rc=react(p,D,px),conf=rc.conf,far=!conf&&!p.on&&p.dist>2;p.conf=conf;
-  const st=conf?'ENTER NOW':p.on?'IN ZONE':far?'TOO FAR · WATCH':p.dist<=1?'NEAR ENTRY':'WAIT FOR PRICE';
-  return `<div class="pl ${p.side==='SELL'?'sell':''} ${conf||p.on?'on':''}" style="${far?'opacity:.55':''}"><h4><span>${p.side} plan · ${SN[p.z.s]} zone</span><em>${st}</em></h4>
-  <div class="note" style="margin:0 0 6px">${conf?'✓ ':''}${rc.msg}${p.on&&!conf?'. Wait for a candle to close with a reaction, then enter at market.':''}</div>
-  <div class="pr"><span>${conf?'Entry (market, now)':p.on?'Entry (after reaction)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
-  <div class="pr"><span>Distance to entry</span><span>${conf?'at market':p.dist.toFixed(1)+' ATR'}</span></div>
-  <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
-  <div class="pr"><span>Target 1</span><span class="tp">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div>
-  <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div>
-  ${far?'<div class="note">Entry is more than 2 ATR away, so it is unlikely to fill soon. Treat it as a level to watch, not a trade.</div>':!conf&&!p.on?'<div class="note">Limit order: valid for about 12 candles. Cancel it if a candle closes beyond the stop level before it fills.</div>':''}
-  ${p.r1<1?'<div class="note" style="color:var(--wait)">TP1 is under 1R, so this setup is weak. Consider skipping it.</div>':''}</div>`};
- $('plans').innerHTML=card(P2.buy)+card(P2.sell)||'<div class="empty">No zones near price.</div>';return P2}
-// chart
-function fit(){const cv=$('cv'),r=devicePixelRatio||1;cv.width=cv.clientWidth*r;cv.height=cv.clientHeight*r}
-let VN=70,VO=0;
-let fT,fD;function mkFmt(){const z=S.tz||'Africa/Johannesburg';fT=new Intl.DateTimeFormat('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:z});fD=new Intl.DateTimeFormat('en-ZA',{day:'numeric',month:'short',timeZone:z})}mkFmt();
-function draw(){
- const cv=$('cv');fit();const W=cv.width,H=cv.height,g=cv.getContext('2d'),r=devicePixelRatio||1;g.clearRect(0,0,W,H);if(!D)return;
- const{h,l,c,o}=D,n=D.n,N=VN,i0=Math.floor(VO),i1=Math.min(n-1,i0+Math.ceil(N)+1),gut=52*r,bw=(W-gut)/N,X=i=>(W-gut)-(i-VO+.5)*bw;
- $('cvLatest').style.display=VO>.5?'block':'none';
- let mx=-1e18,mn=1e18;for(let i=i0;i<=i1;i++){mx=Math.max(mx,h[i]);mn=Math.min(mn,l[i])}
- const pad=(mx-mn)*.14;mx+=pad;mn-=pad;const bm=D.t?32*r:0,Y=v=>(H-bm)-(v-mn)/(mx-mn)*(H-bm);
- for(let i=i1;i>=i0;i--){const x=X(i);if(x<-bw||x>W-gut+bw)continue;const up=c[i]>=o[i];g.strokeStyle=g.fillStyle=up?'#4fd18b':'#e0605e';
-  g.lineWidth=Math.max(r,bw*.12);g.beginPath();g.moveTo(x,Y(h[i]));g.lineTo(x,Y(l[i]));g.stroke();
-  g.fillRect(x-bw*.32,Math.min(Y(o[i]),Y(c[i])),bw*.64,Math.max(r,Math.abs(Y(o[i])-Y(c[i]))))}
- g.fillStyle='rgba(255,255,255,.45)';g.font=`${10*r}px sans-serif`;
- for(let k=0;k<=4;k++){const v=mn+(mx-mn)*k/4;g.fillText(v.toFixed(D.dec),W-gut+4*r,Y(v)+(k===0?-3*r:k===4?9*r:4*r))}
- if(D.t){g.textAlign='center';g.strokeStyle='rgba(255,255,255,.18)';g.lineWidth=r;
-  for(let k=0;k<4;k++){const i=Math.min(n-1,Math.round(i0+(k+.5)*N/4)),x=X(i);if(x<22*r||x>W-gut-22*r||!D.t[i])continue;const dt=new Date(D.t[i]);
-   g.beginPath();g.moveTo(x,H-bm);g.lineTo(x,H-bm+5*r);g.stroke();g.fillStyle='rgba(255,255,255,.7)';
-   if(S.tf==='D1'){g.font=`${10*r}px sans-serif`;g.fillText(fD.format(dt),x,H-bm+19*r)}else{g.font=`700 ${10*r}px sans-serif`;g.fillText(fT.format(dt),x,H-bm+17*r);g.fillStyle='rgba(255,255,255,.45)';g.font=`${9*r}px sans-serif`;g.fillText(fD.format(dt),x,H-bm+29*r)}}
-  g.textAlign='left'}
- const R0=Math.max(5*r,Math.min(bw*.5+2*r,11*r)),lw=Math.max(1.6*r,R0*.22);
- for(let i=i0;i<=i1;i++){for(const[a,col,top]of[[R.buy,'#00ff55',false],[R.sell,'#ff3b30',true]]){if(a[i]==null)continue;
-  const x=X(i);if(x<-R0||x>W-gut+R0)continue;const yy=top?Y(h[i])-R0*.55:Y(l[i])+R0*.55;
-  g.save();g.shadowColor=col;g.shadowBlur=5*r;g.strokeStyle=col;g.lineWidth=lw;g.beginPath();g.arc(x,yy,R0,0,7);g.stroke();g.restore()}}
- const y=Y(c[0]);if(y>0&&y<H-bm){g.setLineDash([4*r,4*r]);g.strokeStyle=getComputedStyle(document.documentElement).getPropertyValue('--accent');g.lineWidth=r;g.beginPath();g.moveTo(0,y);g.lineTo(W-gut,y);g.stroke();g.setLineDash([]);
-  g.fillStyle=g.strokeStyle;g.fillRect(W-gut,y-9*r,gut,18*r);g.fillStyle='#000';g.font=`700 ${10*r}px sans-serif`;g.fillText(c[0].toFixed(D.dec),W-gut+2*r,y+4*r)}
- const ap=PLN&&(PLN.buy&&PLN.buy.on?PLN.buy:PLN.sell&&PLN.sell.on?PLN.sell:null);
- if(ap)for(const[v,n2,col]of[[ap.e,'ENTRY','#ffffff'],[ap.sl,'SL','#ff3b30'],[ap.t1,'TP1','#00ff55'],[ap.t2,'TP2','#00ff55']]){if(v<mn||v>mx)continue;const yy=Y(v);
-  g.setLineDash([2*r,5*r]);g.strokeStyle=col;g.lineWidth=r;g.beginPath();g.moveTo(0,yy);g.lineTo(W-gut,yy);g.stroke();g.setLineDash([]);g.fillStyle=col;g.font=`700 ${10*r}px sans-serif`;g.fillText(n2,6*r,yy-4*r)}}
-// drag to scroll, pinch to zoom
-(function(){const cv=$('cv'),pts=new Map();let sx=0,sv=0,ld=0;
- const view=()=>{const n=D?D.n:0;VN=Math.max(20,Math.min(200,VN));VO=Math.max(0,Math.min(Math.max(0,n-VN-1),VO))},dist=()=>{const q=[...pts.values()];return Math.hypot(q[0].x-q[1].x,q[0].y-q[1].y)||1};
- cv.addEventListener('pointerdown',e=>{try{cv.setPointerCapture(e.pointerId)}catch(_){}pts.set(e.pointerId,{x:e.clientX,y:e.clientY});if(pts.size===1){sx=e.clientX;sv=VO}else if(pts.size===2)ld=dist()});
- cv.addEventListener('pointermove',e=>{if(!pts.has(e.pointerId))return;pts.set(e.pointerId,{x:e.clientX,y:e.clientY});
-  if(pts.size===1){VO=sv+(e.clientX-sx)/((cv.clientWidth-52)/VN);view();draw()}
-  else if(pts.size===2){const d=dist();if(ld){VN=VN*ld/d;ld=d;view();draw()}}});
- const up=e=>{pts.delete(e.pointerId);if(pts.size===1){const q=[...pts.values()][0];sx=q.x;sv=VO}ld=0};
- ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,up));
- $('cvLatest').onclick=()=>{VO=0;draw()};$('zIn').onclick=()=>{VN*=.75;view();draw()};$('zOut').onclick=()=>{VN*=1.33;view();draw()}})();
-// alerts
-function beep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(),t=a.currentTime,m=a.createGain();m.gain.value=.9;m.connect(a.destination);
- [[523.25,0],[659.25,.17],[783.99,.34]].forEach(([f,d])=>{const o=a.createOscillator(),e=a.createGain();o.type='sine';o.frequency.value=f;o.connect(e);e.connect(m);
-  e.gain.setValueAtTime(0,t+d);e.gain.linearRampToValueAtTime(.13,t+d+.05);e.gain.exponentialRampToValueAtTime(.001,t+d+1);o.start(t+d);o.stop(t+d+1.05)});
- setTimeout(()=>{try{a.close()}catch(e){}},1800)}catch(e){}}
-function fire(type,price,p){
- const t=new Date(),f=v=>v.toFixed(D.dec),pl=p?{e:f(p.e),sl:f(p.sl),t1:f(p.t1),t2:f(p.t2)}:null,msg=`${S.sym} ${S.tf} ${type}`+(pl?` · Entry ${pl.e} SL ${pl.sl} TP1 ${pl.t1} TP2 ${pl.t2}`:'');
- sigs.unshift({sym:S.sym,tf:S.tf,type,price:price.toFixed(D.dec),t:t.toLocaleString(),pl});sigs=sigs.slice(0,100);try{localStorage.setItem('sp_sig',JSON.stringify(sigs))}catch(e){}
- beep();navigator.vibrate&&navigator.vibrate([200,100,200]);
- if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro',{body:msg,icon:'icon-192.png'})).catch(()=>{});
- if(S.hook)fetch(S.hook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({symbol:S.sym,timeframe:S.tf,signal:type,price,plan:pl,time:t.toISOString().slice(0,19),indicator:'SignalsPro'})}).catch(()=>{})}
-// main loop
-async function tick(){
- try{D=await load();R=compute(D);const px=D.c[0],PL=renderPlans(px);PLN=PL;
-  if(run){if(R.b)advice=1;if(R.s)advice=-1;const now=Date.now()/1000;
-   if(R.b&&now-lastB>=P.cool){fire('BUY',px,PL.buy);lastB=now}if(R.s&&now-lastS>=P.cool){fire('SELL',px,PL.sell);lastS=now}}
-  const a=$('adv');a.textContent=advice>0?'BUY':advice<0?'SELL':'WAIT';a.className='adv '+(advice>0?'buy':advice<0?'sell':'');
-  $('sym').textContent=`${S.sym} · ${S.tf}`;$('px').textContent=px.toFixed(D.dec);
-  const sup=R.zones.filter(z=>!z.res&&z.lo<px).sort((a,b)=>b.hi-a.hi)[0],res=R.zones.filter(z=>z.res&&z.hi>px).sort((a,b)=>a.lo-b.lo)[0],f=z=>z?`${z.lo.toFixed(D.dec)}–${z.hi.toFixed(D.dec)} · ${SN[z.s]}`:'None';
-  $('ns').textContent=f(sup);$('nr').textContent=f(res);$('zc').textContent=R.zones.length;$('ls').textContent=sigs[0]?`${sigs[0].type} ${sigs[0].price}`:'None yet';
-  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;draw()
- }catch(e){$('st').textContent='Error: '+e.message}}
-function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
- $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
-$('go').onclick=()=>{setRun(!run);if(run)page('ind')};
-// scanner
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={},scanForce=false;const HT={M15:'H1',M30:'H4',H1:'H4',H4:'D1'};
-function ema(a,n){const k=2/(n+1);let e=a[a.length-1];for(let i=a.length-2;i>=0;i--)e=a[i]*k+e*(1-k);return e}
-function htfDir(d){const cs=d.c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),a=atr7(d.h,d.l,d.c,d.n)[0];return Math.abs(e20-e50)/a<.3?0:e20>e50?1:-1}
-function rate(sym,d,Rr,hd){
- const{c}=d,px=c[0],a=Rr.atr,cs=c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),dir=e20>e50?1:-1,sep=Math.abs(e20-e50)/a;
- let path=0;for(let i=0;i<30;i++)path+=Math.abs(c[i]-c[i+1]);const er=path?Math.abs(c[0]-c[30])/path:0;
- const trending=er>=.3&&sep>=.5,intact=dir>0?px>e50-.5*a:px<e50+.5*a,pl=plans(px,Rr),cc=sym.replace(/[^A-Za-z]/g,'').toUpperCase();
- const mode=trending?(intact?'TREND':'BROKEN'):'RANGE';let p=null,why='',v='NO TRADE';const notes=[];
- if(mode==='TREND')p=dir>0?pl.buy:pl.sell;
- else if(mode==='RANGE'){if(pl.buy&&pl.sell){const w=(pl.sell.z.lo-pl.buy.z.hi)/a;if(w>=2)p=pl.buy.dist<=pl.sell.dist?pl.buy:pl.sell;else why='Range too tight to trade ('+w.toFixed(1)+' ATR wide)'}else why='No clear range (a zone is missing on one side)'}
- else why='Trend is breaking down, wait for it to settle';
- const rc=p?react(p,d,px):{conf:false,late:false,msg:'No reaction candle yet'},conf=rc.conf,late=rc.late,cmsg=rc.msg;
- const ok=p&&p.r1>=1&&!late,kk=p?Math.abs(p.e-p.sl)/a:0;
- let adj=0;
- if(p){adj+={4:10,3:6,2:0,1:-5}[p.z.s]||0;const hr=new Date().getUTCHours();if(hr<7||hr>=20){adj-=8;notes.push('Quiet session')}
-  if(hd!=null){const T=HT[S.stf]||'higher';if(hd===0)notes.push(T+' trend is neutral');else{const ag=(p.side==='BUY')===(hd>0);adj+=ag?8:-12;notes.push(T+' trend '+(ag?'agrees':'disagrees'));if(!ag&&mode==='TREND'&&!why)why='Higher-timeframe trend disagrees'}}}
- const fit=mode==='TREND'?Math.min(sep,3)/3*40:mode==='RANGE'?Math.max(0,.3-er)/.3*40:0;
- const raw=Math.max(0,Math.min(100,fit+(p?20:0)+Math.min(Rr.rv,1.5)/1.5*15+(ok?Math.min(p.r1,3)/3*25:0)+(ok&&conf?15:ok&&p.on?5:0)+(ok?adj:0)));
- if(!why){if(!p)why='No zone to trade from';else if(late)why='Reaction already played out';else if(Rr.rv<.5)why='Market is too quiet right now';else if(Rr.rv>2.5)why='Volatility spike, wait for it to calm down';else if(kk<.5)why='Stop would be too tight ('+kk.toFixed(1)+' ATR)';else if(kk>5)why='Stop would be too wide ('+kk.toFixed(1)+' ATR)';else if(!ok)why='Target is too close to the stop';else if(!conf&&!p.on&&p.dist>2)why='Entry is '+p.dist.toFixed(1)+' ATR away, too far to expect a fill';else v=conf?'CONFIRMED':p.on?'IN ZONE':'WAIT FOR PRICE'}
- const b=c[Math.min(48,c.length-1)];
- return{sym,dec:d.dec,dir,p,v,why,cmsg,mode,notes,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,
-  trend:mode==='TREND'?(dir>0?'Uptrend':'Downtrend')+(sep>1.5?' (strong)':' (moderate)')+' · pullback trade':mode==='RANGE'?'Ranging market · bounce trade between zones':''}}
-function renderScan(list){
- const L=list.slice().sort((x,y)=>(y.score||0)-(x.score||0));
- $('scList').innerHTML=L.map(r=>{
-  if(r.err)return `<div class="sg" style="border-left-color:var(--wait)"><div class="t"><span>${r.sym}</span><em style="background:rgba(255,204,0,.15);color:var(--wait)">Error</em></div><div class="m">${r.err}</div></div>`;
-  if(r.v==='NO TRADE')return `<div class="sg" style="opacity:.6;border-left-color:#555"><div class="t"><span>${r.sym}</span><em style="background:rgba(255,255,255,.08);color:var(--t2)">No trade</em></div><div class="m">${r.why}</div></div>`;
-  const p=r.p,f=v=>v.toFixed(r.dec),now=r.v==='CONFIRMED',cs=r.csa==null?'':r.csa>.15?'<span style="color:var(--buy)">Currency strength supports this trade</span>':r.csa<-.15?'<span style="color:var(--sell)">Currency strength is against this trade</span>':'Currency strength is neutral';
-  return `<div class="pl ${p.side==='SELL'?'sell':''} ${now?'on':''}" onclick="openSym('${r.sym}')"><h4><span>${r.sym} · ${p.side}</span><em>${r.v} · ${r.score}</em></h4>
-  <div class="note" style="margin:0 0 6px">${r.trend} · ${SN[p.z.s]} zone<br>${now?'✓ ':''}${r.cmsg}${r.v==='IN ZONE'?'. Wait for a candle to close with a reaction.':''}${cs?'<br>'+cs:''}${r.notes&&r.notes.length?'<br><span style="color:var(--t2)">'+r.notes.join(' · ')+'</span>':''}${r.dup&&r.dup.length?'<br><span style="color:var(--wait)">Overlaps: '+r.dup.join(', ')+'</span>':''}</div>
-  <div class="pr"><span>${now?'Entry (market, now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
-  <div class="pr"><span>Distance to entry</span><span>${now?'at market':p.dist.toFixed(1)+' ATR'}</span></div>
-  <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
-  <div class="pr"><span>Target 1</span><span class="tp">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div>
-  <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div></div>`}).join('')}
-function renderStr(st){
- const L=Object.entries(st).sort((a,b)=>b[1]-a[1]);
- $('scStr').innerHTML=`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Currency strength</div>${L.map(([c,v])=>`<div class="pr" style="align-items:center"><span style="width:44px;color:var(--text)">${c}</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.07);position:relative;margin:0 10px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${v>=0?'var(--buy)':'var(--sell)'};${v>=0?'left:50%':'right:50%'};width:${Math.abs(v)*50}%"></i></span><span style="width:40px;text-align:right;color:${v>=0?'var(--buy)':'var(--sell)'}">${Math.round(v*100)}</span></div>`).join('')}<div class="note">From the price change of the pairs you scanned. Best trades pair a strong currency with a weak one.</div></div>`}
-function finalize(out){
- const ok=out.filter(x=>!x.err),sum={},cnt={};
- ok.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
- const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9);
- if(ok.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);LASTST={st,t:Date.now()};
-  ok.forEach(x=>{if(!x.p)return;x.csa=(x.p.side==='BUY'?st[x.base]-st[x.quote]:st[x.quote]-st[x.base])/2;x.score=Math.max(0,Math.min(100,Math.round(x.raw+x.csa*10)))})}
- const seen={};ok.slice().sort((a,b)=>b.score-a.score).forEach(x=>{if(!x.p||x.v==='NO TRADE')return;const sg=x.p.side==='BUY'?1:-1;x.dup=[];
-  [[x.base,sg],[x.quote,-sg]].forEach(([c,s])=>{const k=c+s;if(seen[k])x.dup.push(`${c} ${s>0?'long':'short'}, same as ${seen[k]}`);else seen[k]=x.sym})});
- renderScan(out)}
-function addCred(){const t=new Date().toDateString();let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}if(c.d!==t)c={d:t,n:0};c.n++;try{localStorage.setItem('sp_cr',JSON.stringify(c))}catch(e){}showCred()}
-function showCred(){let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}$('scCr').textContent=`Scanner credits used today: ${c.d===new Date().toDateString()?c.n:0} (the daily limit of 800 is shared with the Indicator page)`}
-function notify(msg,ttl){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(ttl||'SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
-async function scan(auto){
- if(scanning)return;
- const nd=new Date(),dy=nd.getUTCDay(),hr=nd.getUTCHours();
- if(dy===6||(dy===0&&hr<21)||(dy===5&&hr>=21)){if(auto)return;if(!scanForce){scanForce=true;$('scSt').textContent='The forex market is closed, so prices are stale. Tap Scan now again to scan anyway.';return}}
- scanForce=false;scanning=true;const list=S.wl.split(',').map(x=>x.trim()).filter(Boolean),out=[];let stop=false;$('scBtn').disabled=true;
- for(let i=0;i<list.length&&!stop;i++){let tries=0;
-  while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
-   try{const d=await load(list[i],S.stf);addCred();let hd=null;
-    if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'?8000:300);const d2=await load(list[i],HT[S.stf]);addCred();hd=htfDir(d2)}catch(_){hd=null}}
-    out.push(rate(list[i],d,compute(d),hd));break}
-   catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
-    out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
-  renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'?8000:300)}
- finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym]||0)>3600).forEach(x=>{notified[x.sym]=now;const f=v=>v.toFixed(x.dec);notify(`${x.sym} ${x.p.side} CONFIRMED · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
- scanning=false;$('scBtn').disabled=false;$('scSt').textContent='Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
-function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
-$('scWl').value=S.wl;$('scTf').value=S.stf;showCred();
-$('scWl').onchange=()=>{S.wl=$('scWl').value;save()};$('scTf').onchange=()=>{S.stf=$('scTf').value;save()};
-$('scBtn').onclick=()=>scan();
-const htfLbl=()=>$('scHtf').textContent='Higher-timeframe check: '+(S.htf?'On (uses 2x credits)':'Off');
-$('scHtf').onclick=()=>{S.htf=!S.htf;save();htfLbl()};htfLbl();
-$('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').textContent='Auto-scan every 30 min: Off'}else{scan();autoT=setInterval(()=>scan(true),1800000);$('scAuto').textContent='Auto-scan every 30 min: On'}};
-// fundamentals
-let FD=null,FDT=0,LASTST=null,RX=null,SHOWALL=false;
-const FW={NFP:{n:'Non-Farm Payrolls',u:75,w:1,unit:'K',alert:1},ADP:{n:'ADP Employment',u:50,w:.4,unit:'K'},CLAIMS:{n:'Jobless Claims',u:10,w:.5,unit:'K',inv:1},UNRATE:{n:'Unemployment Rate',u:.1,w:.8,unit:'%',inv:1},AHE:{n:'Avg Hourly Earnings m/m',u:.1,w:.6,unit:'%'},JOLTS:{n:'JOLTS Job Openings',u:.25,w:.4,unit:'M',off:2},
- CPI:{n:'CPI m/m',u:.1,w:1,unit:'%',alert:1},CORE_CPI:{n:'Core CPI m/m',u:.1,w:1.2,unit:'%',alert:1},PPI:{n:'PPI m/m',u:.2,w:.5,unit:'%',alert:1},CORE_PPI:{n:'Core PPI m/m',u:.2,w:.6,unit:'%',alert:1},CORE_PCE:{n:'Core PCE m/m',u:.1,w:1,unit:'%'},PCE:{n:'PCE m/m',u:.1,w:.6,unit:'%'},
- RS:{n:'Retail Sales m/m',u:.3,w:.6,unit:'%'},CORE_RS:{n:'Core Retail Sales m/m',u:.3,w:.6,unit:'%'},GDP:{n:'GDP q/q',u:.3,w:.7,unit:'%'},ISM_MFG:{n:'ISM Manufacturing PMI',u:1,w:.6,unit:''},ISM_SVC:{n:'ISM Services PMI',u:1,w:.6,unit:''},PMI_MFG:{n:'S&P Global Manufacturing PMI',u:1,w:.5,unit:''},PMI_SVC:{n:'S&P Global Services PMI',u:1,w:.5,unit:''},INFO:{n:'High-impact event',u:1,w:0,unit:'',alert:1,info:1},FOMC:{n:'FOMC rate decision',u:.25,w:1.5,unit:'%',alert:1},X_RATE:{n:'Rate decision',u:.25,w:1.5,unit:'%',alert:1,x:1},X_CPI:{n:'CPI',u:.1,w:1,unit:'%',alert:1,x:1},X_EMP:{n:'Employment change',u:15,w:.8,unit:'K',x:1},X_UNR:{n:'Unemployment rate',u:.1,w:.8,unit:'%',inv:1,x:1},X_GDP:{n:'GDP',u:.2,w:.8,unit:'%',x:1},X_RS:{n:'Retail sales',u:.3,w:.6,unit:'%',x:1}};
-const GROUP={NFP:'L',ADP:'L',CLAIMS:'L',UNRATE:'L',AHE:'L',JOLTS:'L',CPI:'I',CORE_CPI:'I',PPI:'I',CORE_PPI:'I',CORE_PCE:'I',PCE:'I',RS:'G',CORE_RS:'G',GDP:'G',ISM_MFG:'G',ISM_SVC:'G',PMI_MFG:'G',PMI_SVC:'G'};
-const PAIRS=[['EUR/USD',-1],['GBP/USD',-1],['AUD/USD',-1],['NZD/USD',-1],['USD/JPY',1],['USD/CAD',1],['USD/CHF',1],['XAU/USD',-1]];
-const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
-const num=t=>{const m=String(t==null?'':t).replace(/,/g,'').match(/-?\d+(\.\d+)?/);return m?parseFloat(m[0]):null};
-const getAct=()=>{try{return JSON.parse(localStorage.getItem('sp_act')||'{}')}catch(e){return{}}};
-const getTone=()=>+(localStorage.getItem('sp_tone')||0);
-function setAct(id,v){const A=getAct();A[id]=v;try{localStorage.setItem('sp_act',JSON.stringify(A))}catch(e){}renderFund()}
-function setTone(v){try{localStorage.setItem('sp_tone',v)}catch(e){}renderFund()}
-function regime(m){
- if(!m)return null;let sc=0;const notes=[];
- const pol=m.fedUpper-m.fed6m;if(pol>=.2){sc+=1;notes.push('The Fed has been raising rates')}else if(pol<=-.2){sc-=1;notes.push('The Fed has been cutting rates')}else notes.push('The Fed has held rates steady');
- if(m.coreYoY>=3){sc+=1;notes.push('Core inflation is '+m.coreYoY.toFixed(1)+'%, well above the 2% target')}else if(m.coreYoY<=2.4){sc-=1;notes.push('Core inflation is '+m.coreYoY.toFixed(1)+'%, close to or under target')}else notes.push('Core inflation is '+m.coreYoY.toFixed(1)+'%, a little above target');
- const du=m.unrate-m.unrate3m;if(du>=.3){sc-=1;notes.push('Unemployment is rising ('+m.unrate.toFixed(1)+'%)')}else if(du<=-.1){sc+=.5;notes.push('Unemployment is falling ('+m.unrate.toFixed(1)+'%)')}else notes.push('Unemployment is steady at '+m.unrate.toFixed(1)+'%');
- if(m.pay3>=150){sc+=.5;notes.push('Job growth is strong ('+Math.round(m.pay3)+'K a month)')}else if(m.pay3<=50){sc-=1;notes.push('Job growth is weak ('+Math.round(m.pay3)+'K a month)')}else notes.push('Job growth is moderate ('+Math.round(m.pay3)+'K a month)');
- sc=clamp(sc,-3,3);return{sc,label:sc>=1.5?'Hawkish':sc<=-1.5?'Dovish':'Balanced',notes}}
-// 1) leading-data composites
-function labour(m){
- if(!m||!m.lab)return null;const L=m.lab,notes=[];let sc=0;
- const dc=(L.c4-L.p4)/L.p4*100;if(dc<=-3){sc+=1;notes.push('Initial jobless claims are falling ('+L.c4.toFixed(0)+'K, 4-week average)')}else if(dc>=3){sc-=1;notes.push('Initial jobless claims are rising ('+L.c4.toFixed(0)+'K, 4-week average)')}else notes.push('Initial jobless claims are steady at '+L.c4.toFixed(0)+'K');
- if(L.c4<220)sc+=.5;else if(L.c4>260)sc-=.5;
- const cc=(L.cont-L.cont13)/L.cont13*100;if(cc>=4){sc-=.5;notes.push('Continuing claims are rising, so hiring is slowing')}else if(cc<=-3){sc+=.5;notes.push('Continuing claims are falling')}else notes.push('Continuing claims are little changed');
- const jo=(L.jolts-L.joltsPrev3)/L.joltsPrev3*100;if(jo>=3){sc+=.5;notes.push('Job openings are rising (JOLTS)')}else if(jo<=-3){sc-=.5;notes.push('Job openings are falling (JOLTS)')}else notes.push('Job openings are steady (JOLTS)');
- if(L.aheMM>=.4){sc+=.5;notes.push('Wages grew '+L.aheMM.toFixed(1)+'% last month, a tight labour market')}else if(L.aheMM<=.2){sc-=.5;notes.push('Wage growth is cooling ('+L.aheMM.toFixed(1)+'% m/m)')}else notes.push('Wage growth is moderate ('+L.aheMM.toFixed(1)+'% m/m)');
- if(m.pay3>=150)sc+=.5;else if(m.pay3<=50)sc-=.5;
- const du=m.unrate-m.unrate3m;if(du>=.3)sc-=1;else if(du<=-.1)sc+=.5;
- sc=clamp(sc,-3,3);return{sc,label:sc>=1?'Strong':sc<=-1?'Soft':'Mixed',notes}}
-function inflation(m){
- if(!m||!m.inf)return null;const I=m.inf,notes=[];let sc=0;
- if(m.coreYoY>=3){sc+=1;notes.push('Core CPI is '+m.coreYoY.toFixed(1)+'% y/y, well above target')}else if(m.coreYoY<=2.4){sc-=1;notes.push('Core CPI is '+m.coreYoY.toFixed(1)+'% y/y, near or under target')}else notes.push('Core CPI is '+m.coreYoY.toFixed(1)+'% y/y');
- const dt=m.coreYoY-(m.coreYoYPrev==null?m.coreYoY:m.coreYoYPrev);if(dt>=.1){sc+=.5;notes.push('The core CPI trend is rising')}else if(dt<=-.1){sc-=.5;notes.push('The core CPI trend is easing')}
- if(I.corePceYY>=2.8){sc+=.5;notes.push('Core PCE, the Fed\'s gauge, is '+I.corePceYY.toFixed(1)+'%')}else if(I.corePceYY<=2.2){sc-=.5;notes.push('Core PCE, the Fed\'s gauge, is '+I.corePceYY.toFixed(1)+'%')}else notes.push('Core PCE is '+I.corePceYY.toFixed(1)+'%');
- const lb=m.lab;if(lb){if(lb.aheYY>=4.2){sc+=.5;notes.push('Wages are up '+lb.aheYY.toFixed(1)+'% y/y, which feeds inflation')}else if(lb.aheYY<=3.3){sc-=.5;notes.push('Wage growth ('+lb.aheYY.toFixed(1)+'% y/y) is not adding pressure')}}
- const pt=m.ppiYoY-(m.ppiYoYPrev==null?m.ppiYoY:m.ppiYoYPrev);if(pt>=.3){sc+=.5;notes.push('Producer prices are accelerating')}else if(pt<=-.3){sc-=.5;notes.push('Producer prices are slowing')}
- const be=m.rates&&m.rates.be10;if(be!=null){if(be>=2.4){sc+=.5;notes.push('Market inflation expectations are high ('+be.toFixed(2)+'%)')}else if(be<=2.1){sc-=.5;notes.push('Market inflation expectations are low ('+be.toFixed(2)+'%)')}}
- sc=clamp(sc,-3,3);return{sc,label:sc>=1?'Running hot':sc<=-1?'Cooling':'Moderate',notes}}
-// 2) what the bond market is pricing, and the risk mood
-function pricing(m){
- if(!m||!m.rates||m.rates.y2==null)return null;const r=m.rates,ff=m.fedUpper-.125,gap=r.y2-ff,Pu=clamp(gap/.25,-3,3),vix=r.vix;
- return{r,gap,Pu,label:Pu>=1?'The market is pricing rate hikes, or rates staying high':Pu<=-1?'The market is pricing rate cuts':'Market pricing is close to the current rate',
-  risk:vix==null?null:vix>=22?'Risk-off':vix<=14?'Risk-on':'Neutral',mood:vix==null?0:vix>=22?-1:vix<=14?1:0}}
-function growth(m){if(!m)return null;const L=labour(m),i=m.inf;let sc=0;
- if(i){if(i.rsMM!=null){if(i.rsMM>=.5)sc+=.5;else if(i.rsMM<=0)sc-=.5}if(i.gdp!=null){if(i.gdp>=2.5)sc+=.5;else if(i.gdp<=1)sc-=.5}}
- if(L)sc+=L.sc/3;return i||L?clamp(sc,-1.5,1.5):null}
-function preLean(e){
- const m=FD&&FD.macro;if(!m)return{v:0,txt:''};
- if(e.k==='FOMC'){const P=pricing(m);return{v:0,txt:P?P.label:''}}
- const g=GROUP[e.k];let v=0,nm='';
- if(g==='L'){const L=labour(m);if(!L)return{v:0,txt:''};v=L.sc/3;nm='Leading labour data'}
- else if(g==='I'){const I=inflation(m);if(!I)return{v:0,txt:''};v=I.sc/3;nm='Inflation indicators'}
- else if(g==='G'){const G=growth(m);if(G==null)return{v:0,txt:''};v=G/1.5;nm='Growth indicators'}
- else return{v:0,txt:''};
- return{v,txt:v>=.33?nm+' lean USD bullish, so a USD-positive result is more likely':v<=-.33?nm+' lean USD bearish, so a USD-negative result is more likely':nm+' give no clear lean'}}
-const ymd=d=>d.getUTCFullYear()+'-'+String(d.getUTCMonth()+1).padStart(2,'0');
-function autoActual(e){
- if(!FD||!FD.act||!FD.act[e.k])return null;const d=new Date(e.date);if(d>new Date())return null;const A=FD.act[e.k];
- if(e.k==='FOMC')return Date.now()-d.getTime()>26*36e5?A.v:null;
- if(e.k==='CLAIMS'){const od=Date.parse(A.d),dt=d.getTime();return od<dt&&dt-od<=9*864e5?A.v:null}
- if(e.k==='GDP'){const q=Math.floor(d.getUTCMonth()/3),r=q===0?new Date(Date.UTC(d.getUTCFullYear()-1,9,1)):new Date(Date.UTC(d.getUTCFullYear(),(q-1)*3,1));return A.ref===ymd(r)?A.v:null}
- const off=FW[e.k].off||1;return A.ref===ymd(new Date(Date.UTC(d.getUTCFullYear(),d.getUTCMonth()-off,1)))?A.v:null}
-function calcStrength(items){const sum={},cnt={};items.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
- const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9),st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);return st}
-function pairSignals(v){
- const st=LASTST?LASTST.st:null,mood=(pricing(FD&&FD.macro)||{}).mood||0;
- return PAIRS.map(([sym,dir])=>{const side=v*dir>0?'BUY':'SELL',sg=side==='BUY'?1:-1,[b,q]=sym.split('/');
-  let edge=st&&st[b]!=null&&st[q]!=null?sg*(st[b]-st[q]):0;
-  const safe=(sym==='USD/JPY'||sym==='USD/CHF')?-sg:sym==='XAU/USD'?sg:0,risky=(sym==='AUD/USD'||sym==='NZD/USD')?sg:0;
-  edge+=mood<0?.4*safe:mood>0?.3*risky:0;return{sym,side,edge}}).sort((a,b)=>b.edge-a.edge)}
-// 3) what price did after the release (5, 15 and 60 minutes, from 5-minute candles)
-function reactionFor(e,list){
- if(!RX)return null;const evt=Date.parse(e.date);if(!evt||evt>Date.now())return null;const t0=Math.floor(evt/3e5)*3e5,legs=[0,2,11],sum=[0,0,0],cnt=[0,0,0];
- for(const[sym,dir]of(list||[['EUR/USD',-1],['GBP/USD',-1],['AUD/USD',-1],['USD/JPY',1]])){const q=RX.px[sym];if(!q)continue;const i=q.t.indexOf(t0);if(i<0)continue;const op=q.o[i];
-  legs.forEach((k,j)=>{const ix=i-k;if(ix<0)return;sum[j]+=(q.c[ix]/op-1)*100*dir;cnt[j]++})}
- if(!cnt[0])return null;const u=sum.map((x,j)=>cnt[j]?x/cnt[j]:null),w=[.3,.5,.2];let sc=0,ws=0;u.forEach((x,j)=>{if(x!=null){sc+=w[j]*x;ws+=w[j]}});
- return{u5:u[0],u15:u[1],u60:u[2],score:clamp(sc/ws/.2,-1,1),fade:u[1]!=null&&u[2]!=null&&Math.sign(u[1])!==Math.sign(u[2])&&Math.abs(u[2])>.03}}
-function verdictFor(e,a,reg){
- if(FW[e.k]&&FW[e.k].x)return verdictCcy(e,a);
- const w=FW[e.k],f=num(e.forecast),p=num(e.previous);if(a==null||f==null)return null;let s;
- if(e.k==='FOMC'){if(p==null)return null;const P=pricing(FD&&FD.macro);s=clamp(((a-p)-(f-p))/w.u,-2,2)*w.w+getTone()+(P?.4*clamp((a-p)/.25-P.Pu,-2,2):0)}else s=clamp((w.inv?f-a:a-f)/w.u,-2,2)*w.w;
- const M=reg?reg.sc:0,lean=preLean(e).v,rx=reactionFor(e),pr=rx?rx.score:(LASTST?(LASTST.st.USD||0):0),total=s+.4*M+.6*lean+.8*pr;
- const sg=[s,M,lean,pr].map(x=>Math.abs(x)<.3?0:Math.sign(x)),dn=Math.sign(total),ag=sg.filter(x=>x===dn).length,op=sg.filter(x=>x===-dn).length;
- return{s,M,lean,pr,rx,total,dir:total>=1?1:total<=-1?-1:0,conv:Math.abs(total)<1?'Low':ag>=3&&!op?'High':ag>=2&&!op?'Medium':'Low'}}
-async function loadFund(force){
- if(!force&&FD&&Date.now()-FDT<600000){renderFund();return}
- $('fSt').textContent='Loading fundamentals…';
- try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){showLock(j.msg);return}FD=j;FDT=Date.now();renderFund();renderNews()}
- catch(e){$('fSt').textContent='Cannot load fundamentals. Check your internet and try again.'}}
-async function priceCheck(){
- const L=['EUR/USD','GBP/USD','USD/JPY','AUD/USD'],it=[],px={};
- for(let i=0;i<L.length;i++){$('fSt').textContent='Checking '+L[i]+' ('+(i+1)+'/4)…';
-  try{const d=await load(L[i],'M5');addCred();px[L[i]]={t:d.t,o:d.o,c:d.c};const c=d.c,b=c[Math.min(288,c.length-1)],cc=L[i].replace('/','');it.push({base:cc.slice(0,3),quote:cc.slice(3),chg:(c[0]-b)/b})}catch(e){$('fSt').textContent=e.message;break}
-  if(i<L.length-1)await sleep(8000)}
- if(it.length>=3){LASTST={st:calcStrength(it),t:Date.now()};RX={t:Date.now(),px}}renderFund()}
-const GAUGE=(sc,l,rt)=>`<div class="gauge"><i style="left:${(sc+3)/6*100}%"></i></div><div class="gl"><span>${l}</span><span>${rt}</span></div>`;
-const colr=v=>v>0?'var(--buy)':v<0?'var(--sell)':'var(--wait)',pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
-const CCY_PAIR={EUR:['EUR/USD',1],GBP:['GBP/USD',1],AUD:['AUD/USD',1],NZD:['NZD/USD',1],JPY:['USD/JPY',-1],CAD:['USD/CAD',-1],CHF:['USD/CHF',-1]};
-const evName=e=>e.c&&e.c!=='USD'?e.c+' · '+e.title:(['GDP','PMI_MFG','PMI_SVC','INFO'].includes(e.k)&&e.title?e.title:FW[e.k].n);
-function reactionCcy(e){const pp=CCY_PAIR[e.c];return pp?reactionFor(e,[[pp[0],pp[1]]]):null}
-function verdictCcy(e,a){
- const w=FW[e.k],f=num(e.forecast);if(a==null||f==null)return null;
- const u=e.k==='X_EMP'&&!/K/i.test(e.forecast||'')?.2:w.u,s=clamp((a-f)/u,-2,2)*w.w*(w.inv?-1:1);
- const rx=reactionCcy(e),st=LASTST&&LASTST.st[e.c]!=null?LASTST.st[e.c]:0,pr=rx?rx.score:st,total=s+.8*pr;
- const sg=[s,pr].map(x=>Math.abs(x)<.3?0:Math.sign(x)),dn=Math.sign(total),ag=sg.filter(x=>x===dn).length,op=sg.filter(x=>x===-dn).length;
- return{s,pr,rx,total,hasPrice:!!rx||(LASTST&&LASTST.st[e.c]!=null),dir:total>=1?1:total<=-1?-1:0,conv:Math.abs(total)<1?'Low':ag>=2&&!op&&Math.abs(total)>=2?'High':ag>=1&&!op?'Medium':'Low'}}
-function ccyCard(e,A){
- const w=FW[e.k],d=new Date(e.date),past=d<new Date(),id=e.k+'|'+e.c+'|'+e.date.slice(0,10),man=A[id]!=null&&A[id]!=='',a=man?num(A[id]):null,V=verdictCcy(e,a),pp=CCY_PAIR[e.c],rx=past?reactionCcy(e):null,col=colr;
- const when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'});
- const sfx=e.k==='X_EMP'&&!/K/i.test(e.forecast||'')?'%':w.unit,row=(l,v)=>`<div class="pr"><span>${l}</span><span>${v}</span></div>`;
- const side=dir=>pp?(dir*pp[1]>0?'BUY':'SELL')+' '+pp[0]:'';
- let body=`<div class="fgrid"><div><span class="fk">Forecast</span><b>${e.forecast||'—'}</b></div><div><span class="fk">Previous</span><b>${e.previous||'—'}</b></div><div><span class="fk">Actual${a!=null?' · you':''}</span><b style="color:var(--accent)">${a!=null?a+sfx:'—'}</b></div></div>`;
- if(past)body+=`<input class="inp" style="margin:0" inputmode="decimal" placeholder="Enter the actual number" value="${man?A[id]:''}" onchange="setAct('${id}',this.value)">`;
- if(rx)body+=`<div class="fk" style="margin-top:14px">${e.c} price reaction</div><div class="fgrid"><div><span class="fk">5 min</span><b style="color:${col(rx.u5)}">${pc(rx.u5)}</b></div><div><span class="fk">15 min</span><b style="color:${col(rx.u15)}">${pc(rx.u15)}</b></div><div><span class="fk">60 min</span><b style="color:${col(rx.u60)}">${pc(rx.u60)}</b></div></div>${rx.fade?'<div class="note" style="color:var(--wait)">The first move is fading. Be careful chasing it.</div>':''}`;
- let sig='';
- if(V){const nd=V.conv==='High'?3:V.conv==='Medium'?2:1;
-  sig=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 0"><span class="vd u${V.dir}">${V.dir>0?e.c+' BULLISH':V.dir<0?e.c+' BEARISH':'NO CLEAR BIAS'}</span><span class="dots">${V.conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
-  <div style="margin-top:12px">${row('News surprise','<b style="color:'+col(V.s)+'">'+(V.s>=0?'+':'')+V.s.toFixed(1)+'</b>')}${V.rx?row('Price reaction','<b style="color:'+col(V.pr)+'">'+(V.pr>=0?'+':'')+(V.pr*.8).toFixed(1)+'</b>'):row('Price strength',V.hasPrice?'<b style="color:'+col(V.pr)+'">'+(V.pr>=0?'+':'')+(V.pr*.8).toFixed(1)+'</b>':'not available for '+e.c)}</div>
-  ${V.dir&&pp?'<div class="fk" style="margin-top:14px">Pair to look at</div><div><button class="chip '+side(V.dir).split(' ')[0]+'" onclick="openSym(\''+pp[0]+'\')">'+side(V.dir)+'</button></div><div class="note">Tap the pair to open its chart. Take entries, stop and targets from the Indicator zone plan.</div>':'<div class="note">The signals are mixed, so conviction is low. Wait for price to confirm a direction.</div>'}`}
- else if(!past)sig=`<div class="fgrid" style="grid-template-columns:1fr 1fr;margin-bottom:6px"><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--buy)">Beats forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">${e.c} bullish${w.inv?' (lower is better)':''}</b><br>${side(1)}</div></div><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--sell)">Misses forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">${e.c} bearish</b><br>${side(-1)}</div></div></div>`;
- else sig='<div class="note" style="margin-top:8px">Waiting for the actual number. There is no automatic source for this release, so enter it above for an instant signal.</div>';
- return `<div class="fcard ${V&&V.dir>0?'bull':V&&V.dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST</div></div><span class="pillx ${past?'':'up'}">${past?'Released':'Upcoming'}</span></div>${body}${sig}</div>`}
-function preConv(lean,M,cs){
- const total=2*lean+.4*M+.5*cs,cand=total>0?1:total<0?-1:0,sg=Math.sign;
- const ag=[Math.abs(lean)>=.17&&sg(lean)===cand,Math.abs(M)>=.5&&sg(M)===cand,Math.abs(cs)>=.2&&sg(cs)===cand].filter(Boolean).length;
- const op=[Math.abs(lean)>=.17&&sg(lean)===-cand,Math.abs(M)>=.5&&sg(M)===-cand,Math.abs(cs)>=.4&&sg(cs)===-cand].filter(Boolean).length;
- let conv='None';
- if(cand){if(ag>=2&&!op)conv=ag===3&&Math.abs(total)>=1.6?'High':'Medium';else if(ag>=2&&Math.abs(total)>=.8)conv='Low';else if(ag===1&&!op&&Math.abs(total)>=1.2)conv='Low'}
- return{dir:conv==='None'?0:cand,conv,ag,total}}
-function preSignal(e){
- const m=FD&&FD.macro,w=FW[e.k];if(!m||!w||w.x||w.info)return null;let lean=0;
- if(e.k==='FOMC'){const L=labour(m),I=inflation(m),P=pricing(m);if(!L&&!I)return null;lean=clamp(((L?L.sc:0)+(I?I.sc:0))/6-(P?.3*P.Pu/3:0),-1,1)}
- else if(GROUP[e.k])lean=preLean(e).v;else return null;
- const reg=regime(m),M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,total=2*lean+.4*M+.5*cs;
- const R=preConv(lean,M,cs);return{dir:R.dir,total:R.total,lean,M,cs,agree:R.ag,hasPrice:!!LASTST,conv:R.conv}}
-function preBlock(e,PS){
- if(!PS)return '';const col=colr,row=(l,v)=>`<div class="pr"><span>${l}</span><span>${v}</span></div>`,hrs=Math.max(0,(Date.parse(e.date)-Date.now())/36e5);
- if(!PS.dir)return `<div class="fk" style="margin-top:14px">Pre-news signal</div><div class="note"><b style="color:var(--wait)">No pre-news edge.</b> The leading data, the Fed and macro picture and price momentum don't agree strongly enough. Wait for the number, or for price to pick a direction.</div>`;
- const nd=PS.conv==='High'?3:PS.conv==='Medium'?2:1,ch=pairSignals(PS.dir),f=v=>(v>=0?'+':'')+v.toFixed(1);
- return `<div class="fk" style="margin-top:14px">Pre-news signal</div>
-  <div style="margin-top:8px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 0"><span class="vd u${PS.dir}">USD ${PS.dir>0?'BULLISH':'BEARISH'}</span><span class="dots">${PS.conv} conviction · ${PS.agree} of 3 agree<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
-  <div style="margin-top:12px">${row('Leading data lean','<b style="color:'+col(PS.lean)+'">'+f(PS.lean*2)+'</b>')}${row('Fed &amp; macro regime','<b style="color:'+col(PS.M)+'">'+f(PS.M*.4)+'</b>')}${row('Price momentum',PS.hasPrice?'<b style="color:'+col(PS.cs)+'">'+f(PS.cs*.5)+'</b>':'not checked')}</div>
-  <div class="fk" style="margin-top:14px">Pairs to look at · ★ best fit with price strength</div><div>${ch.map((c,i)=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym}${i<2&&c.edge>.2?' ★':''}</button>`).join('')}</div>
-  <div class="note">Take entries, stop and targets from the Indicator zone plan on these pairs. Spreads widen and price can gap around the release, so allow for slippage when you size the trade.${hrs<2?' The release is close, so spreads are already widening.':''} This is a positioning bias from data the number has not confirmed yet. It is not a prediction and it has not been backtested.</div>`}
-function infoCard(e){
- const d=new Date(e.date),past=d<new Date(),when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'});
- return `<div class="fcard"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST</div></div><span class="pillx ${past?'':'up'}">${past?'Passed':'Upcoming'}</span></div><div class="note" style="margin-top:10px">A high-impact event with no number to score, so there is no automatic signal. Prices can move sharply on the wording or tone.</div></div>`}
-function renderFund(){
- if(!FD)return;const reg=regime(FD.macro),m=FD.macro,col=colr,L=labour(m),I=inflation(m),P=pricing(m);
- $('fMacro').innerHTML=reg?`<div class="fcard ${reg.sc>=1.5?'bull':reg.sc<=-1.5?'bear':''}"><div class="fk">Fed &amp; macro regime</div>
-  <div style="font-size:30px;font-weight:900;margin-top:4px;color:${col(reg.sc)}">${reg.label}</div>${GAUGE(reg.sc,'Dovish · USD bearish','Hawkish · USD bullish')}
-  <div class="fgrid"><div><span class="fk">Fed funds</span><b>${m.fedUpper}%</b></div><div><span class="fk">CPI y/y</span><b>${m.cpiYoY.toFixed(1)}%</b></div><div><span class="fk">PPI y/y</span><b>${m.ppiYoY.toFixed(1)}%</b></div></div>
-  ${reg.notes.map(n=>'<div class="pr"><span style="color:var(--text)">'+n+'</span></div>').join('')}</div>`
-  :`<div class="fcard"><div class="fk">Fed &amp; macro regime</div><div class="note" style="margin-top:8px">Macro data isn't connected yet, so only the news surprise and price strength are used. Add a free FRED API key to your Google script to enable the Fed and macro view.</div></div>`;
- const comp=(t,o,l,r2,sub)=>o?`<div class="fcard ${o.sc>=1?'bull':o.sc<=-1?'bear':''}"><div class="fk">${t}</div><div style="font-size:24px;font-weight:900;margin-top:4px;color:${col(o.sc)}">${o.label}</div>${GAUGE(o.sc,l,r2)}<div class="note" style="margin:0 0 6px">${sub}</div>${o.notes.map(n=>'<div class="pr"><span style="color:var(--text)">'+n+'</span></div>').join('')}</div>`:'';
- const rt=P?`<div class="fcard ${P.Pu>=1?'bull':P.Pu<=-1?'bear':''}"><div class="fk">Rate expectations &amp; risk mood</div><div style="font-size:20px;font-weight:900;margin-top:6px;color:${col(P.Pu)}">${P.label}</div>
-  <div class="fgrid"><div><span class="fk">2Y yield</span><b>${P.r.y2.toFixed(2)}%</b></div><div><span class="fk">10Y yield</span><b>${P.r.y10!=null?P.r.y10.toFixed(2)+'%':'—'}</b></div><div><span class="fk">10Y − 2Y</span><b>${P.r.y10!=null?(P.r.y10-P.r.y2>=0?'+':'')+(P.r.y10-P.r.y2).toFixed(2):'—'}</b></div><div><span class="fk">Breakeven</span><b>${P.r.be10!=null?P.r.be10.toFixed(2)+'%':'—'}</b></div><div><span class="fk">VIX</span><b>${P.r.vix!=null?P.r.vix.toFixed(1):'—'}</b></div><div><span class="fk">2Y vs Fed</span><b style="color:${col(P.gap)}">${(P.gap>=0?'+':'')+P.gap.toFixed(2)}</b></div></div>
-  <div class="note">${P.risk?'Risk mood: <b style="color:var(--text)">'+P.risk+'</b>. '+(P.mood<0?'Risk-off tends to support the yen, Swiss franc and gold against USD strength.':P.mood>0?'Risk-on tends to support AUD and NZD.':'No strong safe-haven or risk tilt.'):''} The 2-year yield sits ${Math.abs(P.gap).toFixed(2)} points ${P.gap>=0?'above':'below'} the Fed rate.</div></div>`:'';
- $('fExtra').innerHTML=comp('Labour composite',L,'Weak labour · USD bearish','Strong labour · USD bullish','Built from jobless claims, JOLTS, wages, payrolls and unemployment. It leans the NFP outcome before the release.')+comp('Inflation composite',I,'Cooling · USD bearish','Running hot · USD bullish','Built from core CPI, core PCE, wages, PPI and market breakevens. It leans CPI and PPI before the release.')+rt;
- const age=LASTST?Math.round((Date.now()-LASTST.t)/6e4):null,usd=LASTST?(LASTST.st.USD||0):0;
- $('fCS').innerHTML=`<div class="fcard ${usd>.15?'bull':usd<-.15?'bear':''}"><div class="fk">Price check · strength &amp; reaction</div>${LASTST?`<div class="pr" style="align-items:center;border:0"><span style="width:44px;color:var(--text);font-weight:800">USD</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(255,255,255,.08);position:relative;margin:0 12px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${usd>=0?'var(--buy)':'var(--sell)'};${usd>=0?'left:50%':'right:50%'};width:${Math.abs(usd)*50}%"></i></span><span style="font-weight:900;color:${col(usd)}">${Math.round(usd*100)}</span></div><div class="note">Checked ${age<1?'just now':age+' min ago'}. USD strength is the last 24 hours of price. The same check measures how price moved in the 5, 15 and 60 minutes after each release below.</div>`:'<div class="note" style="margin-top:8px">Not checked yet. Run the check so signals can use currency strength and the real price reaction to each release.</div>'}
-  <button class="btn ghost" onclick="priceCheck()">Check price reaction &amp; strength (4 credits)</button></div>`;
- const now=Date.now(),A=getAct(),lo=SHOWALL?3:1.5,hi=SHOWALL?8:3,ev=(FD.events||[]).filter(e=>FW[e.k]).filter(e=>{const t=new Date(e.date).getTime();return t>now-lo*864e5&&t<now+hi*864e5}).sort((a,b)=>new Date(a.date)-new Date(b.date));
- $('fEvents').innerHTML=ev.length?ev.map(e=>{
-  if(FW[e.k].info)return infoCard(e);
-  if(FW[e.k].x)return ccyCard(e,A);
-  const w=FW[e.k],d=new Date(e.date),past=d<new Date(),id=e.k+'|'+e.date.slice(0,10),man=A[id]!=null&&A[id]!=='',au=autoActual(e),a=man?num(A[id]):au,V=verdictFor(e,a,reg),rx=past?reactionFor(e):null,pl=preLean(e);
-  const when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'});
-  const sfx=w.unit,row=(l,v)=>`<div class="pr"><span>${l}</span><span>${v}</span></div>`;
-  let body=`<div class="fgrid"><div><span class="fk">Forecast</span><b>${e.forecast||'—'}</b></div><div><span class="fk">Previous</span><b>${e.previous||'—'}</b></div><div><span class="fk">Actual${a!=null?(man?' · you':' · auto'):''}</span><b style="color:var(--accent)">${a!=null?a+sfx:'—'}</b></div></div>`;
-  if(past)body+=`<input class="inp" style="margin:0" inputmode="decimal" placeholder="Enter the actual number" value="${man?A[id]:''}" onchange="setAct('${id}',this.value)">`;
-  if(e.k==='FOMC')body+=`<label>Fed tone (your read of the statement)</label><select class="inp" onchange="setTone(this.value)"><option value="-1" ${getTone()<0?'selected':''}>Dovish</option><option value="0" ${getTone()===0?'selected':''}>Neutral</option><option value="1" ${getTone()>0?'selected':''}>Hawkish</option></select>`;
-  if(rx)body+=`<div class="fk" style="margin-top:14px">USD price reaction</div><div class="fgrid"><div><span class="fk">5 min</span><b style="color:${col(rx.u5)}">${pc(rx.u5)}</b></div><div><span class="fk">15 min</span><b style="color:${col(rx.u15)}">${pc(rx.u15)}</b></div><div><span class="fk">60 min</span><b style="color:${col(rx.u60)}">${pc(rx.u60)}</b></div></div>${rx.fade?'<div class="note" style="color:var(--wait)">The first move is fading. Be careful chasing it.</div>':''}`;
-  else if(past&&LASTST)body+='<div class="note" style="margin-top:8px">No price reaction for this release (it is outside the 5-minute data window).</div>';
-  let sig='';
-  if(V){const ch=pairSignals(V.dir||1),nd=V.conv==='High'?3:V.conv==='Medium'?2:1;
-   sig=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:6px 0"><span class="vd u${V.dir}">${V.dir>0?'USD BULLISH':V.dir<0?'USD BEARISH':'NO CLEAR BIAS'}</span><span class="dots">${V.conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
-   <div style="margin-top:12px">${row('News surprise','<b style="color:'+col(V.s)+'">'+(V.s>=0?'+':'')+V.s.toFixed(1)+'</b>')}${row('Fed &amp; macro regime',reg?reg.label+' <b style="color:'+col(V.M)+'">('+(V.M>=0?'+':'')+(V.M*.4).toFixed(1)+')</b>':'not connected')}${row('Leading data',pl.txt?'<b style="color:'+col(V.lean)+'">'+(V.lean>=0?'+':'')+(V.lean*.6).toFixed(1)+'</b>':'not connected')}${V.rx?row('Price reaction','<b style="color:'+col(V.pr)+'">'+(V.pr>=0?'+':'')+(V.pr*.8).toFixed(1)+'</b>'):row('Price strength',LASTST?'<b style="color:'+col(V.pr)+'">'+(V.pr>=0?'+':'')+(V.pr*.8).toFixed(1)+'</b>':'not checked')}</div>
-   ${V.dir?'<div class="fk" style="margin-top:14px">Pairs to look at · ★ best fit with price strength</div><div>'+ch.map((c,i)=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym}${i<2&&c.edge>.2?' ★':''}</button>`).join('')+'</div><div class="note">Tap a pair to open its chart. Take entries, stop and targets from the Indicator zone plan.</div>':'<div class="note">The signals are mixed, so conviction is low. Wait for price to confirm a direction.</div>'}`}
-  else if(!past){const PS=preSignal(e),pre=preBlock(e,PS),up=pairSignals(1).slice(0,4).map(c=>c.side+' '+c.sym).join(', '),dn=pairSignals(-1).slice(0,4).map(c=>c.side+' '+c.sym).join(', ');
-   sig=`${pre}${pl.txt?'<div class="note" style="margin-top:10px"><b style="color:var(--text)">Leading data:</b> '+pl.txt+'.</div>':''}<div class="fgrid" style="grid-template-columns:1fr 1fr;margin-bottom:6px"><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--buy)">Better than forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">USD bullish</b><br>${up}</div></div><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--sell)">Worse than forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">USD bearish</b><br>${dn}</div></div></div>
-   <div class="note">${w.inv?'For this release a lower number is better for the dollar. ':''}${reg?'Macro lean: '+reg.label+'.':''}</div>`}
-  else sig='<div class="note" style="margin-top:8px">Waiting for the actual number. It fills in by itself when the data source updates, or enter it above for an instant signal.</div>';
-  return `<div class="fcard ${V&&V.dir>0?'bull':V&&V.dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST</div></div><span class="pillx ${past?'':'up'}">${past?'Released':'Upcoming'}</span></div>${body}${sig}</div>`}).join('')
-  :'<div class="fcard"><div class="note">No tracked US releases in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>';
- $('fEvents').innerHTML+='<button class="btn ghost" onclick="SHOWALL=!SHOWALL;renderFund()">'+(SHOWALL?'Show fewer events':'Show the full week')+'</button>';
- $('fSt').innerHTML='Updated '+new Date(FDT).toLocaleTimeString()+' · <a href="#" style="color:var(--accent)" onclick="loadFund(true);return false">Refresh</a>'}
-// today's news: card on Home, warning bar everywhere, and a chime 15 minutes before
-const sastKey=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Johannesburg'}).format(d),sastHM=d=>d.toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
-function inTxt(ms){const m=Math.max(0,Math.round(Math.abs(ms)/6e4)),h=Math.floor(m/60),t=h?h+'h '+String(m%60).padStart(2,'0')+'m':m+'m';return ms>0?'in '+t:t+' ago'}
-const getNA=()=>{try{return JSON.parse(localStorage.getItem('sp_na')||'{}')}catch(e){return{}}};
-function renderNews(){
- const card=$('news'),bar=$('newsBar');if(!card)return;
- if(!FD||!FD.events){card.innerHTML='';bar.style.display='none';return}
- const now=Date.now(),evs=FD.events.filter(e=>FW[e.k]).map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
- const dayTxt=new Date().toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',timeZone:'Africa/Johannesburg'});
- const row=e=>{const d=e.t-now,soon=d>0&&d<36e5,done=d<=0&&d<-36e5*3,tag=d>0?inTxt(d):d>-36e5*3?'Released '+inTxt(d):'Released',w=FW[e.k],PS=d>0?preSignal(e):null,pt=PS&&PS.dir?' · Pre-news: USD '+(PS.dir>0?'bullish':'bearish')+' ('+PS.conv+')':'';
-  return `<div class="nrow"><div class="nt">${sastHM(new Date(e.t))}</div><div class="nm"><b><i class="imp" style="background:${e.impact==='High'?'var(--sell)':'var(--wait)'}"></i>${evName(e)}</b><span>Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}${pt}</span></div><span class="pillx ${soon?'hot':d>0?'up':'dn'}">${tag}</span></div>`};
- card.innerHTML=`<div class="fcard" style="text-align:left"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="fk">Today's news · SAST</div><div style="font-size:16px;font-weight:800;margin-top:3px">${dayTxt}</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="page('fund');return false">All events ›</a></div>
-  <div style="margin-top:8px">${td.length?td.map(row).join(''):'<div class="note" style="margin:10px 0 4px">'+(FD.evErr?'The calendar feed is unavailable right now.':'No tracked US releases today.')+'</div>'}</div>
-  ${!td.length&&next?'<div class="note">Next: <b style="color:var(--text)">'+evName(next)+'</b> · '+new Date(next.t).toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' ('+inTxt(next.t-now)+')</div>':''}
-  <div class="note" style="margin-top:8px"><i class="imp" style="background:var(--sell)"></i>High impact <i class="imp" style="background:var(--wait);margin-left:10px"></i>Medium impact</div></div>`;
- const hot=evs.filter(e=>(e.impact==='High'||FW[e.k].alert)&&e.t-now<=36e5&&e.t-now>=-9e5).sort((a,b)=>Math.abs(a.t-now)-Math.abs(b.t-now))[0];
- if(hot){const d=hot.t-now,nm=evName(hot);bar.className='nbar'+(d>0&&d<6e5?' danger':'');bar.style.display='block';
-  bar.textContent=d>0?`High-impact news: ${nm} ${inTxt(d)} (${sastHM(new Date(hot.t))} SAST).${(()=>{const q=preSignal(hot);return q&&q.dir?' Pre-news bias: USD '+(q.dir>0?'bullish':'bearish')+' ('+q.conv+').':''})()}`:`${nm} was released ${inTxt(d)}.`}
- else bar.style.display='none';
- const NA=getNA();evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date;if(d>0&&d<=9e5&&!NA[id]&&(e.impact==='High'||FW[e.k].alert)){NA[id]=1;try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}notify(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${(()=>{const q=preSignal(e);return q&&q.dir?' Pre-news bias: USD '+(q.dir>0?'bullish':'bearish')+' ('+q.conv+').':''})()}`,'High-impact news')}})}
-setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
-$('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
-// settings
-S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
-$('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
-$('logout').onclick=()=>{if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
-$('notif').onclick=()=>{window.Notification?Notification.requestPermission().then(p=>$('notif').textContent=p==='granted'?'Alerts on':'Alerts blocked'):$('notif').textContent='Not supported'};
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
-addEventListener('resize',draw);
-</script></body></html>
+  document.getElementById("year").textContent = new Date().getFullYear();
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("./sw.js").catch(function (error) {
+        console.warn("SignalsPro service worker registration failed:", error);
+      });
+    });
+  }
+</script>
+</body>
+</html>
