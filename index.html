@@ -1,269 +1,320 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#070a12">
-  <meta name="description" content="SignalsPro is a premium market-analysis workspace with market zones, trade planning, scanning and macroeconomic context. Web access available; pricing is R1,000 once-off.">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-title" content="SignalsPro">
-  <link rel="manifest" href="./manifest.json">
-  <link rel="icon" type="image/png" href="./icon-192.png">
-  <link rel="apple-touch-icon" href="./icon-192.png">
-  <title>SignalsPro — Premium Market Analysis Workspace</title>
-  <style>
-    :root{color-scheme:dark;--bg:#070a12;--panel:#0d1322;--panel2:#101a2d;--line:rgba(151,180,230,.16);--text:#f4f7ff;--muted:#a4b0c7;--blue:#3988ff;--cyan:#43d9f5;--green:#4df2ad;--glow:rgba(45,130,255,.28)}
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6;overflow-x:hidden}
-    a{color:inherit;text-decoration:none}
-    .bgfx{position:fixed;inset:0;z-index:-2;pointer-events:none;background:radial-gradient(ellipse at 15% 15%,rgba(28,93,207,.2),transparent 38%),radial-gradient(ellipse at 90% 35%,rgba(0,192,255,.09),transparent 35%),linear-gradient(180deg,#070a12,#080d18 65%,#070a12)}
-    .wrap{width:min(1120px,calc(100% - 40px));margin:auto}
-    header{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(151,180,230,.1)}
-    .brand{display:flex;align-items:center;gap:11px;font-weight:850;letter-spacing:-.5px;font-size:20px}
-    .brand-icon{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--blue),#14c6e8);display:grid;place-items:center;box-shadow:0 0 28px var(--glow)}
-    .brand-icon svg{width:25px;height:25px}
-    .brand span{color:#67b9ff}
-    .nav{display:flex;align-items:center;gap:25px;color:var(--muted);font-size:13px}
-    .nav a:hover,.textlink:hover{color:#fff}
-    .nav-cta{border:1px solid var(--line);padding:9px 14px;border-radius:10px;color:#fff!important}
-    .hero{padding:80px 0 65px;display:grid;grid-template-columns:1.04fr .96fr;align-items:center;gap:45px;min-height:570px}
-    .eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(68,151,255,.28);background:rgba(35,108,220,.09);color:#9bcaff;border-radius:30px;padding:7px 12px;font-size:11px;letter-spacing:1.5px;font-weight:800;text-transform:uppercase}
-    .pulse{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
-    h1{font-size:clamp(42px,6vw,68px);line-height:1.04;letter-spacing:-3px;margin:23px 0 20px;font-weight:850}
-    .gradient{background:linear-gradient(100deg,#fff 12%,#8fc6ff 53%,#48ddf5);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .lead{font-size:17px;color:var(--muted);max-width:570px;line-height:1.8}
-    .actions{display:flex;gap:12px;flex-wrap:wrap;margin:29px 0 17px}
-    .btn{display:inline-flex;justify-content:center;align-items:center;gap:10px;border-radius:12px;padding:14px 18px;font-size:14px;font-weight:800;transition:transform .2s,box-shadow .2s;border:1px solid transparent}
-    .btn:hover{transform:translateY(-2px)}
-    .primary{background:linear-gradient(100deg,#2878f6,#27bfe8);color:#fff;box-shadow:0 9px 30px rgba(35,120,255,.24)}
-    .secondary{background:rgba(255,255,255,.025);border-color:var(--line);color:#f4f7ff}
-    .fine{font-size:12px;color:#8593ad}
-    .chart-shell{position:relative;border:1px solid rgba(111,163,245,.22);border-radius:24px;padding:17px;background:linear-gradient(145deg,rgba(17,29,51,.96),rgba(8,13,24,.95));box-shadow:0 25px 90px rgba(0,0,0,.38),0 0 55px rgba(31,112,246,.1);overflow:hidden}
-    .chart-shell:before{content:"";position:absolute;inset:-50% 20% auto;height:180px;background:rgba(32,120,255,.16);filter:blur(65px);pointer-events:none}
-    .chart-top{display:flex;justify-content:space-between;gap:10px;align-items:center;position:relative}
-    .chart-title{font-size:12px;color:#a8b8d4;font-weight:700}
-    .chart-tag{font-size:10px;color:var(--green);border:1px solid rgba(77,242,173,.2);background:rgba(77,242,173,.07);padding:5px 8px;border-radius:20px}
-    .chart{display:block;width:100%;height:auto;margin:20px 0 5px;position:relative}
-    .chart-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
-    .stat{border:1px solid rgba(151,180,230,.12);background:rgba(255,255,255,.025);border-radius:12px;padding:11px}
-    .stat small{display:block;color:#8999b4;font-size:10px}
-    .stat b{display:block;font-size:14px;margin-top:4px}
-    .up{color:var(--green)}.down{color:#ff748b}
-    .section{padding:66px 0}
-    .section-head{text-align:center;max-width:680px;margin:0 auto 34px}
-    .section-head h2{font-size:clamp(28px,4vw,40px);letter-spacing:-1.3px;line-height:1.15;margin:12px 0}
-    .section-head p{color:var(--muted);margin:0}
-    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}
-    .card{border:1px solid var(--line);border-radius:18px;padding:23px;background:linear-gradient(145deg,rgba(17,27,47,.8),rgba(10,15,27,.85));min-height:190px}
-    .card-icon{width:43px;height:43px;border-radius:13px;display:grid;place-items:center;color:#8cc6ff;background:rgba(47,129,255,.12);border:1px solid rgba(68,151,255,.2);margin-bottom:18px}
-    .card-icon svg{width:23px;height:23px}
-    .card h3{font-size:17px;margin:0 0 8px}
-    .card p{font-size:13px;color:var(--muted);margin:0}
-    .access{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .access-card{border:1px solid var(--line);border-radius:20px;padding:26px;background:rgba(13,19,34,.8)}
-    .access-card h3{margin:0 0 8px;font-size:20px}
-    .access-card p{color:var(--muted);font-size:14px;margin:0 0 19px}
-    .access-card .btn{width:100%}
-    .step{display:flex;gap:13px;margin:18px 0;color:var(--muted);font-size:14px}
-    .num{width:27px;height:27px;flex:none;display:grid;place-items:center;border-radius:9px;background:rgba(55,133,255,.14);color:#9acaff;font-size:12px;font-weight:800}
-    .disclaimer{border:1px solid rgba(151,180,230,.13);border-radius:14px;padding:15px 17px;color:#95a3bc;font-size:12px;background:rgba(255,255,255,.02);margin-top:30px}
-    footer{border-top:1px solid rgba(151,180,230,.1);padding:26px 0 35px;color:#8391a9;font-size:12px}
-    .footer-row{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
-    .textlink{color:#b6c5df}
-    .price-section{padding-top:20px}
-    .pricing-wrap{max-width:760px;margin:auto}
-    .pricing-card{position:relative;overflow:hidden;border:1px solid rgba(72,174,255,.38);border-radius:26px;padding:clamp(24px,5vw,42px);background:radial-gradient(ellipse at 50% 0%,rgba(49,130,246,.18),transparent 55%),linear-gradient(145deg,rgba(17,29,51,.96),rgba(8,13,24,.98));box-shadow:0 24px 80px rgba(0,0,0,.3),0 0 50px rgba(31,112,246,.09)}
-    .price-top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-    .price-label{display:inline-flex;align-items:center;gap:8px;color:#9bcaff;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;border:1px solid rgba(68,151,255,.25);background:rgba(35,108,220,.1);border-radius:30px;padding:8px 12px}
-    .once{font-size:11px;color:var(--green);border:1px solid rgba(77,242,173,.22);background:rgba(77,242,173,.07);padding:7px 10px;border-radius:20px;font-weight:800}
-    .price{font-size:clamp(42px,8vw,64px);font-weight:900;letter-spacing:-2.5px;line-height:1.1;margin:24px 0 8px}
-    .price small{font-size:14px;font-weight:600;letter-spacing:0;color:var(--muted)}
-    .price-desc{color:var(--muted);font-size:14px;max-width:540px}
-    .included{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:26px 0}
-    .included span{display:flex;align-items:flex-start;gap:9px;color:#dbe6f8;font-size:13px}
-    .check{color:var(--green);font-weight:900}
-    .payment-note{font-size:12px;color:#8999b4;margin-top:13px;text-align:center}
-    .pricing-card .btn{width:100%;margin-top:8px}
-    .launch-note{display:flex;align-items:center;gap:9px;margin-top:18px;color:#9baac2;font-size:12px}
-    .launch-note:before{content:"";width:7px;height:7px;flex:none;border-radius:50%;background:var(--green);box-shadow:0 0 12px var(--green)}
-    .card,.access-card,.pricing-card{transition:transform .22s ease,border-color .22s ease,box-shadow .22s ease}
-    .card:hover,.access-card:hover{transform:translateY(-3px);border-color:rgba(90,160,255,.32)}
-    @media(max-width:540px){.included{grid-template-columns:1fr}.price{letter-spacing:-1.5px}}
-    @media(max-width:820px){.hero{grid-template-columns:1fr;gap:35px;padding:58px 0 45px}.hero-copy{max-width:690px}.chart-shell{max-width:600px;width:100%;margin:auto}.cards{grid-template-columns:1fr 1fr}.access{grid-template-columns:1fr}.nav{gap:12px}.nav .hide-mobile{display:none}}
-    @media(max-width:540px){.wrap{width:min(100% - 30px,1120px)}header{height:66px}.brand{font-size:18px}.brand-icon{width:34px;height:34px}.nav{gap:8px}.nav-cta{padding:8px 10px;font-size:12px}.hero{padding-top:45px}h1{letter-spacing:-2px;font-size:43px}.lead{font-size:15px}.actions{flex-direction:column}.btn{width:100%}.cards{grid-template-columns:1fr}.section{padding:48px 0}.chart-shell{padding:12px}.chart-stats{gap:6px}.stat{padding:8px}.stat b{font-size:12px}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}}
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060912">
+<meta name="description" content="SignalsPro is a premium market-analysis workspace with market zones, trade planning, scanning and macroeconomic context. Web access available; pricing is R1,000 once-off.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SignalsPro">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>SignalsPro — Premium Market Analysis Workspace</title>
+<style>
+:root{color-scheme:dark;--bg:#060912;--ink:#f3f6fd;--mut:#9aa8c2;--dim:#6c7b97;--line:rgba(150,180,235,.14);--blue:#3b8cff;--cyan:#45dcf7;--up:#4df2ad;--dn:#ff7690;--amb:#ffc86b;--r:18px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:8px}
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 500px at 12% -5%,rgba(40,100,220,.24),transparent 60%),radial-gradient(700px 480px at 95% 20%,rgba(0,190,255,.1),transparent 60%),linear-gradient(#060912,#070c17)}
+.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(150,180,235,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(150,180,235,.045) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 70%)}
+.wrap{width:min(1160px,calc(100% - 40px));margin:auto}
+header{position:sticky;top:0;z-index:50;padding-top:env(safe-area-inset-top,0px);background:rgba(6,9,18,.72);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(150,180,235,.08)}
+.bar{height:68px;display:flex;align-items:center;justify-content:space-between}
+.brand{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.5px;font-size:20px}
+.brand-icon{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--blue),#14c6e8);display:grid;place-items:center;box-shadow:0 0 26px rgba(45,130,255,.35)}
+.brand-icon svg{width:23px;height:23px}
+.brand i{font-style:normal;color:#6dbcff}
+nav{display:flex;align-items:center;gap:26px;font-size:14px;color:var(--mut)}
+nav a:hover{color:#fff}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:9px;border-radius:12px;padding:14px 20px;font:inherit;font-size:15px;font-weight:700;border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}
+.btn:hover{transform:translateY(-2px)}
+.primary{background:linear-gradient(100deg,#2b7bff,#25c3ea);color:#04101f;box-shadow:0 10px 34px rgba(37,130,255,.3)}
+.primary:hover{box-shadow:0 14px 44px rgba(37,150,255,.45)}
+.ghost{background:rgba(255,255,255,.03);border-color:var(--line);color:var(--ink)}
+.ghost:hover{border-color:rgba(120,170,255,.4)}
+.sm{padding:9px 15px;font-size:13px}
+.hero{padding:72px 0 40px;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(68,151,255,.28);background:rgba(35,108,220,.1);color:#a6d0ff;border-radius:30px;padding:7px 14px;font-size:13px;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 12px var(--up);animation:pl 2.4s infinite}
+@keyframes pl{50%{opacity:.35}}
+h1{font-size:clamp(40px,7vw,78px);line-height:1.02;letter-spacing:-.045em;margin:24px auto 22px;max-width:900px;font-weight:800}
+.grad{background:linear-gradient(100deg,#fff 5%,#93c8ff 50%,#45dcf7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:18px;color:var(--mut);max-width:640px;margin:0 auto;line-height:1.75}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:32px 0 14px}
+.fine{font-size:13px;color:var(--dim);margin:0}
+/* workspace preview */
+.stage{position:relative;margin:54px auto 0;max-width:1060px;perspective:1600px}
+.stage:before{content:"";position:absolute;inset:8% 6% -4%;background:radial-gradient(ellipse,rgba(40,130,255,.35),transparent 65%);filter:blur(50px);z-index:-1}
+.win{border:1px solid rgba(120,170,245,.26);border-radius:20px;background:linear-gradient(160deg,rgba(15,24,42,.97),rgba(8,13,24,.98));box-shadow:0 40px 120px rgba(0,0,0,.55);overflow:hidden;text-align:left;transform:rotateX(4deg);transform-origin:50% 0;transition:transform .6s}
+.stage:hover .win{transform:rotateX(0)}
+.wtop{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim)}
+.wtop b{width:10px;height:10px;border-radius:50%;background:#26324a}
+.wtop span{margin-left:10px}
+.wtop em{margin-left:auto;font-style:normal;color:var(--amb);font-size:11px}
+.wbody{display:grid;grid-template-columns:200px 1fr 230px;min-height:380px}
+.side{border-right:1px solid var(--line);padding:12px}
+.side h4,.plan h4{margin:4px 6px 10px;font-size:12px;font-weight:600;color:var(--dim)}
+.sym{display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:1px solid transparent;border-radius:11px;padding:10px;color:var(--mut);font:inherit;font-size:13px;cursor:pointer;text-align:left;transition:.2s}
+.sym:hover{background:rgba(255,255,255,.03)}
+.sym.on{background:rgba(59,140,255,.13);border-color:rgba(80,160,255,.35);color:#fff}
+.sym small{display:block;color:var(--dim);font-size:11px}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px}
+.tag.l{color:var(--up);background:rgba(77,242,173,.1)}.tag.s{color:var(--dn);background:rgba(255,118,144,.1)}
+.main{padding:14px 10px 8px;min-width:0}
+.mhead{display:flex;justify-content:space-between;align-items:baseline;padding:0 8px;gap:8px;flex-wrap:wrap}
+.mhead b{font-size:17px}.mhead span{font-size:12px;color:var(--dim)}
+#ch{display:block;width:100%;height:auto}
+.plan{border-left:1px solid var(--line);padding:14px}
+.row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(150,180,235,.09);font-size:13px;color:var(--mut)}
+.row b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.row .e{color:var(--cyan)}.row .t{color:var(--up)}.row .x{color:var(--dn)}
+.rr{margin-top:14px;border:1px solid rgba(80,160,255,.28);background:rgba(59,140,255,.08);border-radius:13px;padding:12px;font-size:12px;color:var(--mut)}
+.rr b{display:block;font-size:24px;color:#fff;letter-spacing:-.5px}
+.news{margin-top:12px;font-size:12px;color:var(--mut);display:flex;gap:8px;align-items:center}
+.news:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amb)}
+.cap{text-align:center;font-size:12px;color:var(--dim);margin:18px 0 0}
+/* sections */
+.sec{padding:84px 0}
+.head{max-width:680px;margin:0 0 40px}
+.head h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08;letter-spacing:-.035em;margin:0 0 14px}
+.head p{color:var(--mut);margin:0;font-size:17px}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.tile{position:relative;grid-column:span 2;border:1px solid var(--line);border-radius:var(--r);padding:26px;background:linear-gradient(150deg,rgba(17,27,47,.85),rgba(9,14,26,.9));overflow:hidden;transition:border-color .25s}
+.tile:hover{border-color:rgba(90,160,255,.4)}
+.tile:before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,0),rgba(60,150,255,.14),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.tile:hover:before{opacity:1}
+.tile.w{grid-column:span 3}
+.tile h3{font-size:19px;margin:16px 0 8px;letter-spacing:-.2px}
+.tile p{font-size:14px;color:var(--mut);margin:0}
+.ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#8cc6ff;background:rgba(47,129,255,.12);border:1px solid rgba(68,151,255,.22)}
+.ic svg{width:23px;height:23px}
+.mini{margin-top:20px;display:flex;flex-direction:column;gap:7px}
+.mini span{height:26px;border-radius:7px;font-size:11px;display:flex;align-items:center;padding:0 10px;color:var(--mut)}
+.z1{background:rgba(59,140,255,.12);border:1px dashed rgba(59,140,255,.4)}
+.z2{background:rgba(77,242,173,.08);border:1px dashed rgba(77,242,173,.35)}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.flow div{border-top:2px solid rgba(80,160,255,.45);padding:18px 4px 0}
+.flow div:before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(59,140,255,.15);color:#9ccbff;font-weight:700;font-size:13px;margin-bottom:12px}
+.flow h3{margin:0 0 6px;font-size:19px}.flow p{margin:0;color:var(--mut);font-size:15px}
+/* pricing */
+.price-card{position:relative;max-width:780px;margin:auto;border-radius:28px;padding:2px;background:linear-gradient(140deg,rgba(69,220,247,.7),rgba(59,140,255,.15) 40%,rgba(59,140,255,.6))}
+.price-in{border-radius:26px;padding:clamp(26px,5vw,46px);background:radial-gradient(ellipse at 50% 0,rgba(49,130,246,.2),transparent 60%),#0a1120}
+.ptop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.ptop b{font-size:15px;color:#a6d0ff}
+.once{font-size:12px;font-weight:700;color:var(--up);border:1px solid rgba(77,242,173,.25);background:rgba(77,242,173,.07);padding:6px 11px;border-radius:20px}
+.price{font-size:clamp(52px,9vw,84px);font-weight:800;letter-spacing:-.05em;line-height:1;margin:26px 0 10px}
+.price small{font-size:16px;font-weight:600;letter-spacing:0;color:var(--mut)}
+.pd{color:var(--mut);font-size:15px;max-width:560px;margin:0}
+.inc{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin:28px 0}
+.inc span{display:flex;gap:10px;color:#dbe6f8;font-size:14px}
+.inc b{color:var(--up)}
+label{display:block;font-size:13px;color:#c7d5ed;margin:0 0 8px;font-weight:600}
+input{width:100%;background:#070d1a;border:1px solid #2b3d59;border-radius:12px;color:#f5f8ff;padding:15px;font:inherit;margin-bottom:12px;transition:border-color .2s,box-shadow .2s}
+input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,140,255,.18)}
+.price-in .btn{width:100%}
+.pn{font-size:13px;color:var(--dim);margin:14px 0 0;text-align:center}
+.have{margin-top:16px;font-size:13px;color:var(--mut);text-align:center}
+.have a{color:#8bc3ff;text-decoration:underline;text-underline-offset:3px}
+.disc{max-width:780px;margin:28px auto 0;border:1px solid var(--line);border-radius:14px;padding:16px 18px;color:#95a3bc;font-size:13px;background:rgba(255,255,255,.02)}
+.disc strong{color:#c7d5ed}
+/* faq */
+.faq{max-width:780px;margin:auto}
+details{border-bottom:1px solid var(--line);padding:4px 0}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:14px;padding:18px 0;font-weight:600;font-size:17px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--cyan);font-size:22px;line-height:1;transition:transform .25s}
+details[open] summary:after{transform:rotate(45deg)}
+details p{margin:0 0 18px;color:var(--mut);font-size:15px;max-width:640px}
+footer{border-top:1px solid rgba(150,180,235,.1);padding:28px 0 calc(36px + env(safe-area-inset-bottom,0px));color:var(--dim);font-size:13px}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.frow nav{gap:18px;font-size:13px}
+.js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+.js .rv.in{opacity:1;transform:none}
+@media(max-width:900px){.wbody{grid-template-columns:1fr}.side{display:flex;gap:6px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}.side h4{display:none}.sym{flex:none;width:auto;gap:12px}.plan{border-left:0;border-top:1px solid var(--line)}.bento{grid-template-columns:1fr 1fr}.tile,.tile.w{grid-column:span 1}.win{transform:none}}
+@media(max-width:600px){.wrap{width:calc(100% - 30px)}nav a:not(.btn){display:none}.hero{padding-top:48px}.bento,.flow,.inc{grid-template-columns:1fr}.sec{padding:60px 0}.btn{width:100%}.bar .btn{width:auto}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}}
+</style>
 </head>
 <body>
-<div class="bgfx" aria-hidden="true"></div>
-<header class="wrap">
-  <a class="brand" href="./" aria-label="SignalsPro home">
-    <span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>
-    Signals<span>Pro</span>
-  </a>
-  <nav class="nav" aria-label="Main navigation">
-    <a class="hide-mobile" href="#features">Features</a>
-    <a class="hide-mobile" href="#how-it-works">How it works</a>
-    <a class="hide-mobile" href="#pricing">Pricing</a>
-    <a class="nav-cta" href="./app.html">Launch web app ↗</a>
-  </nav>
+<div class="bg" aria-hidden="true"></div>
+<header>
+  <div class="wrap bar">
+    <a class="brand" href="./" aria-label="SignalsPro home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
+    <nav aria-label="Main navigation">
+      <a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+      <a class="btn ghost sm" href="./app.html">Launch web app ↗</a>
+    </nav>
+  </div>
 </header>
 
 <main>
-  <section class="hero wrap">
-    <div class="hero-copy">
-      <div class="eyebrow"><i class="pulse"></i> Market analysis workspace</div>
-      <h1>See the setup.<br><span class="gradient">Plan your next move.</span></h1>
-      <p class="lead">SignalsPro brings market zones, trade plans, market scanning and macroeconomic context into one focused trading analysis workspace — designed to help you study the market with more structure.</p>
-      <div class="actions">
-        <a class="btn primary" href="./app.html">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 5l11 7-11 7V5z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></svg>
-          Launch web app <span aria-hidden="true">↗</span>
-        </a>
-        <a class="btn secondary" href="#pricing">Explore pricing ↓</a>
-      </div>
-      <p class="fine">Open SignalsPro in your browser. Subscriber verification remains inside the app.</p>
-    </div>
+<section class="hero wrap">
+  <div class="pill"><i class="dot"></i> Market analysis workspace</div>
+  <h1>See the setup.<br><span class="grad">Plan your next move.</span></h1>
+  <p class="lead">Market zones, trade plans, a symbol scanner and macroeconomic context in one focused workspace, built to help you study the market with more structure.</p>
+  <div class="cta">
+    <a class="btn primary" href="./app.html">Launch web app ↗</a>
+    <a class="btn ghost" href="#pricing">See pricing</a>
+  </div>
+  <p class="fine">Opens in your browser. Subscriber verification happens inside the app.</p>
 
-    <div class="chart-shell" aria-label="Illustrative market chart graphic">
-      <div class="chart-top"><span class="chart-title">SIGNAL OVERVIEW <span style="color:#647796">/ ILLUSTRATION</span></span><span class="chart-tag">● ANALYSIS VIEW</span></div>
-      <svg class="chart" viewBox="0 0 520 330" role="img" aria-label="Illustrative candlestick chart with blue support and resistance zones">
-        <defs><linearGradient id="area" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3988ff" stop-opacity=".25"/><stop offset="1" stop-color="#3988ff" stop-opacity="0"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="4" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
-        <g stroke="#8aa6d4" stroke-opacity=".11" stroke-width="1"><path d="M0 45H520M0 95H520M0 145H520M0 195H520M0 245H520M0 295H520"/><path d="M50 20V310M120 20V310M190 20V310M260 20V310M330 20V310M400 20V310M470 20V310"/></g>
-        <rect x="8" y="92" width="504" height="42" rx="7" fill="#3988ff" fill-opacity=".09" stroke="#3988ff" stroke-opacity=".28" stroke-dasharray="5 5"/>
-        <rect x="8" y="220" width="504" height="37" rx="7" fill="#4df2ad" fill-opacity=".06" stroke="#4df2ad" stroke-opacity=".25" stroke-dasharray="5 5"/>
-        <path d="M12 266 L42 246 L66 254 L91 218 L116 228 L139 184 L166 198 L190 164 L215 178 L239 143 L264 153 L288 124 L312 148 L336 111 L360 123 L385 81 L408 100 L433 66 L457 80 L483 48 L510 56 L510 310 L12 310Z" fill="url(#area)"/>
-        <g stroke-linecap="round" stroke-width="2">
-          <path d="M42 225V270M66 231V263M91 198V237M116 210V246M139 164V207M166 178V218M190 146V189M215 157V197M239 125V165M264 135V174M288 106V151M312 126V166M336 91V138M360 102V143M385 63V104M408 82V121M433 48V91M457 61V99M483 32V71" stroke="#4df2ad"/>
-        </g>
-        <g>
-          <rect x="36" y="236" width="12" height="24" rx="2" fill="#4df2ad"/><rect x="60" y="239" width="12" height="14" rx="2" fill="#ff748b"/><rect x="85" y="207" width="12" height="22" rx="2" fill="#4df2ad"/><rect x="110" y="217" width="12" height="19" rx="2" fill="#ff748b"/><rect x="133" y="175" width="12" height="22" rx="2" fill="#4df2ad"/><rect x="160" y="187" width="12" height="19" rx="2" fill="#ff748b"/><rect x="184" y="156" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="209" y="165" width="12" height="18" rx="2" fill="#ff748b"/><rect x="233" y="132" width="12" height="20" rx="2" fill="#4df2ad"/><rect x="258" y="143" width="12" height="17" rx="2" fill="#ff748b"/><rect x="282" y="113" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="306" y="132" width="12" height="17" rx="2" fill="#ff748b"/><rect x="330" y="99" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="354" y="110" width="12" height="17" rx="2" fill="#ff748b"/><rect x="379" y="71" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="402" y="89" width="12" height="17" rx="2" fill="#ff748b"/><rect x="427" y="56" width="12" height="21" rx="2" fill="#4df2ad"/><rect x="451" y="69" width="12" height="17" rx="2" fill="#ff748b"/><rect x="477" y="39" width="12" height="21" rx="2" fill="#4df2ad"/>
-        </g>
-        <path d="M12 145 C90 144 130 139 190 141 S300 138 360 140 S450 136 510 139" stroke="#3988ff" stroke-width="2" stroke-dasharray="4 5" fill="none" filter="url(#glow)"/>
-        <circle cx="483" cy="48" r="5" fill="#fff" stroke="#3988ff" stroke-width="3" filter="url(#glow)"/>
-      </svg>
-      <div class="chart-stats">
-        <div class="stat"><small>WORKSPACE</small><b>Market zones</b></div>
-        <div class="stat"><small>PLANNING</small><b>Trade plans</b></div>
-        <div class="stat"><small>CONTEXT</small><b class="up">Fundamentals</b></div>
-      </div>
-    </div>
-  </section>
-
-  <section class="section wrap" id="features">
-    <div class="section-head">
-      <div class="eyebrow">Built for a clearer process</div>
-      <h2>Tools for your market workflow</h2>
-      <p>Explore the analysis tools available inside SignalsPro. Use them as decision support, not as a promise of results.</p>
-    </div>
-    <div class="cards">
-      <article class="card">
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3>Market zones</h3><p>Review price charts and identified support and resistance zones to help structure your market analysis.</p>
-      </article>
-      <article class="card">
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/></svg></div>
-        <h3>Trade planning</h3><p>View potential entries, stop levels and target areas as part of a more structured plan.</p>
-      </article>
-      <article class="card">
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 9h8M8 13h5M8 16h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3>Market scanner</h3><p>Explore supported symbols and available market setups from one focused workspace.</p>
-      </article>
-      <article class="card">
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 21h20" stroke="currentColor" stroke-width="1.5"/></svg></div>
-        <h3>Fundamental context</h3><p>Review economic releases and macroeconomic context where the app's data sources are connected.</p>
-      </article>
-      <article class="card">
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-        <h3>News awareness</h3><p>Keep an eye on tracked economic events and in-app alerts to help you prepare for volatility.</p>
-      </article>
-      <article class="card">
-        <div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="6" y="3" width="12" height="18" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M10 17h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div>
-        <h3>Browser-based access</h3><p>Launch SignalsPro directly from your browser on a compatible phone, tablet or computer.</p>
-      </article>
-    </div>
-  </section>
-
-  <section class="section wrap" id="pricing">
-    <div class="section-head">
-      <div class="eyebrow">Simple, transparent pricing</div>
-      <h2>One payment. Your SignalsPro access.</h2>
-      <p>Premium market-analysis tools in one focused workspace. No monthly price is being advertised.</p>
-    </div>
-    <div class="pricing-wrap">
-      <article class="pricing-card">
-        <div class="price-top"><span class="price-label">SignalsPro Premium</span><span class="once">ONCE-OFF PAYMENT</span></div>
-        <div class="price">R1,000 <small>/ once-off</small></div>
-        <p class="price-desc">A single once-off payment for lifetime access to the SignalsPro analysis workspace. After payment, access is activated manually after your transaction is verified.</p>
-        <div class="included">
-          <span><b class="check">✓</b> Market zones and chart analysis</span>
-          <span><b class="check">✓</b> Trade planning tools</span>
-          <span><b class="check">✓</b> Supported market scanner</span>
-          <span><b class="check">✓</b> Fundamental and news context</span>
-          <span><b class="check">✓</b> Mobile-friendly web access</span>
-          <span><b class="check">✓</b> Subscriber email verification</span>
+  <div class="stage" aria-label="Interactive preview of the SignalsPro workspace">
+    <div class="win">
+      <div class="wtop"><b></b><b></b><b></b><span>SignalsPro workspace</span><em>Sample data</em></div>
+      <div class="wbody">
+        <div class="side" id="list"><h4>Scanner</h4></div>
+        <div class="main">
+          <div class="mhead"><b id="mname"></b><span id="mmeta"></span></div>
+          <svg id="ch" viewBox="0 0 560 300" role="img" aria-label="Sample candlestick chart with support and resistance zones and a trade plan"></svg>
         </div>
-        <form id="purchase-form" class="purchase-form">
-          <label for="purchase-email" style="display:block;font-size:13px;color:#c7d5ed;margin:0 0 8px;font-weight:650">Email address for your SignalsPro access</label>
-          <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" style="width:100%;box-sizing:border-box;background:#080f1d;border:1px solid #2b3d59;border-radius:12px;color:#f5f8ff;padding:14px 15px;font:inherit;outline:none;margin-bottom:12px" />
-          <button class="btn primary" type="submit" style="width:100%;cursor:pointer;border:0">Continue to secure checkout <span aria-hidden="true">↗</span></button>
-        </form>
-        <p class="payment-note">You'll pay through Whop. After payment, access is not automatic: your email will be added manually after payment is verified.</p>
-        <div class="launch-note">Already have subscriber access? <a href="./app.html" style="color:#8bc3ff">Launch the web app</a> and sign in with your registered email.</div>
-      </article>
+        <div class="plan">
+          <h4>Trade plan</h4>
+          <div class="row">Entry<b class="e" id="pe"></b></div>
+          <div class="row">Stop<b class="x" id="ps"></b></div>
+          <div class="row">Target<b class="t" id="pt"></b></div>
+          <div class="rr">Reward to risk<b id="prr"></b></div>
+          <div class="news" id="pn"></div>
+        </div>
+      </div>
     </div>
-    <div class="disclaimer"><strong style="color:#c7d5ed">Risk notice:</strong> SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading. You are responsible for your own trading decisions.</div>
-  </section>
+    <p class="cap">Interactive illustration. Pick a symbol to see how a zone-based plan is laid out. Values are sample data, not live prices or signals.</p>
+  </div>
+</section>
 
-  <section class="section wrap" id="how-it-works">
-    <div class="section-head">
-      <div class="eyebrow">Start in seconds</div>
-      <h2>Your workspace, one launch away</h2>
-      <p>Use SignalsPro in your browser. Subscriber verification remains inside the existing app.</p>
+<section class="sec wrap" id="features">
+  <div class="head rv"><h2>Everything you need to study a setup</h2><p>Use these tools as decision support, not as a promise of results.</p></div>
+  <div class="bento">
+    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market zones</h3><p>Review price charts with identified support and resistance zones to structure your analysis.</p><div class="mini"><span class="z1">Resistance zone</span><span class="z2">Support zone</span></div></article>
+    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/></svg></div><h3>Trade planning</h3><p>See potential entries, stop levels and target areas laid out as one structured plan, with the reward-to-risk ratio.</p></article>
+    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 9h8M8 13h5M8 16h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market scanner</h3><p>Browse supported symbols and available setups from one place.</p></article>
+    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Fundamental context</h3><p>Economic releases and macro context where the app's data sources are connected.</p></article>
+    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>News awareness</h3><p>Track economic events and in-app alerts to prepare for volatility.</p></article>
+  </div>
+</section>
+
+<section class="sec wrap" id="how-it-works">
+  <div class="head rv"><h2>Your workspace is one launch away</h2><p>Use SignalsPro on a compatible phone, tablet or computer. Subscriber verification stays inside the app.</p></div>
+  <div class="flow rv">
+    <div><h3>Launch</h3><p>Open the web app from this page in your browser.</p></div>
+    <div><h3>Verify access</h3><p>Enter the email linked to your SignalsPro subscriber access.</p></div>
+    <div><h3>Analyse</h3><p>Explore the tools and make your own informed decisions.</p></div>
+  </div>
+</section>
+
+<section class="sec wrap" id="pricing">
+  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>One payment. Your SignalsPro access.</h2><p>No monthly price is advertised. Pay once.</p></div>
+  <div class="price-card rv"><div class="price-in">
+    <div class="ptop"><b>SignalsPro Premium</b><span class="once">Once-off payment</span></div>
+    <div class="price">R1,000 <small>/ once-off</small></div>
+    <p class="pd">A single once-off payment for lifetime access to the SignalsPro analysis workspace. After payment, access is activated manually once your transaction is verified.</p>
+    <div class="inc">
+      <span><b>✓</b> Market zones and chart analysis</span><span><b>✓</b> Trade planning tools</span>
+      <span><b>✓</b> Supported market scanner</span><span><b>✓</b> Fundamental and news context</span>
+      <span><b>✓</b> Mobile-friendly web access</span><span><b>✓</b> Subscriber email verification</span>
     </div>
-    <div class="cards">
-      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Launch</h3><p>Open the web app from this page on your phone, tablet or computer.</p></article>
-      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Verify access</h3><p>Enter the email associated with your SignalsPro subscriber access.</p></article>
-      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 21h20" stroke="currentColor" stroke-width="1.5"/></svg></div><h3>Analyse</h3><p>Explore the available analysis tools and make your own informed decisions.</p></article>
-    </div>
-  </section>
+    <form id="purchase-form">
+      <label for="purchase-email">Email address for your SignalsPro access</label>
+      <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+      <button class="btn primary" type="submit">Continue to secure checkout ↗</button>
+    </form>
+    <p class="pn">You'll pay through Whop. Access is not automatic: your email is added manually after payment is verified.</p>
+    <p class="have">Already have access? <a href="./app.html">Launch the web app</a> and sign in with your registered email.</p>
+  </div></div>
+  <div class="disc rv"><strong>Risk notice:</strong> SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading. You are responsible for your own trading decisions.</div>
+</section>
+
+<section class="sec wrap" id="faq">
+  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>Questions, answered</h2></div>
+  <div class="faq rv">
+    <details><summary>When do I get access after paying?</summary><p>Access is activated manually. Once your payment is verified, your email is added and you can sign in to the web app with it. Use the same email you entered at checkout.</p></details>
+    <details><summary>Is it a subscription?</summary><p>No. The price is a single once-off payment of R1,000 for lifetime access to the workspace.</p></details>
+    <details><summary>Does SignalsPro tell me what to trade?</summary><p>No. It is an analysis workspace that helps you study zones, plan levels and keep macro context in view. It is not financial advice and does not guarantee results.</p></details>
+    <details><summary>What devices does it work on?</summary><p>Any compatible phone, tablet or computer with a modern browser. Nothing to install.</p></details>
+  </div>
+</section>
 </main>
 
 <footer>
-  <div class="wrap footer-row">
-    <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:30px;height:30px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<span>Pro</span></a>
+  <div class="wrap frow">
+    <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:28px;height:28px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
     <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>
-    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><a class="textlink" href="#pricing">Pricing</a><a class="textlink" href="./app.html">Launch web app ↗</a></div>
+    <nav><a href="#pricing">Pricing</a><a href="./app.html">Launch web app ↗</a></nav>
   </div>
 </footer>
-<script>
-  document.getElementById("year").textContent = new Date().getFullYear();
-  if ("serviceWorker" in navigator) {
-    window.addEventListener("load", function () {
-      navigator.serviceWorker.register("./sw.js").catch(function (error) {
-        console.warn("SignalsPro service worker registration failed:", error);
-      });
-    });
-  }
-</script>
 
-  <script>
-    (() => {
-      const form = document.getElementById('purchase-form');
-      const emailInput = document.getElementById('purchase-email');
-      const checkoutUrl = 'https://whop.com/checkout/plan_EDimWMct9cG71';
-      if (!form || !emailInput) return;
-      form.addEventListener('submit', (event) => {
-        event.preventDefault();
-        if (!emailInput.reportValidity()) return;
-        const email = emailInput.value.trim().toLowerCase();
-        // Pass the submitted email as a query parameter for reference. The hosted Whop checkout may still ask the buyer to confirm or enter it.
-        const destination = new URL(checkoutUrl);
-        destination.searchParams.set('email', email);
-        window.location.href = destination.toString();
-      });
-    })();
-  </script>
+<script>
+document.documentElement.classList.add("js");
+document.getElementById("year").textContent=new Date().getFullYear();
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(e){console.warn("SignalsPro service worker registration failed:",e)})})}
+
+/* reveal on scroll */
+(function(){var els=document.querySelectorAll(".rv");
+if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in")});return}
+var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}})},{threshold:.12});
+els.forEach(function(e){io.observe(e)})})();
+
+/* tile spotlight */
+document.querySelectorAll(".tile").forEach(function(t){t.addEventListener("pointermove",function(e){var r=t.getBoundingClientRect();t.style.setProperty("--mx",(e.clientX-r.left)+"px");t.style.setProperty("--my",(e.clientY-r.top)+"px")})});
+
+/* interactive workspace preview (sample data only) */
+(function(){
+var S=[
+ {n:"EUR/USD",b:1.0850,d:4,seed:7,side:"Long",tf:"H4",ev:"Sample event: rate decision in 2h"},
+ {n:"XAU/USD",b:2380,d:2,seed:21,side:"Long",tf:"H1",ev:"Sample event: inflation data tomorrow"},
+ {n:"GBP/JPY",b:192.4,d:3,seed:13,side:"Short",tf:"H4",ev:"Sample event: no high-impact news"},
+ {n:"US30",b:39200,d:0,seed:33,side:"Short",tf:"D1",ev:"Sample event: jobs report Friday"}
+];
+var list=document.getElementById("list"),svg=document.getElementById("ch"),cur=0;
+function rng(s){return function(){s=(s*16807)%2147483647;return(s-1)/2147483646}}
+function px(s,n){return(s.b*(1+(n-.5)*.02)).toFixed(s.d)}
+function draw(i){
+ cur=i;var s=S[i],r=rng(s.seed*97),W=560,H=300,N=34,p=50,cs=[],lo=1e9,hi=-1e9,short=s.side==="Short";
+ for(var k=0;k<N;k++){var t=k/N,tr=short?(.62-.3*t):(.38+.3*t),tgt=tr+Math.sin(k/3.2+s.seed)*.12,o=p,c=o+(tgt*100-o)*.35+(r()-.5)*6;
+  var h=Math.max(o,c)+r()*3,l=Math.min(o,c)-r()*3;cs.push([o,h,l,c]);p=c;lo=Math.min(lo,l);hi=Math.max(hi,h)}
+ var pad=(hi-lo)*.12;lo-=pad;hi+=pad;
+ var y=function(v){return 14+(1-(v-lo)/(hi-lo))*(H-34)},nm=function(v){return(v-lo)/(hi-lo)};
+ var rz=[hi-(hi-lo)*.22,hi-(hi-lo)*.06],sz=[lo+(hi-lo)*.06,lo+(hi-lo)*.22];
+ var en,sp,tp;
+ if(short){en=rz[0]+(rz[1]-rz[0])*.25;sp=rz[1]+(hi-lo)*.03;tp=sz[1]}else{en=sz[1]-(sz[1]-sz[0])*.2;sp=sz[0]-(hi-lo)*.03;tp=rz[0]}
+ var rr=Math.abs(tp-en)/Math.abs(en-sp),cw=(W-70)/N,o="";
+ for(var g=0;g<6;g++)o+='<path d="M0 '+(14+g*52)+'H'+(W-62)+'" stroke="#8aa6d4" stroke-opacity=".08"/>';
+ o+='<rect x="0" y="'+y(rz[1])+'" width="'+(W-62)+'" height="'+(y(rz[0])-y(rz[1]))+'" rx="5" fill="#ff7690" fill-opacity=".08" stroke="#ff7690" stroke-opacity=".3" stroke-dasharray="5 5"/>';
+ o+='<rect x="0" y="'+y(sz[1])+'" width="'+(W-62)+'" height="'+(y(sz[0])-y(sz[1]))+'" rx="5" fill="#4df2ad" fill-opacity=".07" stroke="#4df2ad" stroke-opacity=".3" stroke-dasharray="5 5"/>';
+ cs.forEach(function(c,k){var x=k*cw+cw/2,up=c[3]>=c[0],col=up?"#4df2ad":"#ff7690";
+  o+='<path d="M'+x+' '+y(c[1])+'V'+y(c[2])+'" stroke="'+col+'" stroke-width="1.6" style="opacity:0;animation:fi .4s '+(k*.025)+'s forwards"/><rect x="'+(x-3.6)+'" y="'+y(Math.max(c[0],c[3]))+'" width="7.2" height="'+Math.max(2,Math.abs(y(c[0])-y(c[3])))+'" rx="1.5" fill="'+col+'" style="opacity:0;animation:fi .4s '+(k*.025)+'s forwards"/>'});
+ [[en,"#45dcf7","Entry"],[sp,"#ff7690","Stop"],[tp,"#4df2ad","Target"]].forEach(function(L){var yy=y(L[0]);
+  o+='<path d="M0 '+yy+'H'+(W-62)+'" stroke="'+L[1]+'" stroke-width="1.5" stroke-dasharray="2 4"/><rect x="'+(W-60)+'" y="'+(yy-10)+'" width="58" height="20" rx="6" fill="'+L[1]+'" fill-opacity=".16" stroke="'+L[1]+'" stroke-opacity=".5"/><text x="'+(W-31)+'" y="'+(yy+4)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+L[1]+'">'+L[2]+'</text>'});
+ svg.innerHTML='<style>@keyframes fi{to{opacity:1}}</style>'+o;
+ document.getElementById("mname").textContent=s.n+" · "+s.tf;
+ document.getElementById("mmeta").textContent=s.side+" plan · sample";
+ document.getElementById("pe").textContent=px(s,nm(en));document.getElementById("ps").textContent=px(s,nm(sp));document.getElementById("pt").textContent=px(s,nm(tp));
+ document.getElementById("prr").textContent="1 : "+rr.toFixed(1);document.getElementById("pn").textContent=s.ev;
+ [].forEach.call(list.querySelectorAll(".sym"),function(b,k){b.classList.toggle("on",k===i);b.setAttribute("aria-pressed",k===i)})}
+S.forEach(function(s,i){var b=document.createElement("button");b.className="sym";b.type="button";
+ b.innerHTML='<span>'+s.n+'<small>'+s.tf+'</small></span><span class="tag '+(s.side==="Long"?"l":"s")+'">'+s.side+'</span>';
+ b.onclick=function(){draw(i)};list.appendChild(b)});
+draw(0);
+var auto=setInterval(function(){draw((cur+1)%S.length)},5200);
+document.querySelector(".stage").addEventListener("pointerdown",function(){clearInterval(auto)});
+})();
+
+/* checkout */
+(function(){
+var form=document.getElementById("purchase-form"),emailInput=document.getElementById("purchase-email"),checkoutUrl="https://whop.com/checkout/plan_EDimWMct9cG71";
+if(!form||!emailInput)return;
+form.addEventListener("submit",function(event){
+ event.preventDefault();
+ if(!emailInput.reportValidity())return;
+ var email=emailInput.value.trim().toLowerCase();
+ // Pass the submitted email as a query parameter for reference. The hosted Whop checkout may still ask the buyer to confirm or enter it.
+ var destination=new URL(checkoutUrl);
+ destination.searchParams.set("email",email);
+ window.location.href=destination.toString();
+});
+})();
+</script>
 </body>
 </html>
