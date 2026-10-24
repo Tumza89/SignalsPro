@@ -118,6 +118,7 @@ nav button{display:flex;flex-direction:column;align-items:center;gap:4px;color:r
 nav button span{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:.25s}
 nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-shadow:0 0 20px var(--glow)}
+.sup a{color:var(--accent);font-weight:700;text-decoration:none}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -126,6 +127,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button class="btn" style="max-width:300px" id="btnU">Unlock</button>
 <div id="lerr" style="color:var(--sell);font-size:13px;margin-top:14px;max-width:300px;display:none"></div>
 <div class="note" style="max-width:300px;text-align:center">Subscriber access only. One device per subscription.</div>
+<div class="note sup" id="hlp" style="max-width:300px;text-align:center">Need help? <a href="tel:+27696750129">Call +27 69 675 0129</a> · <a href="https://wa.me/27696750129" target="_blank" rel="noopener">WhatsApp</a></div>
 <div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
 
 <div id="welcome"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="#fff" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -212,7 +214,13 @@ const API='https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8
 let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.randomUUID():Date.now()+''+Math.random());try{localStorage.setItem('sp_dev',DEV)}catch(e){}}
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
-function showLock(m){if(run)setRun(false);$('welcome').classList.remove('on');welcomeShown=false;$('lock').classList.remove('hidden');$('lerr').textContent=m||'';$('lerr').style.display=m?'block':'none';$('btnU').disabled=false;$('btnU').textContent='Unlock'}
+// shows the login screen; any error message also gets the support contact (call + WhatsApp)
+function showLock(m){if(run)setRun(false);$('welcome').classList.remove('on');welcomeShown=false;$('lock').classList.remove('hidden');
+ const e=$('lerr');e.textContent=m||'';
+ if(m){const s=document.createElement('div');s.style.cssText='margin-top:10px;font-size:12px;color:var(--t2)';s.append('Need help? Contact support: ');
+  const a=document.createElement('a');a.href='tel:+27696750129';a.textContent='+27 69 675 0129';a.style.cssText='color:var(--accent);font-weight:700;text-decoration:none';s.append(a);s.append(' · ');
+  const w=document.createElement('a');w.href='https://wa.me/27696750129';w.target='_blank';w.rel='noopener';w.textContent='WhatsApp';w.style.cssText='color:var(--accent);font-weight:700;text-decoration:none';s.append(w);e.append(s)}
+ e.style.display=m?'block':'none';$('hlp').style.display=m?'none':'block';$('btnU').disabled=false;$('btnU').textContent='Unlock'}
 async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
@@ -221,7 +229,7 @@ async function check(email,silent){
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
-if(!GATED){$('lerr').textContent='App is not configured yet. Contact support.';$('lerr').style.display='block'}else if(EM){$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();check(EM,true)}
+if(!GATED){showLock('App is not configured yet.')}else if(EM){$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();check(EM,true)}
 setInterval(()=>{if(GATED&&EM)check(EM,true)},900000);
 // theme panel
 const thOpen=v=>document.body.classList.toggle('th',v);
