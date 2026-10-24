@@ -1,4 +1,4 @@
-<!dotml>
+<!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -195,7 +195,7 @@
       <article class="pricing-card">
         <div class="price-top"><span class="price-label">SignalsPro Premium</span><span class="once">ONCE-OFF PAYMENT</span></div>
         <div class="price">R1,000 <small>/ once-off</small></div>
-        <p class="price-desc">A single once-off price for access to the SignalsPro analysis workspace. Payment processing is not active yet and will be added later.</p>
+        <p class="price-desc">A single once-off payment for lifetime access to the SignalsPro analysis workspace. After payment, access is activated manually after your transaction is verified.</p>
         <div class="included">
           <span><b class="check">✓</b> Market zones and chart analysis</span>
           <span><b class="check">✓</b> Trade planning tools</span>
@@ -204,9 +204,13 @@
           <span><b class="check">✓</b> Mobile-friendly web access</span>
           <span><b class="check">✓</b> Subscriber email verification</span>
         </div>
-        <a class="btn primary" href="./app.html">Launch web app <span aria-hidden="true">↗</span></a>
-        <p class="payment-note">Payment gateway coming soon · No payment is collected on this website yet.</p>
-        <div class="launch-note">Already have subscriber access? Launch the app and sign in with your registered email.</div>
+        <form id="purchase-form" class="purchase-form">
+          <label for="purchase-email" style="display:block;font-size:13px;color:#c7d5ed;margin:0 0 8px;font-weight:650">Email address for your SignalsPro access</label>
+          <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" style="width:100%;box-sizing:border-box;background:#080f1d;border:1px solid #2b3d59;border-radius:12px;color:#f5f8ff;padding:14px 15px;font:inherit;outline:none;margin-bottom:12px" />
+          <button class="btn primary" type="submit" style="width:100%;cursor:pointer;border:0">Continue to secure checkout <span aria-hidden="true">↗</span></button>
+        </form>
+        <p class="payment-note">You'll pay through Whop. After payment, access is not automatic: your email will be added manually after payment is verified.</p>
+        <div class="launch-note">Already have subscriber access? <a href="./app.html" style="color:#8bc3ff">Launch the web app</a> and sign in with your registered email.</div>
       </article>
     </div>
     <div class="disclaimer"><strong style="color:#c7d5ed">Risk notice:</strong> SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading. You are responsible for your own trading decisions.</div>
@@ -243,5 +247,23 @@
     });
   }
 </script>
+
+  <script>
+    (() => {
+      const form = document.getElementById('purchase-form');
+      const emailInput = document.getElementById('purchase-email');
+      const checkoutUrl = 'https://whop.com/checkout/plan_EDimWMct9cG71';
+      if (!form || !emailInput) return;
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+        if (!emailInput.reportValidity()) return;
+        const email = emailInput.value.trim().toLowerCase();
+        // Pass the submitted email as a query parameter for reference. The hosted Whop checkout may still ask the buyer to confirm or enter it.
+        const destination = new URL(checkoutUrl);
+        destination.searchParams.set('email', email);
+        window.location.href = destination.toString();
+      });
+    })();
+  </script>
 </body>
-</html>ctype h
+</html>
