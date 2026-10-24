@@ -102,8 +102,8 @@ h1{font-size:clamp(42px,7.4vw,86px);line-height:.98;letter-spacing:-.04em;margin
 .news:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--amb)}
 .cap{text-align:center;font-size:12px;color:var(--dim);margin:18px auto 0;max-width:640px}
 /* sections */
-.sec{padding:88px 0}
-.head{max-width:700px;margin:0 0 42px}
+.sec{padding:60px 0}
+.head{max-width:700px;margin:0 0 28px}
 .head h2{font-size:clamp(32px,4.6vw,52px);line-height:1.05;letter-spacing:-.035em;margin:0 0 14px}
 .head p{color:var(--mut);margin:0;font-size:17px}
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
@@ -203,7 +203,7 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 .js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
 .js .rv.in{opacity:1;transform:none}
 @media(max-width:960px){.wbody{grid-template-columns:1fr}.side{display:flex;gap:6px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}.side h4{display:none}.sym{flex:none;width:auto;gap:12px}.plan{border-left:0;border-top:1px solid var(--line)}.bento{grid-template-columns:1fr 1fr}.tile,.tile.w{grid-column:span 1}.win{transform:none}.method{grid-template-columns:1fr}.sec-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.wrap{width:calc(100% - 30px)}nav a:not(.btn){display:none}.hero{padding-top:44px}.bento,.flow,.inc,.sec-grid,.calc{grid-template-columns:1fr}.sec{padding:60px 0}.btn{width:100%}.bar .btn{width:auto}}
+@media(max-width:600px){.wrap{width:calc(100% - 30px)}nav a:not(.btn){display:none}.hero{padding-top:44px}.bento,.flow,.inc,.sec-grid,.calc{grid-template-columns:1fr}.sec{padding:44px 0}.btn{width:100%}.bar .btn{width:auto}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}}
 </style>
 </head>
@@ -222,20 +222,14 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 
 <main>
 <section class="hero wrap">
-  <div class="pill"><i class="dot"></i> Manual buy and sell setups, planned with structure</div>
+  <div class="pill"><i class="dot"></i> Manual buy and sell setups</div>
   <h1>See the setup.<br><span class="grad">Plan your next move.</span></h1>
-  <p class="lead">A premium analysis workspace for forex and CFD traders: market zones, manual buy and sell trade plans, a symbol scanner and macro context in one focused place.</p>
+  <p class="lead">Market zones, trade plans and a symbol scanner in one focused workspace for forex and CFD traders.</p>
   <div class="cta">
     <a class="btn primary" href="./app.html">Launch web app ↗</a>
     <a class="btn ghost" href="#pricing">See pricing</a>
   </div>
-  <p class="fine">Opens in your browser. Subscriber verification happens inside the app.</p>
-  <div class="trust" aria-label="Key assurances">
-    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Encrypted connection (HTTPS)</span>
-    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>You place every trade yourself</span>
-    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>No broker passwords needed</span>
-    <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Once-off payment, no subscription</span>
-  </div>
+  <div class="trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Encrypted (HTTPS)</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>You place every trade</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Once-off payment</span></div>
 
   <div class="tick" aria-hidden="true"><div class="tk" id="tk"></div></div>
 
@@ -261,115 +255,100 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
         </div>
       </div>
     </div>
-    <p class="cap">Interactive illustration. Pick a symbol or timeframe to see how a zone-based plan is laid out. Values are sample data, not live prices, signals or results.</p>
+    <p class="cap">Interactive illustration using sample data, not live prices or signals.</p>
   </div>
 </section>
 
 <section class="sec wrap" id="features">
-  <div class="head rv"><h2>Everything you need to study a setup</h2><p>Decision support for traders who prefer to analyse and execute manually.</p></div>
+  <div class="head rv"><h2>Built to study a setup</h2></div>
   <div class="bento">
-    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market zones</h3><p>Review price charts with identified support and resistance zones to structure your analysis.</p><div class="mini"><span class="z1">Resistance zone: look for sell setups</span><span class="z2">Support zone: look for buy setups</span></div></article>
-    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/></svg></div><h3>Manual buy and sell plans</h3><p>Entry, stop and target laid out as one plan with the reward-to-risk ratio. You review it, you decide, you execute with your own broker.</p></article>
-    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 9h8M8 13h5M8 16h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market scanner</h3><p>Browse supported symbols and available setups from one place.</p></article>
-    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Fundamental context</h3><p>Economic releases and macro context where the app's data sources are connected.</p></article>
-    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>News awareness</h3><p>Track economic events and in-app alerts to prepare for volatility.</p></article>
+    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market zones</h3><p>Support and resistance zones to structure your analysis.</p></article>
+    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16" r="3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Manual buy and sell plans</h3><p>Entry, stop and target with reward-to-risk. You decide and execute.</p></article>
+    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 9h8M8 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market scanner</h3><p>Browse supported symbols and setups.</p></article>
+    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Macro context</h3><p>Economic releases where data is connected.</p></article>
+    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>News awareness</h3><p>Events and alerts to prepare for volatility.</p></article>
   </div>
 </section>
 
 <section class="sec wrap" id="strategy">
-  <div class="head rv"><h2>A rules-based method for manual entries</h2><p>Every plan follows the same checklist, so you can judge each setup on its merits and skip the ones that do not qualify.</p></div>
+  <div class="head rv"><h2>A simple rules-based method</h2></div>
   <div class="method rv">
     <div class="steps">
-      <div class="st"><div><h3>Read the trend</h3><p>Start on the higher timeframe so you trade with the dominant direction, not against it.</p></div></div>
-      <div class="st"><div><h3>Mark the zones</h3><p>Support and resistance zones show where price has reacted before and where a buy or sell setup may form.</p></div></div>
-      <div class="st"><div><h3>Wait for confirmation</h3><p>Look for candle confirmation at the zone and check the news calendar before committing.</p></div></div>
-      <div class="st"><div><h3>Define risk first</h3><p>Set the stop, size the position and require a minimum reward-to-risk before you enter.</p></div></div>
+      <div class="st"><div><h3>Read the trend</h3><p>Trade with the higher-timeframe direction.</p></div></div>
+      <div class="st"><div><h3>Mark the zones</h3><p>Look for buys at support, sells at resistance.</p></div></div>
+      <div class="st"><div><h3>Wait for confirmation</h3><p>Candle confirmation and a clear news window.</p></div></div>
+      <div class="st"><div><h3>Define risk first</h3><p>Set the stop and size the position before entry.</p></div></div>
     </div>
     <div class="panel">
       <h3>Position size calculator</h3>
-      <p>Work out how much to risk on a manual trade before you place it.</p>
-      <div class="bs"><div class="b"><b>Buy</b>Near support, stop below the zone, target at resistance.</div><div class="s"><b>Sell</b>Near resistance, stop above the zone, target at support.</div></div>
+      <p>Know your risk before you place the trade.</p>
       <div class="calc">
         <div><label for="cb">Balance (USD)</label><input id="cb" type="number" min="1" value="1000" inputmode="decimal"></div>
-        <div><label for="cr">Risk per trade (%)</label><input id="cr" type="number" min="0.1" max="100" step="0.1" value="1" inputmode="decimal"></div>
+        <div><label for="cr">Risk (%)</label><input id="cr" type="number" min="0.1" max="100" step="0.1" value="1" inputmode="decimal"></div>
         <div><label for="cs">Stop (pips)</label><input id="cs" type="number" min="1" value="25" inputmode="decimal"></div>
       </div>
-      <div class="out"><div>Amount at risk<b id="o1">$10.00</b></div><div>Lot size (USD pairs)<b id="o2">0.04</b></div></div>
-      <p class="note">Assumes $10 per pip per standard lot, as on major USD-quoted pairs. Other instruments differ. Illustrative only.</p>
+      <div class="out"><div>Amount at risk<b id="o1">$10.00</b></div><div>Lot size<b id="o2">0.04</b></div></div>
+      <p class="note">Assumes $10 per pip per lot (USD pairs). Illustrative only.</p>
     </div>
   </div>
-  <!-- OPTIONAL: if you have an independently verified, audited track record (for example a verified Myfxbook link), add it here with the date range and a link. Do not publish accuracy or win-rate figures you cannot document. -->
+  <!-- OPTIONAL: add an independently verified track record here (e.g. a verified Myfxbook link with date range). Do not publish accuracy or win-rate figures you cannot document. -->
 </section>
 
 <section class="sec wrap" id="security">
-  <div class="head rv"><h2>Built to keep your details safe</h2><p>The platform asks for as little as possible and keeps what it does collect protected.</p></div>
+  <div class="head rv"><h2>Secure by design</h2></div>
   <div class="sec-grid rv">
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h3>Encrypted in transit</h3><p>All traffic between your device and SignalsPro uses HTTPS (TLS) encryption.</p></div>
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></div><h3>Secure checkout</h3><p>Payment is handled by Paystack. Your card details never touch our pages.</p></div>
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><h3>Email-only access</h3><p>Access is verified against your subscriber email. No broker logins or API keys are requested.</p></div>
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div><h3>You stay in control</h3><p>SignalsPro never places trades or touches your funds. Execution is always manual.</p></div>
-  </div>
-</section>
-
-<section class="sec wrap" id="how-it-works">
-  <div class="head rv"><h2>Your workspace is one launch away</h2><p>Use SignalsPro on a compatible phone, tablet or computer. Subscriber verification stays inside the app.</p></div>
-  <div class="flow rv">
-    <div><h3>Launch</h3><p>Open the web app from this page in your browser.</p></div>
-    <div><h3>Verify access</h3><p>Enter the email linked to your SignalsPro subscriber access.</p></div>
-    <div><h3>Analyse</h3><p>Explore the tools and make your own informed decisions.</p></div>
+    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h3>Encrypted</h3><p>HTTPS (TLS) on all traffic.</p></div>
+    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></div><h3>Secure checkout</h3><p>Paid via Yoco. We never see your card.</p></div>
+    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><h3>Email-only access</h3><p>No broker logins requested.</p></div>
+    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div><h3>You stay in control</h3><p>We never place trades.</p></div>
   </div>
 </section>
 
 <section class="sec wrap" id="setup">
-  <div class="head rv"><h2>Connect your market data to get signals</h2><p>SignalsPro reads live prices from Twelve Data. You need your own free API key, which takes about two minutes.</p></div>
+  <div class="head rv"><h2>Connect your data in 2 minutes</h2><p>Signals load using your own Twelve Data API key.</p></div>
   <div class="setup rv">
     <ol>
-      <li><div><h3>Register at Twelve Data</h3><p>Go to <a href="https://twelvedata.com" target="_blank" rel="noopener noreferrer">twelvedata.com</a> and create an account with your email.</p></div></li>
-      <li><div><h3>Copy your API key</h3><p>After signing in, open your dashboard and copy the API key shown there. Check Twelve Data's site for the plan that suits you and its current limits.</p></div></li>
-      <li><div><h3>Paste it into the app settings</h3><p>Open the SignalsPro web app, go to Settings, paste your API key into the API key field and save. Your signals and charts will then load.</p></div></li>
+      <li><div><h3>Register</h3><p>Create an account at <a href="https://twelvedata.com" target="_blank" rel="noopener noreferrer">twelvedata.com</a>.</p></div></li>
+      <li><div><h3>Copy your API key</h3><p>Find it in your Twelve Data dashboard.</p></div></li>
+      <li><div><h3>Paste it in the app</h3><p>Open SignalsPro, go to Settings, paste the key and save.</p></div></li>
     </ol>
     <div style="display:grid;gap:14px">
-      <div class="tip"><p><b>Keep your key private.</b> Treat it like a password and never share it with anyone, including in screenshots.</p><p>Twelve Data is a separate company. Their plans, limits and pricing are set by them and are not part of your SignalsPro payment.</p></div>
-      <div class="help"><h3>Need a hand?</h3><p>If you have not received access 5 minutes after paying, or you are stuck connecting your key, message our support team on WhatsApp.</p>
-        <a class="btn wa" href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.800 11.800 0 0 0 4.500 3.900c1.700.7 2.300.7 3.200.6a2.700 2.700 0 0 0 1.800-1.300 2.200 2.200 0 0 0 .2-1.300c-.1-.1-.3-.2-.5-.3z"/></svg>WhatsApp +27 69 675 0129</a>
-        <small>Please include the email you used at checkout.</small></div>
+      <div class="tip"><p><b>Keep your key private.</b> Twelve Data plans and limits are separate from your SignalsPro payment.</p></div>
+      <div class="help"><h3>Need help?</h3><p>No access 5 minutes after paying, or stuck connecting your key?</p>
+        <a class="btn wa" href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.8 11.8 0 0 0 4.5 3.9c1.7.7 2.3.7 3.2.6a2.700 2.700 0 0 0 1.8-1.3 2.200 2.200 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>WhatsApp +27 69 675 0129</a>
+        <small>Include your checkout email.</small></div>
     </div>
   </div>
 </section>
 
 <section class="sec wrap" id="pricing">
-  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>One payment. Your SignalsPro access.</h2><p>No monthly price. Pay once.</p></div>
+  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>One payment. Lifetime access.</h2></div>
   <div class="price-card rv"><div class="price-in">
     <div class="ptop"><b>SignalsPro Premium</b><span class="once">Once-off payment</span></div>
     <div class="price">R1,000 <small>/ once-off</small></div>
-    <p class="pd">A single once-off payment for lifetime access to the SignalsPro analysis workspace. After payment, access is activated manually once your transaction is verified.</p>
     <div class="inc">
-      <span><b>✓</b> Market zones and chart analysis</span><span><b>✓</b> Manual buy and sell trade plans</span>
-      <span><b>✓</b> Supported market scanner</span><span><b>✓</b> Fundamental and news context</span>
-      <span><b>✓</b> Position size calculator</span><span><b>✓</b> Mobile-friendly web access</span>
+      <span><b>✓</b> Market zones and charts</span><span><b>✓</b> Manual buy and sell plans</span>
+      <span><b>✓</b> Scanner and news context</span><span><b>✓</b> Position size calculator</span>
     </div>
     <form id="purchase-form">
-      <label for="purchase-email">Email address for your SignalsPro access</label>
+      <label for="purchase-email">Email for your SignalsPro access</label>
       <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
       <button class="btn primary" type="submit">Continue to secure checkout ↗</button>
     </form>
-    <p class="pn">You'll pay through Paystack over an encrypted connection. Enter this same email on the Paystack page. Access is not automatic: your email is added manually after payment is verified.</p>
-    <p class="have">Already have access? <a href="./app.html">Launch the web app</a> and sign in with your registered email.</p>
+    <p class="pn">Use this same email at checkout. Access is activated manually after payment is verified.</p>
+    <p class="have">Already have access? <a href="./app.html">Launch the web app</a></p>
   </div></div>
-  <p class="supp rv">No access 5 minutes after paying? <a href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer">WhatsApp support: +27 69 675 0129</a></p>
-  <div class="disc rv"><strong>Risk notice:</strong> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and you may lose more than you can afford. SignalsPro provides market-analysis tools for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading. Past performance is not a reliable indicator of future results. You are responsible for your own trading decisions.</div>
+  <p class="supp rv">No access after 5 minutes? <a href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer">WhatsApp +27 69 675 0129</a></p>
+  <div class="disc rv"><strong>Risk notice:</strong> Forex and CFD trading are leveraged products that carry a high risk of loss. SignalsPro is an educational analysis tool, not financial advice, and guarantees no results. Past performance is not a reliable indicator of future results.</div>
 </section>
 
 <section class="sec wrap" id="faq">
-  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>Questions, answered</h2></div>
+  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>FAQ</h2></div>
   <div class="faq rv">
-    <details><summary>When do I get access after paying?</summary><p>Access is activated manually. Once your payment is verified, your email is added and you can sign in to the web app with it. Use the same email you entered on the Paystack payment page. If you still do not have access after 5 minutes, WhatsApp support on +27 69 675 0129 with your checkout email.</p></details>
-    <details><summary>Why am I not seeing any signals?</summary><p>You need to connect your own market data. Register at twelvedata.com, copy your API key from the dashboard, then paste it into the API key field in the SignalsPro app settings and save. See the setup steps above, or message WhatsApp support if you get stuck.</p></details>
-    <details><summary>Is it a subscription?</summary><p>No. The price is a single once-off payment of R1,000 for lifetime access to the workspace.</p></details>
-    <details><summary>Does SignalsPro place trades for me?</summary><p>No. Every buy and sell decision is manual. SignalsPro helps you study zones and plan levels, then you execute with your own broker.</p></details>
-    <details><summary>Can it guarantee winning trades?</summary><p>No tool can. Markets are uncertain and leveraged trading can lose money quickly. Use a stop, size your risk carefully and only trade money you can afford to lose.</p></details>
-    <details><summary>Is the platform secure?</summary><p>Connections use HTTPS encryption, payment is processed by Paystack, and the app only asks for your subscriber email. It never asks for broker passwords.</p></details>
-    <details><summary>What devices does it work on?</summary><p>Any compatible phone, tablet or computer with a modern browser. Nothing to install.</p></details>
+    <details><summary>When do I get access?</summary><p>Once payment is verified, your email is added. If you wait longer than 5 minutes, WhatsApp +27 69 675 0129.</p></details>
+    <details><summary>Why am I not seeing signals?</summary><p>Add your Twelve Data API key in the app Settings. See the setup steps above.</p></details>
+    <details><summary>Does it place trades for me?</summary><p>No. Every buy and sell decision is manual, with your own broker.</p></details>
+    <details><summary>Is it a subscription?</summary><p>No. R1,000 once-off for lifetime access.</p></details>
   </div>
 </section>
 </main>
@@ -379,9 +358,9 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
     <div class="frow">
       <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:28px;height:28px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
       <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>
-      <nav><a href="#pricing">Pricing</a><a href="#setup">Setup</a><a href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer">WhatsApp support</a><a href="./app.html">Launch web app ↗</a></nav>
+      <nav><a href="#pricing">Pricing</a><a href="#setup">Setup</a><a href="./app.html">Launch web app ↗</a></nav>
     </div>
-    <p class="legal"><strong>High risk warning:</strong> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for all investors. Leverage can work against you as well as for you. Before trading, consider your objectives, experience and risk appetite, and seek independent advice if needed. SignalsPro is an analysis tool, not a broker or financial adviser, and all examples and chart values on this site are sample data.</p>
+    <p class="legal"><strong>High risk warning:</strong> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for all investors. SignalsPro is an analysis tool, not a broker or financial adviser. Chart values shown here are sample data.</p>
   </div>
 </footer>
 
@@ -461,12 +440,12 @@ function up(){var bal=parseFloat(b.value),rk=parseFloat(r.value),st=parseFloat(s
 
 /* checkout */
 (function(){
-var form=document.getElementById("purchase-form"),emailInput=document.getElementById("purchase-email"),checkoutUrl="https://paystack.shop/pay/o917y4l0gg";
+var form=document.getElementById("purchase-form"),emailInput=document.getElementById("purchase-email"),checkoutUrl="https://pay.yoco.com/signalspro";
 if(!form||!emailInput)return;
 form.addEventListener("submit",function(event){
  event.preventDefault();
  if(!emailInput.reportValidity())return;
- // The buyer types their email again on the hosted Paystack page, so remind them to use the same one.
+ // The buyer types their email again on the hosted Yoco page, so remind them to use the same one.
  try{sessionStorage.setItem("sp_email",emailInput.value.trim().toLowerCase())}catch(e){}
  window.location.href=checkoutUrl;
 });
