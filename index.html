@@ -305,7 +305,7 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
   <div class="head rv"><h2>Built to keep your details safe</h2><p>The platform asks for as little as possible and keeps what it does collect protected.</p></div>
   <div class="sec-grid rv">
     <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h3>Encrypted in transit</h3><p>All traffic between your device and SignalsPro uses HTTPS (TLS) encryption.</p></div>
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></div><h3>Secure checkout</h3><p>Payment is handled by Whop. Your card details never touch our pages.</p></div>
+    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></div><h3>Secure checkout</h3><p>Payment is handled by Paystack. Your card details never touch our pages.</p></div>
     <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><h3>Email-only access</h3><p>Access is verified against your subscriber email. No broker logins or API keys are requested.</p></div>
     <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div><h3>You stay in control</h3><p>SignalsPro never places trades or touches your funds. Execution is always manual.</p></div>
   </div>
@@ -353,7 +353,7 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
       <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
       <button class="btn primary" type="submit">Continue to secure checkout ↗</button>
     </form>
-    <p class="pn">You'll pay through Whop over an encrypted connection. Access is not automatic: your email is added manually after payment is verified.</p>
+    <p class="pn">You'll pay through Paystack over an encrypted connection. Enter this same email on the Paystack page. Access is not automatic: your email is added manually after payment is verified.</p>
     <p class="have">Already have access? <a href="./app.html">Launch the web app</a> and sign in with your registered email.</p>
   </div></div>
   <p class="supp rv">No access 5 minutes after paying? <a href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer">WhatsApp support: +27 69 675 0129</a></p>
@@ -363,12 +363,12 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 <section class="sec wrap" id="faq">
   <div class="head rv" style="text-align:center;margin-inline:auto"><h2>Questions, answered</h2></div>
   <div class="faq rv">
-    <details><summary>When do I get access after paying?</summary><p>Access is activated manually. Once your payment is verified, your email is added and you can sign in to the web app with it. Use the same email you entered at checkout. If you still do not have access after 5 minutes, WhatsApp support on +27 69 675 0129 with your checkout email.</p></details>
+    <details><summary>When do I get access after paying?</summary><p>Access is activated manually. Once your payment is verified, your email is added and you can sign in to the web app with it. Use the same email you entered on the Paystack payment page. If you still do not have access after 5 minutes, WhatsApp support on +27 69 675 0129 with your checkout email.</p></details>
     <details><summary>Why am I not seeing any signals?</summary><p>You need to connect your own market data. Register at twelvedata.com, copy your API key from the dashboard, then paste it into the API key field in the SignalsPro app settings and save. See the setup steps above, or message WhatsApp support if you get stuck.</p></details>
     <details><summary>Is it a subscription?</summary><p>No. The price is a single once-off payment of R1,000 for lifetime access to the workspace.</p></details>
     <details><summary>Does SignalsPro place trades for me?</summary><p>No. Every buy and sell decision is manual. SignalsPro helps you study zones and plan levels, then you execute with your own broker.</p></details>
     <details><summary>Can it guarantee winning trades?</summary><p>No tool can. Markets are uncertain and leveraged trading can lose money quickly. Use a stop, size your risk carefully and only trade money you can afford to lose.</p></details>
-    <details><summary>Is the platform secure?</summary><p>Connections use HTTPS encryption, payment is processed by Whop, and the app only asks for your subscriber email. It never asks for broker passwords.</p></details>
+    <details><summary>Is the platform secure?</summary><p>Connections use HTTPS encryption, payment is processed by Paystack, and the app only asks for your subscriber email. It never asks for broker passwords.</p></details>
     <details><summary>What devices does it work on?</summary><p>Any compatible phone, tablet or computer with a modern browser. Nothing to install.</p></details>
   </div>
 </section>
@@ -461,16 +461,14 @@ function up(){var bal=parseFloat(b.value),rk=parseFloat(r.value),st=parseFloat(s
 
 /* checkout */
 (function(){
-var form=document.getElementById("purchase-form"),emailInput=document.getElementById("purchase-email"),checkoutUrl="https://whop.com/checkout/plan_EDimWMct9cG71";
+var form=document.getElementById("purchase-form"),emailInput=document.getElementById("purchase-email"),checkoutUrl="https://paystack.shop/pay/o917y4l0gg";
 if(!form||!emailInput)return;
 form.addEventListener("submit",function(event){
  event.preventDefault();
  if(!emailInput.reportValidity())return;
- var email=emailInput.value.trim().toLowerCase();
- // Pass the submitted email as a query parameter for reference. The hosted Whop checkout may still ask the buyer to confirm or enter it.
- var destination=new URL(checkoutUrl);
- destination.searchParams.set("email",email);
- window.location.href=destination.toString();
+ // The buyer types their email again on the hosted Paystack page, so remind them to use the same one.
+ try{sessionStorage.setItem("sp_email",emailInput.value.trim().toLowerCase())}catch(e){}
+ window.location.href=checkoutUrl;
 });
 })();
 </script>
