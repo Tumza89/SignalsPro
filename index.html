@@ -3,364 +3,112 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#050810">
-<meta name="description" content="SignalsPro is a premium market-analysis workspace with manual buy and sell setups, market zones, trade planning, scanning and macro context. Once-off R1,000. Forex and CFDs are leveraged products that carry a high risk of loss.">
+<meta name="theme-color" content="#060912">
+<meta name="description" content="SignalsPro, a premium market-analysis workspace, opens on 16 November 2026. Market zones, trade planning and macroeconomic context in one place.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SignalsPro">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap">
-<title>SignalsPro — Premium Market Analysis Workspace</title>
+<title>SignalsPro — Opening 16 November</title>
 <style>
-:root{color-scheme:dark;--bg:#050810;--ink:#f3f6fd;--mut:#9aa8c2;--dim:#6c7b97;--line:rgba(150,180,235,.14);--blue:#3b8cff;--cyan:#45dcf7;--up:#4df2ad;--dn:#ff7690;--amb:#ffc86b;--r:20px;--hd:"Bricolage Grotesque","Manrope",system-ui,sans-serif}
+:root{color-scheme:dark;--bg:#060912;--ink:#f3f6fd;--mut:#9aa8c2;--dim:#6c7b97;--line:rgba(150,180,235,.16);--blue:#3b8cff;--cyan:#45dcf7;--up:#4df2ad}
 *{box-sizing:border-box}
-html{scroll-behavior:smooth;scroll-padding-top:110px}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:Manrope,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+html,body{min-height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
 a{color:inherit;text-decoration:none}
 :focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:8px}
-.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(1000px 560px at 10% -8%,rgba(40,100,230,.28),transparent 60%),radial-gradient(760px 520px at 96% 14%,rgba(0,200,255,.12),transparent 60%),radial-gradient(700px 500px at 50% 110%,rgba(77,242,173,.06),transparent 60%),#050810}
-.bg:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(150,180,235,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(150,180,235,.05) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 70%)}
-.wrap{width:min(1180px,calc(100% - 40px));margin:auto}
-h1,h2,h3{font-family:var(--hd)}
-/* header */
-header{position:sticky;top:0;z-index:50;padding-top:env(safe-area-inset-top,0px);background:rgba(5,8,16,.78);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-bottom:1px solid rgba(150,180,235,.08)}
-.risk{background:linear-gradient(90deg,rgba(255,118,144,.14),rgba(255,200,107,.1));border-bottom:1px solid rgba(255,118,144,.22);font-size:12px;color:#ffd9b8;text-align:center;padding:6px 14px;line-height:1.4}
-.risk b{color:#ffb4c2}
-.bar{height:66px;display:flex;align-items:center;justify-content:space-between}
-.brand{display:flex;align-items:center;gap:11px;font-family:var(--hd);font-weight:800;letter-spacing:-.5px;font-size:21px}
-.brand-icon{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--blue),#14c6e8);display:grid;place-items:center;box-shadow:0 0 26px rgba(45,130,255,.38)}
-.brand-icon svg{width:23px;height:23px}
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:linear-gradient(#060912,#070c17)}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:drift 18s ease-in-out infinite alternate}
+.o1{width:560px;height:560px;left:-120px;top:-160px;background:#1d5bd6}
+.o2{width:480px;height:480px;right:-140px;top:12%;background:#0ab4e6;opacity:.28;animation-delay:-6s}
+.o3{width:420px;height:420px;left:35%;bottom:-220px;background:#5a3de0;opacity:.28;animation-delay:-11s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.12)}}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(150,180,235,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(150,180,235,.05) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000,transparent 72%);mask-image:radial-gradient(ellipse at 50% 40%,#000,transparent 72%)}
+.line{position:absolute;left:0;right:0;bottom:6%;width:100%;height:36vh;opacity:.5}
+.line path{stroke-dasharray:1800;stroke-dashoffset:1800;animation:draw 5s .4s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.wrap{width:min(980px,calc(100% - 40px));margin:auto}
+header{padding-top:calc(26px + env(safe-area-inset-top,0px))}
+.brand{display:inline-flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.5px;font-size:21px}
+.brand-icon{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--blue),#14c6e8);display:grid;place-items:center;box-shadow:0 0 30px rgba(45,130,255,.4)}
+.brand-icon svg{width:24px;height:24px}
 .brand i{font-style:normal;color:#6dbcff}
-nav{display:flex;align-items:center;gap:26px;font-size:14px;color:var(--mut)}
-nav a:hover{color:#fff}
-.btn{display:inline-flex;justify-content:center;align-items:center;gap:9px;border-radius:13px;padding:15px 22px;font:inherit;font-size:15px;font-weight:700;border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}
-.btn:hover{transform:translateY(-2px)}
-.primary{background:linear-gradient(100deg,#2b7bff,#25c3ea);color:#04101f;box-shadow:0 10px 34px rgba(37,130,255,.32)}
-.primary:hover{box-shadow:0 14px 46px rgba(37,150,255,.5)}
-.ghost{background:rgba(255,255,255,.03);border-color:var(--line);color:var(--ink)}
-.ghost:hover{border-color:rgba(120,170,255,.45)}
-.sm{padding:9px 15px;font-size:13px}
-/* hero */
-.hero{padding:64px 0 30px;text-align:center}
-.pill{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(68,151,255,.28);background:rgba(35,108,220,.1);color:#a6d0ff;border-radius:30px;padding:7px 15px;font-size:13px;font-weight:600}
-.dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 12px var(--up);animation:pl 2.4s infinite}
-@keyframes pl{50%{opacity:.35}}
-h1{font-size:clamp(42px,7.4vw,86px);line-height:.98;letter-spacing:-.04em;margin:24px auto 22px;max-width:960px;font-weight:800}
-.grad{background:linear-gradient(100deg,#fff 5%,#93c8ff 45%,#45dcf7 75%,#4df2ad);-webkit-background-clip:text;background-clip:text;color:transparent}
-.lead{font-size:18px;color:var(--mut);max-width:680px;margin:0 auto;line-height:1.75}
-.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:32px 0 14px}
-.fine{font-size:13px;color:var(--dim);margin:0}
-.trust{display:flex;flex-wrap:wrap;justify-content:center;gap:10px 22px;margin:30px 0 0;font-size:13px;color:var(--mut)}
-.trust span{display:inline-flex;align-items:center;gap:8px}
-.trust svg{width:16px;height:16px;color:var(--up)}
-/* ticker */
-.tick{margin-top:44px;border-block:1px solid var(--line);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
-.tk{display:flex;width:max-content;animation:mq 42s linear infinite}
-.tk span{display:inline-flex;gap:8px;padding:11px 24px;font-size:13px;color:var(--mut);white-space:nowrap;font-variant-numeric:tabular-nums}
-.tk b{color:var(--ink)}.tk .u{color:var(--up)}.tk .d{color:var(--dn)}
-@keyframes mq{to{transform:translateX(-50%)}}
-/* workspace */
-.stage{position:relative;margin:48px auto 0;max-width:1120px;perspective:1700px}
-.stage:before{content:"";position:absolute;inset:8% 6% -4%;background:radial-gradient(ellipse,rgba(40,130,255,.38),transparent 65%);filter:blur(56px);z-index:-1}
-.win{border:1px solid rgba(120,170,245,.28);border-radius:22px;background:linear-gradient(160deg,rgba(15,24,42,.97),rgba(8,13,24,.98));box-shadow:0 40px 120px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden;text-align:left;transform:rotateX(4deg);transform-origin:50% 0;transition:transform .6s}
-.stage:hover .win{transform:rotateX(0)}
-.wtop{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim)}
-.wtop b{width:10px;height:10px;border-radius:50%;background:#26324a}
-.wtop span{margin-left:10px}
-.wtop em{margin-left:auto;font-style:normal;color:var(--amb);font-size:11px}
-.wbody{display:grid;grid-template-columns:210px 1fr 250px;min-height:420px}
-.side{border-right:1px solid var(--line);padding:12px}
-.side h4,.plan h4{margin:4px 6px 10px;font-size:12px;font-weight:700;color:var(--dim)}
-.sym{display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:1px solid transparent;border-radius:12px;padding:10px;color:var(--mut);font:inherit;font-size:13px;cursor:pointer;text-align:left;transition:.2s}
-.sym:hover{background:rgba(255,255,255,.03)}
-.sym.on{background:rgba(59,140,255,.14);border-color:rgba(80,160,255,.38);color:#fff}
-.sym small{display:block;color:var(--dim);font-size:11px}
-.tag{font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px}
-.tag.l{color:var(--up);background:rgba(77,242,173,.12)}.tag.s{color:var(--dn);background:rgba(255,118,144,.12)}
-.main{padding:14px 10px 8px;min-width:0}
-.mhead{display:flex;justify-content:space-between;align-items:center;padding:0 8px;gap:10px;flex-wrap:wrap}
-.mhead b{font-size:17px;font-family:var(--hd)}
-.tfs{display:flex;gap:4px;background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:10px;padding:3px}
-.tfs button{background:none;border:0;color:var(--mut);font:inherit;font-size:12px;font-weight:700;padding:5px 11px;border-radius:7px;cursor:pointer}
-.tfs button.on{background:rgba(59,140,255,.25);color:#fff}
-#ch{display:block;width:100%;height:auto}
-.plan{border-left:1px solid var(--line);padding:14px}
-.sig{display:flex;align-items:center;justify-content:space-between;border-radius:13px;padding:11px 13px;margin-bottom:6px;font-weight:800;font-family:var(--hd);font-size:18px}
-.sig.l{background:rgba(77,242,173,.1);border:1px solid rgba(77,242,173,.35);color:var(--up)}
-.sig.s{background:rgba(255,118,144,.1);border:1px solid rgba(255,118,144,.35);color:var(--dn)}
-.sig small{font:600 11px Manrope,sans-serif;color:var(--mut)}
-.row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid rgba(150,180,235,.09);font-size:13px;color:var(--mut)}
-.row b{font-variant-numeric:tabular-nums;color:var(--ink)}
-.row .e{color:var(--cyan)}.row .t{color:var(--up)}.row .x{color:var(--dn)}
-.cf{list-style:none;margin:12px 0 0;padding:0;font-size:12px;color:var(--mut);display:grid;gap:6px}
-.cf li{display:flex;gap:8px}.cf li:before{content:"–";color:var(--dim);width:12px}.cf li.ok{color:#dbe6f8}.cf li.ok:before{content:"✓";color:var(--up)}
-.meter{height:6px;border-radius:6px;background:rgba(255,255,255,.07);margin-top:10px;overflow:hidden}
-.meter i{display:block;height:100%;background:linear-gradient(90deg,var(--blue),var(--up));transition:width .5s}
-.news{margin-top:12px;font-size:12px;color:var(--mut);display:flex;gap:8px;align-items:center}
-.news:before{content:"";flex:none;width:7px;height:7px;border-radius:50%;background:var(--amb)}
-.cap{text-align:center;font-size:12px;color:var(--dim);margin:18px auto 0;max-width:640px}
-/* sections */
-.sec{padding:60px 0}
-.head{max-width:700px;margin:0 0 28px}
-.head h2{font-size:clamp(32px,4.6vw,52px);line-height:1.05;letter-spacing:-.035em;margin:0 0 14px}
-.head p{color:var(--mut);margin:0;font-size:17px}
-.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
-.tile{position:relative;grid-column:span 2;border:1px solid var(--line);border-radius:var(--r);padding:26px;background:linear-gradient(150deg,rgba(17,27,47,.85),rgba(9,14,26,.9));overflow:hidden;transition:border-color .25s}
-.tile:hover{border-color:rgba(90,160,255,.42)}
-.tile:before{content:"";position:absolute;inset:0;background:radial-gradient(280px circle at var(--mx,50%) var(--my,0),rgba(60,150,255,.15),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
-.tile:hover:before{opacity:1}
-.tile.w{grid-column:span 3}
-.tile h3{font-size:20px;margin:16px 0 8px;letter-spacing:-.2px}
-.tile p{font-size:14px;color:var(--mut);margin:0}
-.ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#8cc6ff;background:rgba(47,129,255,.12);border:1px solid rgba(68,151,255,.22)}
-.ic svg{width:23px;height:23px}
-.mini{margin-top:20px;display:flex;flex-direction:column;gap:7px}
-.mini span{height:26px;border-radius:7px;font-size:11px;display:flex;align-items:center;padding:0 10px;color:var(--mut)}
-.z1{background:rgba(255,118,144,.1);border:1px dashed rgba(255,118,144,.4)}
-.z2{background:rgba(77,242,173,.08);border:1px dashed rgba(77,242,173,.35)}
-/* method */
-.method{display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:stretch}
-.steps{display:grid;gap:12px;counter-reset:s}
-.st{display:flex;gap:16px;border:1px solid var(--line);border-radius:var(--r);padding:20px;background:rgba(255,255,255,.02)}
-.st:before{counter-increment:s;content:counter(s);flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(59,140,255,.16);color:#9ccbff;font-weight:800;font-size:14px}
-.st h3{margin:0 0 4px;font-size:18px}.st p{margin:0;color:var(--mut);font-size:14px}
-.panel{border:1px solid rgba(80,160,255,.28);border-radius:var(--r);padding:26px;background:radial-gradient(ellipse at 50% 0,rgba(49,130,246,.16),transparent 65%),#0a1120}
-.panel h3{margin:0 0 6px;font-size:22px}.panel>p{margin:0 0 18px;color:var(--mut);font-size:14px}
-.bs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
-.bs div{border-radius:14px;padding:14px;font-size:13px;color:var(--mut)}
-.bs b{display:block;font:800 20px var(--hd);margin-bottom:4px}
-.bs .b{background:rgba(77,242,173,.08);border:1px solid rgba(77,242,173,.3)}.bs .b b{color:var(--up)}
-.bs .s{background:rgba(255,118,144,.08);border:1px solid rgba(255,118,144,.3)}.bs .s b{color:var(--dn)}
-.calc{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
-.calc label{font-size:12px;margin:0 0 6px}
-.out{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px}
-.out div{border:1px solid var(--line);border-radius:12px;padding:12px;font-size:12px;color:var(--mut)}
-.out b{display:block;font:800 22px var(--hd);color:#fff}
-.note{font-size:12px;color:var(--dim);margin:12px 0 0}
-/* security */
-.sec-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
-.sc{border:1px solid var(--line);border-radius:var(--r);padding:22px;background:linear-gradient(160deg,rgba(17,27,47,.7),rgba(9,14,26,.8))}
-.sc .ic{width:40px;height:40px;color:var(--up);background:rgba(77,242,173,.08);border-color:rgba(77,242,173,.25)}
-.sc h3{font-size:17px;margin:14px 0 6px}.sc p{margin:0;font-size:13.5px;color:var(--mut)}
-/* flow */
-.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:f}
-.flow div{border-top:2px solid rgba(80,160,255,.45);padding:18px 4px 0}
-.flow div:before{counter-increment:f;content:counter(f);display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(59,140,255,.15);color:#9ccbff;font-weight:700;font-size:13px;margin-bottom:12px}
-.flow h3{margin:0 0 6px;font-size:20px}.flow p{margin:0;color:var(--mut);font-size:15px}
-/* pricing */
-.price-card{position:relative;max-width:800px;margin:auto;border-radius:30px;padding:2px;background:linear-gradient(140deg,rgba(69,220,247,.75),rgba(59,140,255,.15) 40%,rgba(77,242,173,.5))}
-.price-in{border-radius:28px;padding:clamp(26px,5vw,48px);background:radial-gradient(ellipse at 50% 0,rgba(49,130,246,.22),transparent 60%),#0a1120}
-.ptop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
-.ptop b{font-size:15px;color:#a6d0ff}
-.once{font-size:12px;font-weight:700;color:var(--up);border:1px solid rgba(77,242,173,.25);background:rgba(77,242,173,.07);padding:6px 11px;border-radius:20px}
-.price{font:800 clamp(56px,9.5vw,92px)/1 var(--hd);letter-spacing:-.05em;margin:26px 0 10px}
-.price small{font:600 16px Manrope,sans-serif;letter-spacing:0;color:var(--mut)}
-.pd{color:var(--mut);font-size:15px;max-width:580px;margin:0}
-.inc{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin:28px 0}
-.inc span{display:flex;gap:10px;color:#dbe6f8;font-size:14px}
-.inc b{color:var(--up)}
-label{display:block;font-size:13px;color:#c7d5ed;margin:0 0 8px;font-weight:600}
-input{width:100%;background:#070d1a;border:1px solid #2b3d59;border-radius:12px;color:#f5f8ff;padding:14px;font:inherit;margin-bottom:12px;transition:border-color .2s,box-shadow .2s}
-input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,140,255,.18)}
-.price-in .btn{width:100%}
-.pn{font-size:13px;color:var(--dim);margin:14px 0 0;text-align:center}
-.have{margin-top:16px;font-size:13px;color:var(--mut);text-align:center}
-.have a{color:#8bc3ff;text-decoration:underline;text-underline-offset:3px}
-.disc{max-width:800px;margin:28px auto 0;border:1px solid rgba(255,118,144,.3);border-radius:14px;padding:16px 18px;color:#c9b3bd;font-size:13px;background:rgba(255,118,144,.05)}
-.disc strong{color:#ffb4c2}
-/* setup + support */
-.setup{display:grid;grid-template-columns:1.25fr 1fr;gap:18px;align-items:start}
-.setup ol{list-style:none;margin:0;padding:0;display:grid;gap:12px;counter-reset:u}
-.setup li{display:flex;gap:16px;border:1px solid var(--line);border-radius:var(--r);padding:20px;background:rgba(255,255,255,.02)}
-.setup li:before{counter-increment:u;content:counter(u);flex:none;display:grid;place-items:center;width:34px;height:34px;border-radius:50%;background:rgba(59,140,255,.16);color:#9ccbff;font-weight:800;font-size:14px}
-.setup h3{margin:0 0 4px;font-size:18px}.setup li p{margin:0;color:var(--mut);font-size:14px}
-.setup li a,.tip a{color:#8bc3ff;text-decoration:underline;text-underline-offset:3px}
-.tip{border:1px solid rgba(255,200,107,.3);background:rgba(255,200,107,.06);border-radius:var(--r);padding:20px;font-size:14px;color:#e6d3ae}
-.tip b{color:var(--amb)}
-.tip p{margin:0 0 10px}.tip p:last-child{margin:0}
-.help{border:1px solid rgba(77,242,173,.3);border-radius:var(--r);padding:24px;background:radial-gradient(ellipse at 50% 0,rgba(77,242,173,.12),transparent 65%),#0a1120}
-.help h3{margin:0 0 6px;font-size:22px}.help p{margin:0 0 16px;color:var(--mut);font-size:14px}
-.wa{background:linear-gradient(100deg,#1fb85a,#4df2ad);color:#03130a;box-shadow:0 10px 34px rgba(37,211,102,.28);width:100%}
-.wa svg{width:20px;height:20px}
-.help small{display:block;margin-top:12px;color:var(--dim);font-size:12px;text-align:center}
-.supp{max-width:800px;margin:16px auto 0;border:1px solid rgba(77,242,173,.3);background:rgba(77,242,173,.06);border-radius:14px;padding:14px 18px;font-size:14px;color:#cfe9dc;text-align:center}
-.supp a{color:var(--up);font-weight:700;text-decoration:underline;text-underline-offset:3px}
-/* faq */
-.faq{max-width:780px;margin:auto}
-details{border-bottom:1px solid var(--line);padding:4px 0}
-summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:14px;padding:18px 0;font-weight:700;font-size:17px}
-summary::-webkit-details-marker{display:none}
-summary:after{content:"+";color:var(--cyan);font-size:22px;line-height:1;transition:transform .25s}
-details[open] summary:after{transform:rotate(45deg)}
-details p{margin:0 0 18px;color:var(--mut);font-size:15px;max-width:640px}
-footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(safe-area-inset-bottom,0px));color:var(--dim);font-size:13px}
-.frow{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
-.frow nav{gap:18px;font-size:13px}
-.legal{margin:22px 0 0;font-size:12px;line-height:1.7;color:#7d8aa5;border-top:1px solid rgba(150,180,235,.08);padding-top:20px}
-.legal strong{color:#ffb4c2}
-.js .rv{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
-.js .rv.in{opacity:1;transform:none}
-@media(max-width:960px){.wbody{grid-template-columns:1fr}.side{display:flex;gap:6px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}.side h4{display:none}.sym{flex:none;width:auto;gap:12px}.plan{border-left:0;border-top:1px solid var(--line)}.bento{grid-template-columns:1fr 1fr}.tile,.tile.w{grid-column:span 1}.win{transform:none}.method{grid-template-columns:1fr}.sec-grid{grid-template-columns:1fr 1fr}}
-@media(max-width:600px){.wrap{width:calc(100% - 30px)}nav a:not(.btn){display:none}.hero{padding-top:44px}.bento,.flow,.inc,.sec-grid,.calc{grid-template-columns:1fr}.sec{padding:44px 0}.btn{width:100%}.bar .btn{width:auto}}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}}
+main{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 0 50px}
+.pill{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(68,151,255,.3);background:rgba(35,108,220,.1);color:#a6d0ff;border-radius:30px;padding:8px 16px;font-size:13px;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 12px var(--up);animation:pl 2.2s infinite}
+@keyframes pl{50%{opacity:.3}}
+h1{font-size:clamp(38px,7.2vw,76px);line-height:1.03;letter-spacing:-.045em;margin:26px 0 18px;font-weight:800}
+.grad{background:linear-gradient(100deg,#fff 5%,#93c8ff 50%,#45dcf7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(16px,2.2vw,19px);color:var(--mut);max-width:620px;margin:0 auto;line-height:1.75}
+.clock{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,2vw,18px);margin:46px auto 14px;width:min(760px,100%)}
+.unit{position:relative;border:1px solid rgba(120,170,245,.24);border-radius:22px;padding:clamp(16px,3.4vw,30px) 8px clamp(12px,2.4vw,20px);background:linear-gradient(160deg,rgba(18,29,52,.92),rgba(8,13,25,.95));box-shadow:0 24px 70px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.unit:before{content:"";position:absolute;inset:0 0 auto;height:50%;background:linear-gradient(rgba(255,255,255,.05),transparent)}
+.unit:after{content:"";position:absolute;left:12%;right:12%;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.7}
+.num{display:block;font-size:clamp(38px,9.5vw,92px);font-weight:800;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(#fff,#a9cdfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.num.tick{animation:tick .45s ease}
+@keyframes tick{0%{transform:translateY(-14px);opacity:0}100%{transform:none;opacity:1}}
+.lab{display:block;margin-top:10px;font-size:clamp(11px,1.8vw,13px);color:var(--dim);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.when{font-size:15px;color:#c3d3ee;margin:6px 0 0;font-weight:600}
+.when span{color:var(--cyan)}
+.bar{width:min(420px,80%);height:6px;border-radius:6px;background:rgba(150,180,235,.12);margin:26px auto 8px;overflow:hidden}
+.bar b{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 14px rgba(69,220,247,.6);transition:width 1.2s ease}
+.barl{font-size:12px;color:var(--dim);margin:0}
+.thanks{max-width:560px;margin:40px auto 0;font-size:16px;color:var(--mut)}
+.thanks b{color:#fff}
+.live{display:none;margin-top:34px}
+.btn{display:inline-flex;align-items:center;gap:9px;border-radius:13px;padding:16px 28px;font-size:16px;font-weight:700;background:linear-gradient(100deg,#2b7bff,#25c3ea);color:#04101f;box-shadow:0 10px 36px rgba(37,130,255,.35);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 14px 48px rgba(37,150,255,.5)}
+.is-live .clock,.is-live .bar,.is-live .barl,.is-live .when,.is-live .thanks{display:none}
+.is-live .live{display:block}
+footer{padding:20px 0 calc(28px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(150,180,235,.1);color:var(--dim);font-size:12px;text-align:center}
+footer p{margin:0 auto 6px;max-width:760px}
+.js .rv{opacity:0;transform:translateY(16px);animation:rv .8s forwards}
+@keyframes rv{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s!important}.d2{animation-delay:.18s!important}.d3{animation-delay:.3s!important}.d4{animation-delay:.45s!important}.d5{animation-delay:.6s!important}
+@media(max-width:420px){.unit{border-radius:16px}.lab{letter-spacing:.08em}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}.line path{stroke-dashoffset:0}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 </style>
 </head>
 <body>
-<div class="bg" aria-hidden="true"></div>
-<header>
-  <div class="risk"><b>Risk warning:</b> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for everyone.</div>
-  <div class="wrap bar">
-    <a class="brand" href="./" aria-label="SignalsPro home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
-    <nav aria-label="Main navigation">
-      <a href="#features">Features</a><a href="#strategy">Strategy</a><a href="#security">Security</a><a href="#setup">Setup</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
-      <a class="btn ghost sm" href="./app.html">Launch web app ↗</a>
-    </nav>
-  </div>
+<div class="bg" aria-hidden="true">
+  <div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grid"></div>
+  <svg class="line" viewBox="0 0 1200 300" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#3b8cff" stop-opacity="0"/><stop offset=".5" stop-color="#45dcf7"/><stop offset="1" stop-color="#4df2ad"/></linearGradient></defs><path d="M0 260 C90 250 130 210 210 215 S330 150 420 170 S560 110 650 120 S790 70 880 80 S1050 30 1200 20" fill="none" stroke="url(#g)" stroke-width="2.5" stroke-linecap="round"/></svg>
+</div>
+
+<header class="wrap">
+  <a class="brand" href="./" aria-label="SignalsPro home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
 </header>
 
-<main>
-<section class="hero wrap">
-  <div class="pill"><i class="dot"></i> Manual buy and sell setups</div>
-  <h1>See the setup.<br><span class="grad">Plan your next move.</span></h1>
-  <p class="lead">Market zones, trade plans and a symbol scanner in one focused workspace for forex and CFD traders.</p>
-  <div class="cta">
-    <a class="btn primary" href="./app.html">Launch web app ↗</a>
-    <a class="btn ghost" href="#pricing">See pricing</a>
+<main class="wrap" id="main">
+  <div class="pill rv d1"><i class="dot"></i> Opening soon</div>
+  <h1 class="rv d2">Something sharper<br><span class="grad">is almost here.</span></h1>
+  <p class="lead rv d3">SignalsPro brings market zones, trade planning and macroeconomic context into one focused workspace. We're putting the final touches on it, and the doors open on <b style="color:#fff">16 November</b>.</p>
+
+  <div class="clock rv d4" role="timer" aria-label="Time until SignalsPro opens">
+    <div class="unit"><span class="num" id="d">00</span><span class="lab">Days</span></div>
+    <div class="unit"><span class="num" id="h">00</span><span class="lab">Hours</span></div>
+    <div class="unit"><span class="num" id="m">00</span><span class="lab">Minutes</span></div>
+    <div class="unit"><span class="num" id="s">00</span><span class="lab">Seconds</span></div>
   </div>
-  <div class="trust"><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Encrypted (HTTPS)</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>You place every trade</span><span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M9 12l2 2 4-4"/></svg>Once-off payment</span></div>
+  <p class="sr" id="srtext"></p>
+  <p class="when rv d4">Opening <span>Monday, 16 November 2026</span></p>
+  <div class="bar rv d5" aria-hidden="true"><b id="pg"></b></div>
+  <p class="barl rv d5" id="pgl">Preparing for launch</p>
+  <p class="thanks rv d5"><b>Thank you for your patience.</b> Everything good takes a little time, and we want your first look at SignalsPro to be worth the wait.</p>
 
-  <div class="tick" aria-hidden="true"><div class="tk" id="tk"></div></div>
-
-  <div class="stage" aria-label="Interactive preview of the SignalsPro workspace">
-    <div class="win">
-      <div class="wtop"><b></b><b></b><b></b><span>SignalsPro workspace</span><em>Sample data</em></div>
-      <div class="wbody">
-        <div class="side" id="list"><h4>Scanner</h4></div>
-        <div class="main">
-          <div class="mhead"><b id="mname"></b><div class="tfs" id="tfs" role="group" aria-label="Timeframe"></div></div>
-          <svg id="ch" viewBox="0 0 560 300" role="img" aria-label="Sample candlestick chart with support and resistance zones and a trade plan"></svg>
-        </div>
-        <div class="plan">
-          <h4>Manual trade plan</h4>
-          <div class="sig" id="sig"></div>
-          <div class="row">Entry<b class="e" id="pe"></b></div>
-          <div class="row">Stop<b class="x" id="ps"></b></div>
-          <div class="row">Target<b class="t" id="pt"></b></div>
-          <div class="row">Reward to risk<b id="prr"></b></div>
-          <ul class="cf" id="cf"></ul>
-          <div class="meter" aria-hidden="true"><i id="mt"></i></div>
-          <div class="news" id="pn"></div>
-        </div>
-      </div>
-    </div>
-    <p class="cap">Interactive illustration using sample data, not live prices or signals.</p>
+  <div class="live">
+    <h2 style="font-size:clamp(28px,5vw,44px);letter-spacing:-.03em;margin:0 0 10px">SignalsPro is open.</h2>
+    <p class="lead" style="margin-bottom:26px">Thanks for waiting. Your workspace is ready.</p>
+    <a class="btn" href="./app.html">Launch web app ↗</a>
   </div>
-</section>
-
-<section class="sec wrap" id="features">
-  <div class="head rv"><h2>Built to study a setup</h2></div>
-  <div class="bento">
-    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market zones</h3><p>Support and resistance zones to structure your analysis.</p></article>
-    <article class="tile w rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="16" r="3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Manual buy and sell plans</h3><p>Entry, stop and target with reward-to-risk. You decide and execute.</p></article>
-    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 9h8M8 13h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market scanner</h3><p>Browse supported symbols and setups.</p></article>
-    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Macro context</h3><p>Economic releases where data is connected.</p></article>
-    <article class="tile rv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>News awareness</h3><p>Events and alerts to prepare for volatility.</p></article>
-  </div>
-</section>
-
-<section class="sec wrap" id="strategy">
-  <div class="head rv"><h2>A simple rules-based method</h2></div>
-  <div class="method rv">
-    <div class="steps">
-      <div class="st"><div><h3>Read the trend</h3><p>Trade with the higher-timeframe direction.</p></div></div>
-      <div class="st"><div><h3>Mark the zones</h3><p>Look for buys at support, sells at resistance.</p></div></div>
-      <div class="st"><div><h3>Wait for confirmation</h3><p>Candle confirmation and a clear news window.</p></div></div>
-      <div class="st"><div><h3>Define risk first</h3><p>Set the stop and size the position before entry.</p></div></div>
-    </div>
-    <div class="panel">
-      <h3>Position size calculator</h3>
-      <p>Know your risk before you place the trade.</p>
-      <div class="calc">
-        <div><label for="cb">Balance (USD)</label><input id="cb" type="number" min="1" value="1000" inputmode="decimal"></div>
-        <div><label for="cr">Risk (%)</label><input id="cr" type="number" min="0.1" max="100" step="0.1" value="1" inputmode="decimal"></div>
-        <div><label for="cs">Stop (pips)</label><input id="cs" type="number" min="1" value="25" inputmode="decimal"></div>
-      </div>
-      <div class="out"><div>Amount at risk<b id="o1">$10.00</b></div><div>Lot size<b id="o2">0.04</b></div></div>
-      <p class="note">Assumes $10 per pip per lot (USD pairs). Illustrative only.</p>
-    </div>
-  </div>
-  <!-- OPTIONAL: add an independently verified track record here (e.g. a verified Myfxbook link with date range). Do not publish accuracy or win-rate figures you cannot document. -->
-</section>
-
-<section class="sec wrap" id="security">
-  <div class="head rv"><h2>Secure by design</h2></div>
-  <div class="sec-grid rv">
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg></div><h3>Encrypted</h3><p>HTTPS (TLS) on all traffic.</p></div>
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18M7 15h3"/></svg></div><h3>Secure checkout</h3><p>Paid via Yoco. We never see your card.</p></div>
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 8 6"/></svg></div><h3>Email-only access</h3><p>No broker logins requested.</p></div>
-    <div class="sc"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg></div><h3>You stay in control</h3><p>We never place trades.</p></div>
-  </div>
-</section>
-
-<section class="sec wrap" id="setup">
-  <div class="head rv"><h2>Connect your data in 2 minutes</h2><p>Signals load using your own Twelve Data API key.</p></div>
-  <div class="setup rv">
-    <ol>
-      <li><div><h3>Register</h3><p>Create an account at <a href="https://twelvedata.com" target="_blank" rel="noopener noreferrer">twelvedata.com</a>.</p></div></li>
-      <li><div><h3>Copy your API key</h3><p>Find it in your Twelve Data dashboard.</p></div></li>
-      <li><div><h3>Paste it in the app</h3><p>Open SignalsPro, go to Settings, paste the key and save.</p></div></li>
-    </ol>
-    <div style="display:grid;gap:14px">
-      <div class="tip"><p><b>Keep your key private.</b> Twelve Data plans and limits are separate from your SignalsPro payment.</p></div>
-      <div class="help"><h3>Need help?</h3><p>No access 5 minutes after paying, or stuck connecting your key?</p>
-        <a class="btn wa" href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.6.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.5l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.8 11.8 0 0 0 4.5 3.9c1.7.7 2.3.7 3.2.6a2.700 2.700 0 0 0 1.8-1.3 2.200 2.200 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z"/></svg>WhatsApp +27 69 675 0129</a>
-        <small>Include your checkout email.</small></div>
-    </div>
-  </div>
-</section>
-
-<section class="sec wrap" id="pricing">
-  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>One payment. Lifetime access.</h2></div>
-  <div class="price-card rv"><div class="price-in">
-    <div class="ptop"><b>SignalsPro Premium</b><span class="once">Once-off payment</span></div>
-    <div class="price">R1,000 <small>/ once-off</small></div>
-    <div class="inc">
-      <span><b>✓</b> Market zones and charts</span><span><b>✓</b> Manual buy and sell plans</span>
-      <span><b>✓</b> Scanner and news context</span><span><b>✓</b> Position size calculator</span>
-    </div>
-    <form id="purchase-form">
-      <label for="purchase-email">Email for your SignalsPro access</label>
-      <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
-      <button class="btn primary" type="submit">Continue to secure checkout ↗</button>
-    </form>
-    <p class="pn">Use this same email at checkout. Access is activated manually after payment is verified.</p>
-    <p class="have">Already have access? <a href="./app.html">Launch the web app</a></p>
-  </div></div>
-  <p class="supp rv">No access after 5 minutes? <a href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer">WhatsApp +27 69 675 0129</a></p>
-  <div class="disc rv"><strong>Risk notice:</strong> Forex and CFD trading are leveraged products that carry a high risk of loss. SignalsPro is an educational analysis tool, not financial advice, and guarantees no results. Past performance is not a reliable indicator of future results.</div>
-</section>
-
-<section class="sec wrap" id="faq">
-  <div class="head rv" style="text-align:center;margin-inline:auto"><h2>FAQ</h2></div>
-  <div class="faq rv">
-    <details><summary>When do I get access?</summary><p>Once payment is verified, your email is added. If you wait longer than 5 minutes, WhatsApp +27 69 675 0129.</p></details>
-    <details><summary>Why am I not seeing signals?</summary><p>Add your Twelve Data API key in the app Settings. See the setup steps above.</p></details>
-    <details><summary>Does it place trades for me?</summary><p>No. Every buy and sell decision is manual, with your own broker.</p></details>
-    <details><summary>Is it a subscription?</summary><p>No. R1,000 once-off for lifetime access.</p></details>
-  </div>
-</section>
 </main>
 
 <footer>
   <div class="wrap">
-    <div class="frow">
-      <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:28px;height:28px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
-      <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>
-      <nav><a href="#pricing">Pricing</a><a href="#setup">Setup</a><a href="./app.html">Launch web app ↗</a></nav>
-    </div>
-    <p class="legal"><strong>High risk warning:</strong> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for all investors. SignalsPro is an analysis tool, not a broker or financial adviser. Chart values shown here are sample data.</p>
+    <p>SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading.</p>
+    <p>© <span id="year">2026</span> SignalsPro. All rights reserved.</p>
   </div>
 </footer>
 
@@ -369,86 +117,25 @@ document.documentElement.classList.add("js");
 document.getElementById("year").textContent=new Date().getFullYear();
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(e){console.warn("SignalsPro service worker registration failed:",e)})})}
 
-/* reveal on scroll */
-(function(){var els=document.querySelectorAll(".rv");
-if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in")});return}
-var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}})},{threshold:.12});
-els.forEach(function(e){io.observe(e)})})();
-
-/* tile spotlight */
-document.querySelectorAll(".tile").forEach(function(t){t.addEventListener("pointermove",function(e){var r=t.getBoundingClientRect();t.style.setProperty("--mx",(e.clientX-r.left)+"px");t.style.setProperty("--my",(e.clientY-r.top)+"px")})});
-
-/* workspace preview (sample data only) */
 (function(){
-var S=[
- {n:"EUR/USD",b:1.0850,d:4,seed:7,side:"Buy",ev:"Sample event: rate decision in 2h"},
- {n:"XAU/USD",b:2380,d:2,seed:21,side:"Buy",ev:"Sample event: inflation data tomorrow"},
- {n:"GBP/JPY",b:192.4,d:3,seed:13,side:"Sell",ev:"Sample event: no high-impact news"},
- {n:"US30",b:39200,d:0,seed:33,side:"Sell",ev:"Sample event: jobs report Friday"}
-],TF=["M15","H1","H4","D1"],CF=["Higher-timeframe trend agrees","Price is at a market zone","Reward to risk of 1:2 or better","No high-impact news in window","Candle confirmation present"];
-var list=document.getElementById("list"),svg=document.getElementById("ch"),tfs=document.getElementById("tfs"),cur=0,tf=2;
-function rng(s){return function(){s=(s*16807)%2147483647;return(s-1)/2147483646}}
-function px(s,n){return(s.b*(1+(n-.5)*.02)).toFixed(s.d)}
-function draw(i,t){
- cur=i;tf=t;var s=S[i],r=rng((s.seed+t*5)*97),W=560,H=300,N=34,p=50,cs=[],lo=1e9,hi=-1e9,short=s.side==="Sell";
- for(var k=0;k<N;k++){var q=k/N,tr=short?(.62-.3*q):(.38+.3*q),tgt=tr+Math.sin(k/3.2+s.seed+t)*.12,o=p,c=o+(tgt*100-o)*.35+(r()-.5)*6;
-  var h=Math.max(o,c)+r()*3,l=Math.min(o,c)-r()*3;cs.push([o,h,l,c]);p=c;lo=Math.min(lo,l);hi=Math.max(hi,h)}
- var pad=(hi-lo)*.12;lo-=pad;hi+=pad;
- var y=function(v){return 14+(1-(v-lo)/(hi-lo))*(H-34)},nm=function(v){return(v-lo)/(hi-lo)};
- var rz=[hi-(hi-lo)*.22,hi-(hi-lo)*.06],sz=[lo+(hi-lo)*.06,lo+(hi-lo)*.22];
- var en,sp,tp;
- if(short){en=rz[0]+(rz[1]-rz[0])*.25;sp=rz[1]+(hi-lo)*.03;tp=sz[1]}else{en=sz[1]-(sz[1]-sz[0])*.2;sp=sz[0]-(hi-lo)*.03;tp=rz[0]}
- var rr=Math.abs(tp-en)/Math.abs(en-sp),cw=(W-70)/N,o="";
- for(var g=0;g<6;g++)o+='<path d="M0 '+(14+g*52)+'H'+(W-62)+'" stroke="#8aa6d4" stroke-opacity=".08"/>';
- o+='<rect x="0" y="'+y(rz[1])+'" width="'+(W-62)+'" height="'+(y(rz[0])-y(rz[1]))+'" rx="5" fill="#ff7690" fill-opacity=".08" stroke="#ff7690" stroke-opacity=".3" stroke-dasharray="5 5"/>';
- o+='<rect x="0" y="'+y(sz[1])+'" width="'+(W-62)+'" height="'+(y(sz[0])-y(sz[1]))+'" rx="5" fill="#4df2ad" fill-opacity=".07" stroke="#4df2ad" stroke-opacity=".3" stroke-dasharray="5 5"/>';
- cs.forEach(function(c,k){var x=k*cw+cw/2,up=c[3]>=c[0],col=up?"#4df2ad":"#ff7690";
-  o+='<path d="M'+x+' '+y(c[1])+'V'+y(c[2])+'" stroke="'+col+'" stroke-width="1.6" style="opacity:0;animation:fi .4s '+(k*.025)+'s forwards"/><rect x="'+(x-3.6)+'" y="'+y(Math.max(c[0],c[3]))+'" width="7.2" height="'+Math.max(2,Math.abs(y(c[0])-y(c[3])))+'" rx="1.5" fill="'+col+'" style="opacity:0;animation:fi .4s '+(k*.025)+'s forwards"/>'});
- [[en,"#45dcf7","Entry"],[sp,"#ff7690","Stop"],[tp,"#4df2ad","Target"]].forEach(function(L){var yy=y(L[0]);
-  o+='<path d="M0 '+yy+'H'+(W-62)+'" stroke="'+L[1]+'" stroke-width="1.5" stroke-dasharray="2 4"/><rect x="'+(W-60)+'" y="'+(yy-10)+'" width="58" height="20" rx="6" fill="'+L[1]+'" fill-opacity=".16" stroke="'+L[1]+'" stroke-opacity=".5"/><text x="'+(W-31)+'" y="'+(yy+4)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+L[1]+'">'+L[2]+'</text>'});
- svg.innerHTML='<style>@keyframes fi{to{opacity:1}}</style>'+o;
- document.getElementById("mname").textContent=s.n;
- var sg=document.getElementById("sig");sg.className="sig "+(short?"s":"l");sg.innerHTML='<span>'+s.side+' setup</span><small>'+TF[t]+' · sample</small>';
- document.getElementById("pe").textContent=px(s,nm(en));document.getElementById("ps").textContent=px(s,nm(sp));document.getElementById("pt").textContent=px(s,nm(tp));
- document.getElementById("prr").textContent="1 : "+rr.toFixed(1);document.getElementById("pn").textContent=s.ev;
- var q=rng(s.seed*31+t*7+3),met=0,h="";CF.forEach(function(c){var ok=q()>.28;if(ok)met++;h+='<li class="'+(ok?"ok":"")+'">'+c+'</li>'});
- document.getElementById("cf").innerHTML=h;document.getElementById("mt").style.width=(met/CF.length*100)+"%";
- [].forEach.call(list.querySelectorAll(".sym"),function(b,k){b.classList.toggle("on",k===i);b.setAttribute("aria-pressed",k===i)});
- [].forEach.call(tfs.querySelectorAll("button"),function(b,k){b.classList.toggle("on",k===t);b.setAttribute("aria-pressed",k===t)})}
-S.forEach(function(s,i){var b=document.createElement("button");b.className="sym";b.type="button";
- b.innerHTML='<span>'+s.n+'<small>Manual setup</small></span><span class="tag '+(s.side==="Buy"?"l":"s")+'">'+s.side+'</span>';
- b.onclick=function(){draw(i,tf)};list.appendChild(b)});
-TF.forEach(function(n,k){var b=document.createElement("button");b.type="button";b.textContent=n;b.onclick=function(){draw(cur,k)};tfs.appendChild(b)});
-draw(0,2);
-var auto=setInterval(function(){draw((cur+1)%S.length,tf)},5600);
-document.querySelector(".stage").addEventListener("pointerdown",function(){clearInterval(auto)});
-
-/* ticker (sample values) */
-var T="",pr=[["EUR/USD","1.0852","+0.12%",1],["GBP/USD","1.2641","-0.08%",0],["USD/JPY","151.20","+0.21%",1],["XAU/USD","2,381.40","+0.34%",1],["US30","39,214","-0.15%",0],["NAS100","17,980","+0.42%",1],["USD/ZAR","18.42","-0.19%",0]];
-pr.forEach(function(x){T+='<span><b>'+x[0]+'</b>'+x[1]+'<em class="'+(x[3]?"u":"d")+'" style="font-style:normal">'+x[2]+'</em></span>'});
-document.getElementById("tk").innerHTML=T+T+'<span style="color:var(--dim)">Sample values for illustration only</span>';
-})();
-
-/* position size calculator */
-(function(){
-var b=document.getElementById("cb"),r=document.getElementById("cr"),s=document.getElementById("cs"),o1=document.getElementById("o1"),o2=document.getElementById("o2");
-function up(){var bal=parseFloat(b.value),rk=parseFloat(r.value),st=parseFloat(s.value);
- if(!(bal>0&&rk>0&&st>0)){o1.textContent="–";o2.textContent="–";return}
- var risk=bal*rk/100;o1.textContent="$"+risk.toFixed(2);o2.textContent=(risk/(st*10)).toFixed(2)}
-[b,r,s].forEach(function(e){e.addEventListener("input",up)});up();
-})();
-
-/* checkout */
-(function(){
-var form=document.getElementById("purchase-form"),emailInput=document.getElementById("purchase-email"),checkoutUrl="https://pay.yoco.com/r/ZxXBp6";
-if(!form||!emailInput)return;
-form.addEventListener("submit",function(event){
- event.preventDefault();
- if(!emailInput.reportValidity())return;
- // The buyer types their email again on the hosted Yoco page, so remind them to use the same one.
- try{sessionStorage.setItem("sp_email",emailInput.value.trim().toLowerCase())}catch(e){}
- window.location.href=checkoutUrl;
-});
+// Launch moment: 16 November 2026, 00:00 South African time (UTC+2). Change this line to move the date or time.
+var LAUNCH=new Date("2026-11-16T00:00:00+02:00").getTime();
+// Start of the progress bar (when the countdown page went up).
+var START=new Date("2026-10-25T00:00:00+02:00").getTime();
+var ids=["d","h","m","s"],els=ids.map(function(i){return document.getElementById(i)}),last=[];
+var pg=document.getElementById("pg"),pgl=document.getElementById("pgl"),sr=document.getElementById("srtext");
+function pad(n){return n<10?"0"+n:""+n}
+function render(){
+ var now=Date.now(),diff=LAUNCH-now;
+ if(diff<=0){document.body.classList.add("is-live");document.title="SignalsPro is open";clearInterval(t);return}
+ var secs=Math.floor(diff/1000),v=[Math.floor(secs/86400),Math.floor(secs%86400/3600),Math.floor(secs%3600/60),secs%60];
+ v.forEach(function(x,i){var txt=pad(x);if(last[i]!==txt){els[i].textContent=txt;if(last[i]!==undefined){els[i].classList.remove("tick");void els[i].offsetWidth;els[i].classList.add("tick")}last[i]=txt}});
+ var p=Math.max(0,Math.min(1,(now-START)/(LAUNCH-START)));
+ pg.style.width=(p*100).toFixed(1)+"%";
+ pgl.textContent=Math.round(p*100)+"% of the way to launch";
+ if(v[3]===0)sr.textContent=v[0]+" days, "+v[1]+" hours and "+v[2]+" minutes until SignalsPro opens.";
+}
+var t=setInterval(render,1000);render();
 })();
 </script>
 </body>
