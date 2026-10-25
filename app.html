@@ -162,7 +162,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div class="fh"><button class="fb" id="fBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><div><div class="ft">Fundamentals</div><div class="fk" style="margin-top:2px">NFP · CPI · PPI · FOMC</div></div></div>
 <div id="fEvents"></div><div id="fCS"></div>
 <div class="note" id="fSt" style="text-align:center">Loading…</div>
-<div class="note" style="padding:0 6px 10px">Rule-based reading of news data. It is not a prediction. Spreads widen and prices gap around releases, so stops can slip. Calendar data comes from a free public feed and can be late or wrong, so always check the official release. Not financial advice.</div></section>
+<div class="note" style="padding:0 6px 10px">Pre-release positioning bias only. It comes from leading data, the macro picture and price momentum, so it is not a prediction and has not been backtested. Spreads widen and prices gap at the release, so stops can slip and a trade can lose in either direction. Calendar data comes from a free public feed and can be late or wrong. Not financial advice.</div></section>
 
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
@@ -641,46 +641,35 @@ function preConv(lean,M,cs){
  const op=[Math.abs(lean)>=.17&&sg(lean)===-cand,Math.abs(M)>=.5&&sg(M)===-cand,Math.abs(cs)>=.4&&sg(cs)===-cand].filter(Boolean).length;
  let conv='None';
  if(cand){if(ag>=2&&!op)conv=ag===3&&Math.abs(total)>=1.6?'High':'Medium';else if(ag>=2&&Math.abs(total)>=.8)conv='Low';else if(ag===1&&!op&&Math.abs(total)>=1.2)conv='Low'}
- return{dir:conv==='None'?0:cand,conv,ag,total}}
+ const edge=cand&&Math.abs(total)>=.15;if(edge&&conv==='None')conv='Low';return{dir:edge?cand:0,conv:edge?conv:'None',ag,total}}
 function preSignal(e){
  const m=FD&&FD.macro,w=FW[e.k];if(!m||!w||w.x||w.info)return null;let lean=0;
  if(e.k==='FOMC'){const L=labour(m),I=inflation(m),P=pricing(m);if(!L&&!I)return null;lean=clamp(((L?L.sc:0)+(I?I.sc:0))/6-(P?.3*P.Pu/3:0),-1,1)}
  else if(GROUP[e.k])lean=preLean(e).v;else return null;
  const reg=regime(m),M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,total=2*lean+.4*M+.5*cs;
  const R=preConv(lean,M,cs);return{dir:R.dir,total:R.total,lean,M,cs,agree:R.ag,hasPrice:!!LASTST,conv:R.conv}}
-const TRACK=['NFP','CPI','CORE_CPI','PPI','CORE_PPI','FOMC'];
-function sigCard(e,reg,A){
- const w=FW[e.k],d=new Date(e.date),now=Date.now(),past=d.getTime()<now,id=e.k+'|'+e.date.slice(0,10),man=A[id]!=null&&A[id]!=='',a=man?num(A[id]):autoActual(e),
-  V=past?verdictFor(e,a,reg):null,PS=past?null:preSignal(e),dir=V?V.dir:PS?PS.dir:0,conv=V?V.conv:PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv?1:0,
-  col=colr,f1=v=>(v>=0?'+':'')+v.toFixed(1),rx=past?reactionFor(e):null,
+const TRACK=['NFP','CPI','PPI','FOMC'];
+const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym+' ('+q.conv+')'};
+function sigCard(e){
+ const d=new Date(e.date),now=Date.now(),PS=preSignal(e),dir=PS?PS.dir:0,conv=PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv==='Low'?1:0,f1=v=>(v>=0?'+':'')+v.toFixed(1),
+  hm=t=>sastHM(new Date(t)),open=d.getTime()-12e4,
   when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'}),
   chipRow=l=>l.map(c=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym}</button>`).join('');
  let head='',why='';
  if(dir){const ps=pairSignals(dir),t=ps[0];
   head=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 0"><span class="vd u${t.side==='BUY'?1:-1}">${t.side} ${t.sym}</span><span class="dots">${conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
-  <div class="note" style="margin-top:8px">USD ${dir>0?'bullish':'bearish'}. ${past?'Signal from the released number.':'Pre-release bias. A stronger signal comes once the number is out.'}</div>
-  <div class="fk" style="margin-top:12px">Also look at</div><div>${chipRow(ps.slice(1,4))}</div>
-  <div class="note">Tap a pair to open its chart. Take entry, stop and targets from the Indicator zone plan.</div>`;
-  why=V?`News surprise ${f1(V.s)} · Macro ${f1(V.M*.4)} · Leading data ${f1(V.lean*.6)} · Price ${f1(V.pr*.8)}`:`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}`}
- else if(past){head=a==null?'<div class="note" style="margin-top:12px">Waiting for the actual number. It fills in by itself when the data source updates, or type it in above for an instant signal.</div>'
-  :'<div style="margin-top:14px"><span class="vd u0">NO CLEAR SIGNAL</span></div><div class="note" style="margin-top:8px">The number and the market are not agreeing. Wait for price to confirm a direction.</div>'}
- else{const up=pairSignals(1).slice(0,3).map(c=>c.side+' '+c.sym).join(', '),dn=pairSignals(-1).slice(0,3).map(c=>c.side+' '+c.sym).join(', ');
-  head=`<div style="margin-top:14px"><span class="vd u0">WAIT</span></div><div class="note" style="margin-top:8px">No edge before the release. The leading data, macro picture and price do not agree strongly enough yet.</div>
-  <div class="fgrid" style="grid-template-columns:1fr 1fr;margin-bottom:6px"><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--buy)">Better than forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">USD bullish</b><br>${up}</div></div><div style="text-align:left;padding:12px"><span class="fk" style="color:var(--sell)">Worse than forecast</span><div class="note" style="margin:6px 0 0"><b style="color:var(--text)">USD bearish</b><br>${dn}</div></div></div>`}
- let body=`<div class="fgrid"><div><span class="fk">Forecast</span><b>${e.forecast||'—'}</b></div><div><span class="fk">Previous</span><b>${e.previous||'—'}</b></div><div><span class="fk">Actual${a!=null?(man?' · you':' · auto'):''}</span><b style="color:var(--accent)">${a!=null?a+w.unit:'—'}</b></div></div>`;
- if(past)body+=`<input class="inp" style="margin:0" inputmode="decimal" placeholder="Enter the actual number" value="${man?A[id]:''}" onchange="setAct('${id}',this.value)">`;
- if(e.k==='FOMC'&&past)body+=`<label>Fed tone (your read of the statement)</label><select class="inp" onchange="setTone(this.value)"><option value="-1" ${getTone()<0?'selected':''}>Dovish</option><option value="0" ${getTone()===0?'selected':''}>Neutral</option><option value="1" ${getTone()>0?'selected':''}>Hawkish</option></select>`;
- if(rx)body+=`<div class="note" style="margin-top:10px">Price reaction · 5 min <b style="color:${col(rx.u5)}">${pc(rx.u5)}</b> · 15 min <b style="color:${col(rx.u15)}">${pc(rx.u15)}</b> · 60 min <b style="color:${col(rx.u60)}">${pc(rx.u60)}</b>${rx.fade?'<br><span style="color:var(--wait)">The first move is fading. Be careful chasing it.</span>':''}</div>`;
- if(V&&V.dir&&now-d.getTime()<108e5){const NA=getNA(),k=id+'|S|'+V.dir,t=pairSignals(V.dir)[0];
-  if(!NA[k]){NA[k]=1;try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}notify(`${evName(e)}: ${t.side} ${t.sym} (${V.conv} conviction)`,'News signal')}}
- const tag=past?'Released':inTxt(d.getTime()-now);
- return `<div class="fcard ${dir>0?'bull':dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST</div></div><span class="pillx ${past?'':'up'}">${tag}</span></div>${body}${head}${why?'<div class="note" style="margin-top:10px;opacity:.8">Why: '+why+'</div>':''}</div>`}
+  <div style="margin-top:12px;font-weight:800">${open>now?'Open position at '+hm(open)+' SAST':'Open window is on now'}</div><div class="note" style="margin:2px 0 0">2 minutes before the ${hm(d.getTime())} release. USD ${dir>0?'bullish':'bearish'}.</div>
+  <div class="fk" style="margin-top:12px">Also look at</div><div>${chipRow(ps.slice(1,4))}</div>`;
+  why=`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}`}
+ else head=PS?'<div style="margin-top:14px"><span class="vd u0">NO EDGE</span></div><div class="note" style="margin-top:8px">The leading data, macro picture and price are balanced, so there is no side to take before this release.</div>'
+  :'<div class="note" style="margin-top:14px">Not enough data for a signal. Macro data is not connected, so only price momentum could be used.</div>';
+ return `<div class="fcard ${dir>0?'bull':dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST · Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}</div></div><span class="pillx up">${inTxt(d.getTime()-now)}</span></div>${head}${why?'<div class="note" style="margin-top:10px;opacity:.8">Why: '+why+'</div>':''}</div>`}
 function renderFund(){
- if(!FD)return;const reg=regime(FD.macro),now=Date.now(),A=getAct(),span=SHOWALL?30:14,
-  ev=(FD.events||[]).filter(e=>TRACK.includes(e.k)).filter(e=>{const t=Date.parse(e.date);return t>now-864e5&&t<now+span*864e5}).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
- $('fEvents').innerHTML=(ev.length?ev.map(e=>sigCard(e,reg,A)).join(''):'<div class="fcard"><div class="note">No NFP, CPI, PPI or FOMC release in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>')+'<button class="btn ghost" onclick="SHOWALL=!SHOWALL;renderFund()">'+(SHOWALL?'Show fewer':'Show the next 30 days')+'</button>';
+ if(!FD)return;const now=Date.now(),span=SHOWALL?30:14,
+  ev=(FD.events||[]).filter(e=>TRACK.includes(e.k)).filter(e=>{const t=Date.parse(e.date);return t>now&&t<now+span*864e5}).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
+ $('fEvents').innerHTML=(ev.length?ev.map(sigCard).join(''):'<div class="fcard"><div class="note">No NFP, CPI, PPI or FOMC release in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>')+'<button class="btn ghost" onclick="SHOWALL=!SHOWALL;renderFund()">'+(SHOWALL?'Show fewer':'Show the next 30 days')+'</button>';
  const age=LASTST?Math.round((Date.now()-LASTST.t)/6e4):null;
- $('fCS').innerHTML=`<button class="btn ghost" onclick="priceCheck()">Update price reaction &amp; strength (4 credits)</button><div class="note" style="text-align:center">${LASTST?'Last checked '+(age<1?'just now':age+' min ago')+'. ':'Optional. '}Adds real price movement to the signals.</div>`;
+ $('fCS').innerHTML=`<button class="btn ghost" onclick="priceCheck()">Update price momentum (4 credits)</button><div class="note" style="text-align:center">${LASTST?'Last checked '+(age<1?'just now':age+' min ago')+'. ':'Optional. '}Run it shortly before the release for the freshest signal.</div>`;
  $('fSt').innerHTML='Updated '+new Date(FDT).toLocaleTimeString()+' · <a href="#" style="color:var(--accent)" onclick="loadFund(true);return false">Refresh</a>'}
 // today's news: card on Home, warning bar everywhere, and a chime 15 minutes before
 const sastKey=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Johannesburg'}).format(d),sastHM=d=>d.toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
@@ -691,7 +680,7 @@ function renderNews(){
  if(!FD||!FD.events){card.innerHTML='';bar.style.display='none';return}
  const now=Date.now(),evs=FD.events.filter(e=>TRACK.includes(e.k)).map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
  const dayTxt=new Date().toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',timeZone:'Africa/Johannesburg'});
- const row=e=>{const d=e.t-now,soon=d>0&&d<36e5,done=d<=0&&d<-36e5*3,tag=d>0?inTxt(d):d>-36e5*3?'Released '+inTxt(d):'Released',w=FW[e.k],PS=d>0?preSignal(e):null,pt=PS&&PS.dir?' · Pre-news: USD '+(PS.dir>0?'bullish':'bearish')+' ('+PS.conv+')':'';
+ const row=e=>{const d=e.t-now,soon=d>0&&d<36e5,done=d<=0&&d<-36e5*3,tag=d>0?inTxt(d):d>-36e5*3?'Released '+inTxt(d):'Released',w=FW[e.k],PS=d>0?preSignal(e):null,pt=PS&&PS.dir?' · Signal: '+sigTxt(PS):'';
   return `<div class="nrow"><div class="nt">${sastHM(new Date(e.t))}</div><div class="nm"><b><i class="imp" style="background:${e.impact==='High'?'var(--sell)':'var(--wait)'}"></i>${evName(e)}</b><span>Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}${pt}</span></div><span class="pillx ${soon?'hot':d>0?'up':'dn'}">${tag}</span></div>`};
  card.innerHTML=`<div class="fcard" style="text-align:left"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="fk">Today's news · SAST</div><div style="font-size:16px;font-weight:800;margin-top:3px">${dayTxt}</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="page('fund');return false">All events ›</a></div>
   <div style="margin-top:8px">${td.length?td.map(row).join(''):'<div class="note" style="margin:10px 0 4px">'+(FD.evErr?'The calendar feed is unavailable right now.':'No NFP, CPI, PPI or FOMC today.')+'</div>'}</div>
@@ -699,9 +688,12 @@ function renderNews(){
   <div class="note" style="margin-top:8px"><i class="imp" style="background:var(--sell)"></i>High impact <i class="imp" style="background:var(--wait);margin-left:10px"></i>Medium impact</div></div>`;
  const hot=evs.filter(e=>(e.impact==='High'||FW[e.k].alert)&&e.t-now<=36e5&&e.t-now>=-9e5).sort((a,b)=>Math.abs(a.t-now)-Math.abs(b.t-now))[0];
  if(hot){const d=hot.t-now,nm=evName(hot);bar.className='nbar'+(d>0&&d<6e5?' danger':'');bar.style.display='block';
-  bar.textContent=d>0?`High-impact news: ${nm} ${inTxt(d)} (${sastHM(new Date(hot.t))} SAST).${(()=>{const q=preSignal(hot);return q&&q.dir?' Pre-news bias: USD '+(q.dir>0?'bullish':'bearish')+' ('+q.conv+').':''})()}`:`${nm} was released ${inTxt(d)}.`}
+  bar.textContent=d>0?`High-impact news: ${nm} ${inTxt(d)} (${sastHM(new Date(hot.t))} SAST).${(()=>{const q=preSignal(hot);return q&&q.dir?' Signal: '+sigTxt(q)+'.':''})()}`:`${nm} was released ${inTxt(d)}.`}
  else bar.style.display='none';
- const NA=getNA();evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date;if(d>0&&d<=9e5&&!NA[id]&&(e.impact==='High'||FW[e.k].alert)){NA[id]=1;try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}notify(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${(()=>{const q=preSignal(e);return q&&q.dir?' Pre-news bias: USD '+(q.dir>0?'bullish':'bearish')+' ('+q.conv+').':''})()}`,'High-impact news')}})}
+ const NA=getNA(),sv=()=>{try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}};
+ evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date,q=d>0&&d<=9e5?preSignal(e):null,tx=q&&q.dir?sigTxt(q):'';
+  if(d>0&&d<=15e4&&!NA[id+'|b']){NA[id+'|a']=1;NA[id+'|b']=1;sv();notify(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
+  else if(d>0&&d<=9e5&&!NA[id+'|a']){NA[id+'|a']=1;sv();notify(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${tx?' Signal: '+tx+'.':''}`,'High-impact news')}})}
 setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
 // settings
