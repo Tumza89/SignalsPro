@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#060912">
-<meta name="description" content="SignalsPro, a premium market-analysis workspace, opens on 16 November 2026. Market zones, trade planning and macroeconomic context in one place.">
+<meta name="description" content="SignalsPro, a premium market-analysis workspace, launches on 16 November 2026. Market zones, trade planning and macroeconomic context in one place.">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="SignalsPro">
 <link rel="manifest" href="./manifest.json">
 <link rel="icon" type="image/png" href="./icon-192.png">
 <link rel="apple-touch-icon" href="./icon-192.png">
-<title>SignalsPro — Opening 16 November</title>
+<title>SignalsPro — Launching 16 November</title>
 <style>
 :root{color-scheme:dark;--bg:#060912;--ink:#f3f6fd;--mut:#9aa8c2;--dim:#6c7b97;--line:rgba(150,180,235,.16);--blue:#3b8cff;--cyan:#45dcf7;--up:#4df2ad}
 *{box-sizing:border-box}
@@ -82,24 +82,24 @@ footer p{margin:0 auto 6px;max-width:760px}
 </header>
 
 <main class="wrap" id="main">
-  <div class="pill rv d1"><i class="dot"></i> Opening soon</div>
+  <div class="pill rv d1"><i class="dot"></i> Launching soon</div>
   <h1 class="rv d2">Something sharper<br><span class="grad">is almost here.</span></h1>
-  <p class="lead rv d3">SignalsPro brings market zones, trade planning and macroeconomic context into one focused workspace. We're putting the final touches on it, and the doors open on <b style="color:#fff">16 November</b>.</p>
+  <p class="lead rv d3">SignalsPro brings market zones, trade planning and macroeconomic context into one focused workspace. We're putting the final touches on it, and we launch on <b style="color:#fff">16 November</b>.</p>
 
-  <div class="clock rv d4" role="timer" aria-label="Time until SignalsPro opens">
+  <div class="clock rv d4" role="timer" aria-label="Time until SignalsPro launches">
     <div class="unit"><span class="num" id="d">00</span><span class="lab">Days</span></div>
     <div class="unit"><span class="num" id="h">00</span><span class="lab">Hours</span></div>
     <div class="unit"><span class="num" id="m">00</span><span class="lab">Minutes</span></div>
     <div class="unit"><span class="num" id="s">00</span><span class="lab">Seconds</span></div>
   </div>
   <p class="sr" id="srtext"></p>
-  <p class="when rv d4">Opening <span>Monday, 16 November 2026</span></p>
+  <p class="when rv d4">Launching <span>Monday, 16 November 2026</span></p>
   <div class="bar rv d5" aria-hidden="true"><b id="pg"></b></div>
   <p class="barl rv d5" id="pgl">Preparing for launch</p>
   <p class="thanks rv d5"><b>Thank you for your patience.</b> Everything good takes a little time, and we want your first look at SignalsPro to be worth the wait.</p>
 
   <div class="live">
-    <h2 style="font-size:clamp(28px,5vw,44px);letter-spacing:-.03em;margin:0 0 10px">SignalsPro is open.</h2>
+    <h2 style="font-size:clamp(28px,5vw,44px);letter-spacing:-.03em;margin:0 0 10px">SignalsPro has launched.</h2>
     <p class="lead" style="margin-bottom:26px">Thanks for waiting. Your workspace is ready.</p>
     <a class="btn" href="./app.html">Launch web app ↗</a>
   </div>
@@ -127,13 +127,13 @@ var pg=document.getElementById("pg"),pgl=document.getElementById("pgl"),sr=docum
 function pad(n){return n<10?"0"+n:""+n}
 function render(){
  var now=Date.now(),diff=LAUNCH-now;
- if(diff<=0){document.body.classList.add("is-live");document.title="SignalsPro is open";clearInterval(t);return}
+ if(diff<=0){document.body.classList.add("is-live");document.title="SignalsPro has launched";clearInterval(t);return}
  var secs=Math.floor(diff/1000),v=[Math.floor(secs/86400),Math.floor(secs%86400/3600),Math.floor(secs%3600/60),secs%60];
  v.forEach(function(x,i){var txt=pad(x);if(last[i]!==txt){els[i].textContent=txt;if(last[i]!==undefined){els[i].classList.remove("tick");void els[i].offsetWidth;els[i].classList.add("tick")}last[i]=txt}});
  var p=Math.max(0,Math.min(1,(now-START)/(LAUNCH-START)));
  pg.style.width=(p*100).toFixed(1)+"%";
  pgl.textContent=Math.round(p*100)+"% of the way to launch";
- if(v[3]===0)sr.textContent=v[0]+" days, "+v[1]+" hours and "+v[2]+" minutes until SignalsPro opens.";
+ if(v[3]===0)sr.textContent=v[0]+" days, "+v[1]+" hours and "+v[2]+" minutes until SignalsPro launches.";
 }
 var t=setInterval(render,1000);render();
 })();
