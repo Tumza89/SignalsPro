@@ -15,7 +15,7 @@
 /* Launch moment: 16 November 2026, 00:00 South African time (UTC+2). Change this one line to move the date or time. */
 window.LAUNCH=new Date("2026-11-16T00:00:00+02:00").getTime();
 (function(){var ua=navigator.userAgent||"",ch=navigator.userAgentData;if(/Android/i.test(ua)||(ch&&ch.platform==="Android")||/[?&]platform=android/.test(location.search))document.documentElement.classList.add("android")})();
-if(Date.now()>=window.LAUNCH){document.documentElement.classList.add("is-live");document.title="SignalsPro — Premium Market Analysis Workspace"}
+if(Date.now()>=window.LAUNCH||/[?&]preview=live/.test(location.search)){document.documentElement.classList.add("is-live");document.title="SignalsPro — Premium Market Analysis Workspace"}
 </script>
 <style>
 :root{color-scheme:dark;--bg:#060912;--ink:#f3f6fd;--mut:#9aa8c2;--dim:#6c7b97;--line:rgba(150,180,235,.15);--blue:#3b8cff;--cyan:#45dcf7;--up:#4df2ad;--dn:#ff7690;--amb:#ffc86b;--r:18px}
