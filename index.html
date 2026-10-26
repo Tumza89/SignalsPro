@@ -1,1 +1,387 @@
-  </section>   <section class="section wrap" id="how-it-works">    <div class="section-head">      <div class="eyebrow">Start in seconds</div>      <h2>Your workspace, one launch away</h2>      <p>Use SignalsPro in your browser. Subscriber verification remains inside the existing app.</p>    </div>    <div class="cards">      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Launch</h3><p>Open the web app from this page on your phone, tablet or computer.</p></article>      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="3" stroke="currentColor" stroke-width="1.8"/><path d="M8 10h8M8 14h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Verify access</h3><p>Enter the email associated with your SignalsPro subscriber access.</p></article>      <article class="card"><div class="card-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M2 21h20" stroke="currentColor" stroke-width="1.5"/></svg></div><h3>Analyse</h3><p>Explore the available analysis tools and make your own informed decisions.</p></article>    </div>  </section></main> <footer>  <div class="wrap footer-row">    <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:30px;height:30px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<span>Pro</span></a>    <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>    <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap"><a class="textlink" href="#pricing">Pricing</a><a class="textlink" href="./app.html">Launch web app ↗</a></div>  </div></footer><script>  document.getElementById("year").textContent = new Date().getFullYear();  if ("serviceWorker" in navigator) {    window.addEventListener("load", function () {      navigator.serviceWorker.register("./sw.js").catch(function (error) {        console.warn("SignalsPro service worker registration failed:", error);      });    });  }</script>   <script>    (() => {      const form = document.getElementById('purchase-form');      const emailInput = document.getElementById('purchase-email');      const checkoutUrl = 'https://whop.com/checkout/plan_EDimWMct9cG71';      if (!form || !emailInput) return;      form.addEventListener('submit', (event) => {        event.preventDefault();        if (!emailInput.reportValidity()) return;        const email = emailInput.value.trim().toLowerCase();        // Pass the submitted email as a query parameter for reference. The hosted Whop checkout may still ask the buyer to confirm or enter it.        const destination = new URL(checkoutUrl);        destination.searchParams.set('email', email);        window.location.href = destination.toString();      });    })();  </script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#060912">
+<meta name="description" content="SignalsPro is a premium market-analysis workspace with market zones, trade planning, scanning and macroeconomic context. Launching 16 November 2026. Pricing is R1,000 once-off.">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="SignalsPro">
+<link rel="manifest" href="./manifest.json">
+<link rel="icon" type="image/png" href="./icon-192.png">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<title>SignalsPro — Launching 16 November</title>
+<script>
+/* Launch moment: 16 November 2026, 00:00 South African time (UTC+2). Change this one line to move the date or time. */
+window.LAUNCH=new Date("2026-11-16T00:00:00+02:00").getTime();
+if(Date.now()>=window.LAUNCH){document.documentElement.classList.add("is-live");document.title="SignalsPro — Premium Market Analysis Workspace"}
+</script>
+<style>
+:root{color-scheme:dark;--bg:#060912;--ink:#f3f6fd;--mut:#9aa8c2;--dim:#6c7b97;--line:rgba(150,180,235,.15);--blue:#3b8cff;--cyan:#45dcf7;--up:#4df2ad;--dn:#ff7690;--amb:#ffc86b;--r:18px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.6;overflow-x:hidden;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+:focus-visible{outline:2px solid var(--cyan);outline-offset:3px;border-radius:8px}
+#site{display:none}
+.is-live #site{display:block}.is-live #pre{display:none}
+#pre{display:flex;flex-direction:column;min-height:100vh;min-height:100dvh}
+.wrap{width:min(980px,calc(100% - 40px));margin:auto}
+#site .wrap{width:min(1160px,calc(100% - 40px))}
+.brand{display:inline-flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.5px;font-size:20px}
+.brand-icon{width:36px;height:36px;border-radius:11px;background:linear-gradient(135deg,var(--blue),#14c6e8);display:grid;place-items:center;box-shadow:0 0 28px rgba(45,130,255,.38)}
+.brand-icon svg{width:23px;height:23px}
+.brand i{font-style:normal;color:#6dbcff}
+.pill{display:inline-flex;align-items:center;gap:9px;border:1px solid rgba(68,151,255,.3);background:rgba(35,108,220,.1);color:#a6d0ff;border-radius:30px;padding:8px 15px;font-size:13px;font-weight:600}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--up);box-shadow:0 0 12px var(--up);animation:pl 2.2s infinite}
+@keyframes pl{50%{opacity:.3}}
+h1{font-size:clamp(38px,7.2vw,76px);line-height:1.03;letter-spacing:-.045em;margin:26px 0 18px;font-weight:800}
+.grad{background:linear-gradient(100deg,#fff 5%,#93c8ff 50%,#45dcf7);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{font-size:clamp(16px,2.2vw,19px);color:var(--mut);max-width:630px;margin:0 auto;line-height:1.75}
+.btn{display:inline-flex;justify-content:center;align-items:center;gap:9px;border-radius:12px;padding:14px 20px;font:inherit;font-size:15px;font-weight:700;border:1px solid transparent;cursor:pointer;transition:transform .2s,box-shadow .2s,border-color .2s}
+.btn:hover{transform:translateY(-2px)}
+.primary{background:linear-gradient(100deg,#2b7bff,#25c3ea);color:#04101f;box-shadow:0 10px 34px rgba(37,130,255,.3)}
+.primary:hover{box-shadow:0 14px 44px rgba(37,150,255,.45)}
+.ghost{background:rgba(255,255,255,.03);border-color:var(--line);color:var(--ink)}
+.ghost:hover{border-color:rgba(120,170,255,.4)}
+.sm{padding:9px 15px;font-size:13px}
+/* ===== countdown ===== */
+.bg{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;background:linear-gradient(#060912,#070c17)}
+.orb{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;animation:drift 18s ease-in-out infinite alternate}
+.o1{width:560px;height:560px;left:-120px;top:-160px;background:#1d5bd6}
+.o2{width:480px;height:480px;right:-140px;top:12%;background:#0ab4e6;opacity:.28;animation-delay:-6s}
+.o3{width:420px;height:420px;left:35%;bottom:-220px;background:#5a3de0;opacity:.28;animation-delay:-11s}
+@keyframes drift{to{transform:translate(60px,40px) scale(1.12)}}
+.grid{position:absolute;inset:0;background-image:linear-gradient(rgba(150,180,235,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(150,180,235,.05) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse at 50% 40%,#000,transparent 72%);mask-image:radial-gradient(ellipse at 50% 40%,#000,transparent 72%)}
+.line{position:absolute;left:0;right:0;bottom:6%;width:100%;height:36vh;opacity:.5}
+.line path{stroke-dasharray:1800;stroke-dashoffset:1800;animation:draw 5s .4s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.ph{padding-top:calc(26px + env(safe-area-inset-top,0px));width:min(980px,calc(100% - 40px));margin:0 auto}
+.pm{flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:40px 0 50px}
+.clock{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(8px,2vw,18px);margin:46px auto 14px;width:min(760px,100%)}
+.unit{position:relative;border:1px solid rgba(120,170,245,.24);border-radius:22px;padding:clamp(16px,3.4vw,30px) 8px clamp(12px,2.4vw,20px);background:linear-gradient(160deg,rgba(18,29,52,.92),rgba(8,13,25,.95));box-shadow:0 24px 70px rgba(0,0,0,.4),inset 0 1px 0 rgba(255,255,255,.06);overflow:hidden}
+.unit:before{content:"";position:absolute;inset:0 0 auto;height:50%;background:linear-gradient(rgba(255,255,255,.05),transparent)}
+.unit:after{content:"";position:absolute;left:12%;right:12%;top:0;height:2px;background:linear-gradient(90deg,transparent,var(--cyan),transparent);opacity:.7}
+.num{display:block;font-size:clamp(38px,9.5vw,92px);font-weight:800;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums;background:linear-gradient(#fff,#a9cdfc);-webkit-background-clip:text;background-clip:text;color:transparent}
+.num.tick{animation:tick .45s ease}
+@keyframes tick{0%{transform:translateY(-14px);opacity:0}100%{transform:none;opacity:1}}
+.lab{display:block;margin-top:10px;font-size:clamp(11px,1.8vw,13px);color:var(--dim);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.when{font-size:15px;color:#c3d3ee;margin:6px 0 0;font-weight:600}.when span{color:var(--cyan)}
+.pbar{width:min(420px,80%);height:6px;border-radius:6px;background:rgba(150,180,235,.12);margin:26px auto 8px;overflow:hidden}
+.pbar b{display:block;height:100%;width:0;border-radius:6px;background:linear-gradient(90deg,var(--blue),var(--cyan));box-shadow:0 0 14px rgba(69,220,247,.6);transition:width 1.2s ease}
+.barl{font-size:12px;color:var(--dim);margin:0}
+.thanks{max-width:560px;margin:40px auto 0;font-size:16px;color:var(--mut)}.thanks b{color:#fff}
+.pf{padding:20px 0 calc(28px + env(safe-area-inset-bottom,0px));border-top:1px solid rgba(150,180,235,.1);color:var(--dim);font-size:12px;text-align:center}
+.pf p{margin:0 auto 6px;max-width:760px}
+.js .rv{opacity:0;transform:translateY(16px);animation:rv .8s forwards}
+@keyframes rv{to{opacity:1;transform:none}}
+.d1{animation-delay:.05s!important}.d2{animation-delay:.18s!important}.d3{animation-delay:.3s!important}.d4{animation-delay:.45s!important}.d5{animation-delay:.6s!important}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+/* ===== full site ===== */
+.bg2{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(900px 500px at 12% -5%,rgba(40,100,220,.24),transparent 60%),radial-gradient(700px 480px at 95% 20%,rgba(0,190,255,.1),transparent 60%),linear-gradient(#060912,#070c17)}
+.bg2:after{content:"";position:absolute;inset:0;background-image:linear-gradient(rgba(150,180,235,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(150,180,235,.045) 1px,transparent 1px);background-size:64px 64px;-webkit-mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 70%);mask-image:radial-gradient(ellipse at 50% 0,#000,transparent 70%)}
+#site header{position:sticky;top:0;z-index:50;padding-top:env(safe-area-inset-top,0px);background:rgba(6,9,18,.72);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid rgba(150,180,235,.08)}
+.hbar{height:68px;display:flex;align-items:center;justify-content:space-between}
+#site nav{display:flex;align-items:center;gap:26px;font-size:14px;color:var(--mut)}
+#site nav a:hover{color:#fff}
+.hero{padding:72px 0 40px;text-align:center}
+#site h1{margin:24px auto 22px;max-width:900px;line-height:1.02;font-size:clamp(40px,7vw,78px)}
+.cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:32px 0 14px}
+.fine{font-size:13px;color:var(--dim);margin:0}
+.stage{position:relative;margin:54px auto 0;max-width:1060px;perspective:1600px}
+.stage:before{content:"";position:absolute;inset:8% 6% -4%;background:radial-gradient(ellipse,rgba(40,130,255,.35),transparent 65%);filter:blur(50px);z-index:-1}
+.win{border:1px solid rgba(120,170,245,.26);border-radius:20px;background:linear-gradient(160deg,rgba(15,24,42,.97),rgba(8,13,24,.98));box-shadow:0 40px 120px rgba(0,0,0,.55);overflow:hidden;text-align:left;transform:rotateX(4deg);transform-origin:50% 0;transition:transform .6s}
+.stage:hover .win{transform:rotateX(0)}
+.wtop{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:12px;color:var(--dim)}
+.wtop b{width:10px;height:10px;border-radius:50%;background:#26324a}
+.wtop span{margin-left:10px}.wtop em{margin-left:auto;font-style:normal;color:var(--amb);font-size:11px}
+.wbody{display:grid;grid-template-columns:200px 1fr 230px;min-height:380px}
+.side{border-right:1px solid var(--line);padding:12px}
+.side h4,.plan h4{margin:4px 6px 10px;font-size:12px;font-weight:600;color:var(--dim)}
+.sym{display:flex;width:100%;justify-content:space-between;align-items:center;background:none;border:1px solid transparent;border-radius:11px;padding:10px;color:var(--mut);font:inherit;font-size:13px;cursor:pointer;text-align:left;transition:.2s}
+.sym:hover{background:rgba(255,255,255,.03)}
+.sym.on{background:rgba(59,140,255,.13);border-color:rgba(80,160,255,.35);color:#fff}
+.sym small{display:block;color:var(--dim);font-size:11px}
+.tag{font-size:11px;font-weight:700;padding:3px 8px;border-radius:20px}
+.tag.l{color:var(--up);background:rgba(77,242,173,.1)}.tag.s{color:var(--dn);background:rgba(255,118,144,.1)}
+.main{padding:14px 10px 8px;min-width:0}
+.mhead{display:flex;justify-content:space-between;align-items:baseline;padding:0 8px;gap:8px;flex-wrap:wrap}
+.mhead b{font-size:17px}.mhead span{font-size:12px;color:var(--dim)}
+#ch{display:block;width:100%;height:auto}
+.plan{border-left:1px solid var(--line);padding:14px}
+.row{display:flex;justify-content:space-between;padding:11px 0;border-bottom:1px solid rgba(150,180,235,.09);font-size:13px;color:var(--mut)}
+.row b{font-variant-numeric:tabular-nums;color:var(--ink)}
+.row .e{color:var(--cyan)}.row .t{color:var(--up)}.row .x{color:var(--dn)}
+.rr{margin-top:14px;border:1px solid rgba(80,160,255,.28);background:rgba(59,140,255,.08);border-radius:13px;padding:12px;font-size:12px;color:var(--mut)}
+.rr b{display:block;font-size:24px;color:#fff;letter-spacing:-.5px}
+.news{margin-top:12px;font-size:12px;color:var(--mut);display:flex;gap:8px;align-items:center}
+.news:before{content:"";width:7px;height:7px;border-radius:50%;background:var(--amb);flex:none}
+.cap{text-align:center;font-size:12px;color:var(--dim);margin:18px 0 0}
+.sec{padding:84px 0}
+.head{max-width:680px;margin:0 0 40px}
+.head h2{font-size:clamp(30px,4.4vw,48px);line-height:1.08;letter-spacing:-.035em;margin:0 0 14px}
+.head p{color:var(--mut);margin:0;font-size:17px}
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:14px}
+.tile{position:relative;grid-column:span 2;border:1px solid var(--line);border-radius:var(--r);padding:26px;background:linear-gradient(150deg,rgba(17,27,47,.85),rgba(9,14,26,.9));overflow:hidden;transition:border-color .25s}
+.tile:hover{border-color:rgba(90,160,255,.4)}
+.tile:before{content:"";position:absolute;inset:0;background:radial-gradient(260px circle at var(--mx,50%) var(--my,0),rgba(60,150,255,.14),transparent 70%);opacity:0;transition:opacity .3s;pointer-events:none}
+.tile:hover:before{opacity:1}
+.tile.w{grid-column:span 3}
+.tile h3{font-size:19px;margin:16px 0 8px;letter-spacing:-.2px}
+.tile p{font-size:14px;color:var(--mut);margin:0}
+.ic{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#8cc6ff;background:rgba(47,129,255,.12);border:1px solid rgba(68,151,255,.22)}
+.ic svg{width:23px;height:23px}
+.mini{margin-top:20px;display:flex;flex-direction:column;gap:7px}
+.mini span{height:26px;border-radius:7px;font-size:11px;display:flex;align-items:center;padding:0 10px;color:var(--mut)}
+.z1{background:rgba(59,140,255,.12);border:1px dashed rgba(59,140,255,.4)}
+.z2{background:rgba(77,242,173,.08);border:1px dashed rgba(77,242,173,.35)}
+.flow{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;counter-reset:s}
+.flow div{border-top:2px solid rgba(80,160,255,.45);padding:18px 4px 0}
+.flow div:before{counter-increment:s;content:counter(s);display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:rgba(59,140,255,.15);color:#9ccbff;font-weight:700;font-size:13px;margin-bottom:12px}
+.flow h3{margin:0 0 6px;font-size:19px}.flow p{margin:0;color:var(--mut);font-size:15px}
+.price-card{max-width:780px;margin:auto;border-radius:28px;padding:2px;background:linear-gradient(140deg,rgba(69,220,247,.7),rgba(59,140,255,.15) 40%,rgba(59,140,255,.6))}
+.price-in{border-radius:26px;padding:clamp(26px,5vw,46px);background:radial-gradient(ellipse at 50% 0,rgba(49,130,246,.2),transparent 60%),#0a1120}
+.ptop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:center}
+.ptop b{font-size:15px;color:#a6d0ff}
+.once{font-size:12px;font-weight:700;color:var(--up);border:1px solid rgba(77,242,173,.25);background:rgba(77,242,173,.07);padding:6px 11px;border-radius:20px}
+.price{font-size:clamp(52px,9vw,84px);font-weight:800;letter-spacing:-.05em;line-height:1;margin:26px 0 10px}
+.price small{font-size:16px;font-weight:600;letter-spacing:0;color:var(--mut)}
+.pd{color:var(--mut);font-size:15px;max-width:560px;margin:0}
+.inc{display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;margin:28px 0}
+.inc span{display:flex;gap:10px;color:#dbe6f8;font-size:14px}.inc b{color:var(--up)}
+label{display:block;font-size:13px;color:#c7d5ed;margin:0 0 8px;font-weight:600}
+input{width:100%;background:#070d1a;border:1px solid #2b3d59;border-radius:12px;color:#f5f8ff;padding:15px;font:inherit;margin-bottom:12px;transition:border-color .2s,box-shadow .2s}
+input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,140,255,.18)}
+.price-in .btn{width:100%}
+.pn{font-size:13px;color:var(--dim);margin:14px 0 0;text-align:center}
+.have{margin-top:16px;font-size:13px;color:var(--mut);text-align:center}
+.have a{color:#8bc3ff;text-decoration:underline;text-underline-offset:3px}
+.disc{max-width:780px;margin:28px auto 0;border:1px solid var(--line);border-radius:14px;padding:16px 18px;color:#95a3bc;font-size:13px;background:rgba(255,255,255,.02)}
+.disc strong{color:#c7d5ed}
+.faq{max-width:780px;margin:auto}
+details{border-bottom:1px solid var(--line);padding:4px 0}
+summary{cursor:pointer;list-style:none;display:flex;justify-content:space-between;gap:14px;padding:18px 0;font-weight:600;font-size:17px}
+summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--cyan);font-size:22px;line-height:1;transition:transform .25s}
+details[open] summary:after{transform:rotate(45deg)}
+details p{margin:0 0 18px;color:var(--mut);font-size:15px;max-width:640px}
+#site footer{border-top:1px solid rgba(150,180,235,.1);padding:28px 0 calc(36px + env(safe-area-inset-bottom,0px));color:var(--dim);font-size:13px}
+.frow{display:flex;justify-content:space-between;align-items:center;gap:18px;flex-wrap:wrap}
+.frow nav{gap:18px;font-size:13px}
+.js .sv{opacity:0;transform:translateY(18px);transition:opacity .7s,transform .7s}
+.js .sv.in{opacity:1;transform:none}
+@media(max-width:900px){.wbody{grid-template-columns:1fr}.side{display:flex;gap:6px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line)}.side h4{display:none}.sym{flex:none;width:auto;gap:12px}.plan{border-left:0;border-top:1px solid var(--line)}.bento{grid-template-columns:1fr 1fr}.tile,.tile.w{grid-column:span 1}.win{transform:none}}
+@media(max-width:600px){.wrap,#site .wrap,.ph{width:calc(100% - 30px)}#site nav a:not(.btn){display:none}.hero{padding-top:48px}.bento,.flow,.inc{grid-template-columns:1fr}.sec{padding:60px 0}#site .btn{width:100%}.hbar .btn{width:auto}.unit{border-radius:16px}.lab{letter-spacing:.08em}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.js .rv,.js .sv{opacity:1;transform:none}.line path{stroke-dashoffset:0}}
+</style>
+</head>
+<body>
+
+<!-- ============ BEFORE LAUNCH: COUNTDOWN ============ -->
+<div id="pre">
+  <div class="bg" aria-hidden="true"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div><div class="grid"></div>
+    <svg class="line" viewBox="0 0 1200 300" preserveAspectRatio="none"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#3b8cff" stop-opacity="0"/><stop offset=".5" stop-color="#45dcf7"/><stop offset="1" stop-color="#4df2ad"/></linearGradient></defs><path d="M0 260 C90 250 130 210 210 215 S330 150 420 170 S560 110 650 120 S790 70 880 80 S1050 30 1200 20" fill="none" stroke="url(#g)" stroke-width="2.5" stroke-linecap="round"/></svg>
+  </div>
+  <div class="ph"><a class="brand" href="./" aria-label="SignalsPro home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a></div>
+  <div class="pm wrap">
+    <div class="pill rv d1"><i class="dot"></i> Launching soon</div>
+    <h1 class="rv d2">Something sharper<br><span class="grad">is almost here.</span></h1>
+    <p class="lead rv d3">SignalsPro brings market zones, trade planning and macroeconomic context into one focused workspace. We're putting the final touches on it, and we launch on <b style="color:#fff">16 November</b>.</p>
+    <div class="clock rv d4" role="timer" aria-label="Time until SignalsPro launches">
+      <div class="unit"><span class="num" id="d">00</span><span class="lab">Days</span></div>
+      <div class="unit"><span class="num" id="h">00</span><span class="lab">Hours</span></div>
+      <div class="unit"><span class="num" id="m">00</span><span class="lab">Minutes</span></div>
+      <div class="unit"><span class="num" id="s">00</span><span class="lab">Seconds</span></div>
+    </div>
+    <p class="sr" id="srtext"></p>
+    <p class="when rv d4">Launching <span>Monday, 16 November 2026</span></p>
+    <div class="pbar rv d5" aria-hidden="true"><b id="pg"></b></div>
+    <p class="barl rv d5" id="pgl">Preparing for launch</p>
+    <p class="thanks rv d5"><b>Thank you for your patience.</b> Everything good takes a little time, and we want your first look at SignalsPro to be worth the wait.</p>
+  </div>
+  <div class="pf"><div class="wrap">
+    <p>SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading.</p>
+    <p>© <span class="yr">2026</span> SignalsPro. All rights reserved.</p>
+  </div></div>
+</div>
+
+<!-- ============ AFTER LAUNCH: FULL SITE ============ -->
+<div id="site">
+<div class="bg2" aria-hidden="true"></div>
+<header>
+  <div class="wrap hbar">
+    <a class="brand" href="./" aria-label="SignalsPro home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
+    <nav aria-label="Main navigation"><a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a class="btn ghost sm" href="./app.html">Launch web app ↗</a></nav>
+  </div>
+</header>
+<main>
+<section class="hero wrap">
+  <div class="pill"><i class="dot"></i> Market analysis workspace</div>
+  <h1>See the setup.<br><span class="grad">Plan your next move.</span></h1>
+  <p class="lead">Market zones, trade plans, a symbol scanner and macroeconomic context in one focused workspace, built to help you study the market with more structure.</p>
+  <div class="cta"><a class="btn primary" href="./app.html">Launch web app ↗</a><a class="btn ghost" href="#pricing">See pricing</a></div>
+  <p class="fine">Opens in your browser. Subscriber verification happens inside the app.</p>
+  <div class="stage" aria-label="Interactive preview of the SignalsPro workspace">
+    <div class="win">
+      <div class="wtop"><b></b><b></b><b></b><span>SignalsPro workspace</span><em>Sample data</em></div>
+      <div class="wbody">
+        <div class="side" id="list"><h4>Scanner</h4></div>
+        <div class="main"><div class="mhead"><b id="mname"></b><span id="mmeta"></span></div>
+          <svg id="ch" viewBox="0 0 560 300" role="img" aria-label="Sample candlestick chart with support and resistance zones and a trade plan"></svg></div>
+        <div class="plan"><h4>Trade plan</h4>
+          <div class="row">Entry<b class="e" id="pe"></b></div><div class="row">Stop<b class="x" id="ps"></b></div><div class="row">Target<b class="t" id="pt"></b></div>
+          <div class="rr">Reward to risk<b id="prr"></b></div><div class="news" id="pn"></div></div>
+      </div>
+    </div>
+    <p class="cap">Interactive illustration. Pick a symbol to see how a zone-based plan is laid out. Values are sample data, not live prices or signals.</p>
+  </div>
+</section>
+
+<section class="sec wrap" id="features">
+  <div class="head sv"><h2>Everything you need to study a setup</h2><p>Use these tools as decision support, not as a promise of results.</p></div>
+  <div class="bento">
+    <article class="tile w sv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V5m0 14h17M7 15l4-4 3 2 6-7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market zones</h3><p>Review price charts with identified support and resistance zones to structure your analysis.</p><div class="mini"><span class="z1">Resistance zone</span><span class="z2">Support zone</span></div></article>
+    <article class="tile w sv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 8h14M5 16h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="8" r="3" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="16" r="3" stroke="currentColor" stroke-width="1.8"/></svg></div><h3>Trade planning</h3><p>See potential entries, stop levels and target areas laid out as one structured plan, with the reward-to-risk ratio.</p></article>
+    <article class="tile sv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 5h16v14H4zM8 9h8M8 13h5M8 16h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Market scanner</h3><p>Browse supported symbols and available setups from one place.</p></article>
+    <article class="tile sv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Fundamental context</h3><p>Economic releases and macro context where the app's data sources are connected.</p></article>
+    <article class="tile sv"><div class="ic"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9M10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>News awareness</h3><p>Track economic events and in-app alerts to prepare for volatility.</p></article>
+  </div>
+</section>
+
+<section class="sec wrap" id="how-it-works">
+  <div class="head sv"><h2>Your workspace is one launch away</h2><p>Use SignalsPro on a compatible phone, tablet or computer. Subscriber verification stays inside the app.</p></div>
+  <div class="flow sv">
+    <div><h3>Launch</h3><p>Open the web app from this page in your browser.</p></div>
+    <div><h3>Verify access</h3><p>Enter the email linked to your SignalsPro subscriber access.</p></div>
+    <div><h3>Analyse</h3><p>Explore the tools and make your own informed decisions.</p></div>
+  </div>
+</section>
+
+<section class="sec wrap" id="pricing">
+  <div class="head sv" style="text-align:center;margin-inline:auto"><h2>One payment. Your SignalsPro access.</h2><p>No monthly price is advertised. Pay once.</p></div>
+  <div class="price-card sv"><div class="price-in">
+    <div class="ptop"><b>SignalsPro Premium</b><span class="once">Once-off payment</span></div>
+    <div class="price">R1,000 <small>/ once-off</small></div>
+    <p class="pd">A single once-off payment for lifetime access to the SignalsPro analysis workspace. After payment, access is activated manually once your transaction is verified.</p>
+    <div class="inc">
+      <span><b>✓</b> Market zones and chart analysis</span><span><b>✓</b> Trade planning tools</span>
+      <span><b>✓</b> Supported market scanner</span><span><b>✓</b> Fundamental and news context</span>
+      <span><b>✓</b> Mobile-friendly web access</span><span><b>✓</b> Subscriber email verification</span>
+    </div>
+    <form id="purchase-form">
+      <label for="purchase-email">Email address for your SignalsPro access</label>
+      <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
+      <button class="btn primary" type="submit">Continue to secure checkout ↗</button>
+    </form>
+    <p class="pn">You'll pay through Whop. Access is not automatic: your email is added manually after payment is verified.</p>
+    <p class="have">Already have access? <a href="./app.html">Launch the web app</a> and sign in with your registered email.</p>
+  </div></div>
+  <div class="disc sv"><strong>Risk notice:</strong> SignalsPro provides market-analysis tools and information for educational purposes. It is not financial advice, does not guarantee accuracy or profits, and does not remove the risk of trading. You are responsible for your own trading decisions.</div>
+</section>
+
+<section class="sec wrap" id="faq">
+  <div class="head sv" style="text-align:center;margin-inline:auto"><h2>Questions, answered</h2></div>
+  <div class="faq sv">
+    <details><summary>When do I get access after paying?</summary><p>Access is activated manually. Once your payment is verified, your email is added and you can sign in to the web app with it. Use the same email you entered at checkout.</p></details>
+    <details><summary>Is it a subscription?</summary><p>No. The price is a single once-off payment of R1,000 for lifetime access to the workspace.</p></details>
+    <details><summary>Does SignalsPro tell me what to trade?</summary><p>No. It is an analysis workspace that helps you study zones, plan levels and keep macro context in view. It is not financial advice and does not guarantee results.</p></details>
+    <details><summary>What devices does it work on?</summary><p>Any compatible phone, tablet or computer with a modern browser. Nothing to install.</p></details>
+  </div>
+</section>
+</main>
+<footer>
+  <div class="wrap frow">
+    <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:28px;height:28px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
+    <span>© <span class="yr">2026</span> SignalsPro. All rights reserved.</span>
+    <nav><a href="#pricing">Pricing</a><a href="./app.html">Launch web app ↗</a></nav>
+  </div>
+</footer>
+</div>
+
+<script>
+document.documentElement.classList.add("js");
+[].forEach.call(document.querySelectorAll(".yr"),function(e){e.textContent=new Date().getFullYear()});
+if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("./sw.js").catch(function(e){console.warn("SignalsPro service worker registration failed:",e)})})}
+
+/* countdown: switches to the full site at LAUNCH (defined in <head>) */
+(function(){
+var START=new Date("2026-10-25T00:00:00+02:00").getTime(); /* progress bar start */
+var els=["d","h","m","s"].map(function(i){return document.getElementById(i)}),last=[];
+var pg=document.getElementById("pg"),pgl=document.getElementById("pgl"),sr=document.getElementById("srtext");
+function pad(n){return n<10?"0"+n:""+n}
+function render(){
+ var now=Date.now(),diff=window.LAUNCH-now;
+ if(diff<=0){clearInterval(t);document.documentElement.classList.add("is-live");document.title="SignalsPro — Premium Market Analysis Workspace";window.scrollTo(0,0);return}
+ var secs=Math.floor(diff/1000),v=[Math.floor(secs/86400),Math.floor(secs%86400/3600),Math.floor(secs%3600/60),secs%60];
+ v.forEach(function(x,i){var txt=pad(x);if(last[i]!==txt){els[i].textContent=txt;if(last[i]!==undefined){els[i].classList.remove("tick");void els[i].offsetWidth;els[i].classList.add("tick")}last[i]=txt}});
+ var p=Math.max(0,Math.min(1,(now-START)/(window.LAUNCH-START)));
+ pg.style.width=(p*100).toFixed(1)+"%";pgl.textContent=Math.round(p*100)+"% of the way to launch";
+ if(v[3]===0)sr.textContent=v[0]+" days, "+v[1]+" hours and "+v[2]+" minutes until SignalsPro launches.";
+}
+var t=setInterval(render,1000);render();
+})();
+
+/* reveal on scroll + tile spotlight */
+(function(){var els=document.querySelectorAll(".sv");
+if(!("IntersectionObserver" in window)){els.forEach(function(e){e.classList.add("in")})}
+else{var io=new IntersectionObserver(function(es){es.forEach(function(x){if(x.isIntersecting){x.target.classList.add("in");io.unobserve(x.target)}})},{threshold:.12});els.forEach(function(e){io.observe(e)})}
+document.querySelectorAll(".tile").forEach(function(t){t.addEventListener("pointermove",function(e){var r=t.getBoundingClientRect();t.style.setProperty("--mx",(e.clientX-r.left)+"px");t.style.setProperty("--my",(e.clientY-r.top)+"px")})})})();
+
+/* interactive workspace preview (sample data only) */
+(function(){
+var S=[
+ {n:"EUR/USD",b:1.0850,d:4,seed:7,side:"Long",tf:"H4",ev:"Sample event: rate decision in 2h"},
+ {n:"XAU/USD",b:2380,d:2,seed:21,side:"Long",tf:"H1",ev:"Sample event: inflation data tomorrow"},
+ {n:"GBP/JPY",b:192.4,d:3,seed:13,side:"Short",tf:"H4",ev:"Sample event: no high-impact news"},
+ {n:"US30",b:39200,d:0,seed:33,side:"Short",tf:"D1",ev:"Sample event: jobs report Friday"}
+];
+var list=document.getElementById("list"),svg=document.getElementById("ch"),cur=0;
+function rng(s){return function(){s=(s*16807)%2147483647;return(s-1)/2147483646}}
+function px(s,n){return(s.b*(1+(n-.5)*.02)).toFixed(s.d)}
+function draw(i){
+ cur=i;var s=S[i],r=rng(s.seed*97),W=560,H=300,N=34,p=50,cs=[],lo=1e9,hi=-1e9,short=s.side==="Short";
+ for(var k=0;k<N;k++){var t=k/N,tr=short?(.62-.3*t):(.38+.3*t),tgt=tr+Math.sin(k/3.2+s.seed)*.12,o=p,c=o+(tgt*100-o)*.35+(r()-.5)*6;
+  var h=Math.max(o,c)+r()*3,l=Math.min(o,c)-r()*3;cs.push([o,h,l,c]);p=c;lo=Math.min(lo,l);hi=Math.max(hi,h)}
+ var pad=(hi-lo)*.12;lo-=pad;hi+=pad;
+ var y=function(v){return 14+(1-(v-lo)/(hi-lo))*(H-34)},nm=function(v){return(v-lo)/(hi-lo)};
+ var rz=[hi-(hi-lo)*.22,hi-(hi-lo)*.06],sz=[lo+(hi-lo)*.06,lo+(hi-lo)*.22],en,sp,tp;
+ if(short){en=rz[0]+(rz[1]-rz[0])*.25;sp=rz[1]+(hi-lo)*.03;tp=sz[1]}else{en=sz[1]-(sz[1]-sz[0])*.2;sp=sz[0]-(hi-lo)*.03;tp=rz[0]}
+ var rr=Math.abs(tp-en)/Math.abs(en-sp),cw=(W-70)/N,o="";
+ for(var g=0;g<6;g++)o+='<path d="M0 '+(14+g*52)+'H'+(W-62)+'" stroke="#8aa6d4" stroke-opacity=".08"/>';
+ o+='<rect x="0" y="'+y(rz[1])+'" width="'+(W-62)+'" height="'+(y(rz[0])-y(rz[1]))+'" rx="5" fill="#ff7690" fill-opacity=".08" stroke="#ff7690" stroke-opacity=".3" stroke-dasharray="5 5"/>';
+ o+='<rect x="0" y="'+y(sz[1])+'" width="'+(W-62)+'" height="'+(y(sz[0])-y(sz[1]))+'" rx="5" fill="#4df2ad" fill-opacity=".07" stroke="#4df2ad" stroke-opacity=".3" stroke-dasharray="5 5"/>';
+ cs.forEach(function(c,k){var x=k*cw+cw/2,up=c[3]>=c[0],col=up?"#4df2ad":"#ff7690";
+  o+='<path d="M'+x+' '+y(c[1])+'V'+y(c[2])+'" stroke="'+col+'" stroke-width="1.6" style="opacity:0;animation:fi .4s '+(k*.025)+'s forwards"/><rect x="'+(x-3.6)+'" y="'+y(Math.max(c[0],c[3]))+'" width="7.2" height="'+Math.max(2,Math.abs(y(c[0])-y(c[3])))+'" rx="1.5" fill="'+col+'" style="opacity:0;animation:fi .4s '+(k*.025)+'s forwards"/>'});
+ [[en,"#45dcf7","Entry"],[sp,"#ff7690","Stop"],[tp,"#4df2ad","Target"]].forEach(function(L){var yy=y(L[0]);
+  o+='<path d="M0 '+yy+'H'+(W-62)+'" stroke="'+L[1]+'" stroke-width="1.5" stroke-dasharray="2 4"/><rect x="'+(W-60)+'" y="'+(yy-10)+'" width="58" height="20" rx="6" fill="'+L[1]+'" fill-opacity=".16" stroke="'+L[1]+'" stroke-opacity=".5"/><text x="'+(W-31)+'" y="'+(yy+4)+'" text-anchor="middle" font-size="10.5" font-weight="700" fill="'+L[1]+'">'+L[2]+'</text>'});
+ svg.innerHTML='<style>@keyframes fi{to{opacity:1}}</style>'+o;
+ document.getElementById("mname").textContent=s.n+" · "+s.tf;
+ document.getElementById("mmeta").textContent=s.side+" plan · sample";
+ document.getElementById("pe").textContent=px(s,nm(en));document.getElementById("ps").textContent=px(s,nm(sp));document.getElementById("pt").textContent=px(s,nm(tp));
+ document.getElementById("prr").textContent="1 : "+rr.toFixed(1);document.getElementById("pn").textContent=s.ev;
+ [].forEach.call(list.querySelectorAll(".sym"),function(b,k){b.classList.toggle("on",k===i);b.setAttribute("aria-pressed",k===i)})}
+S.forEach(function(s,i){var b=document.createElement("button");b.className="sym";b.type="button";
+ b.innerHTML='<span>'+s.n+'<small>'+s.tf+'</small></span><span class="tag '+(s.side==="Long"?"l":"s")+'">'+s.side+'</span>';
+ b.onclick=function(){draw(i)};list.appendChild(b)});
+draw(0);
+var auto=setInterval(function(){if(document.documentElement.classList.contains("is-live"))draw((cur+1)%S.length)},5200);
+document.querySelector(".stage").addEventListener("pointerdown",function(){clearInterval(auto)});
+})();
+
+/* checkout */
+(function(){
+var form=document.getElementById("purchase-form"),emailInput=document.getElementById("purchase-email"),checkoutUrl="https://whop.com/checkout/plan_EDimWMct9cG71";
+if(!form||!emailInput)return;
+form.addEventListener("submit",function(event){
+ event.preventDefault();
+ if(!emailInput.reportValidity())return;
+ var email=emailInput.value.trim().toLowerCase();
+ // Pass the submitted email as a query parameter for reference. The hosted Whop checkout may still ask the buyer to confirm or enter it.
+ var destination=new URL(checkoutUrl);
+ destination.searchParams.set("email",email);
+ window.location.href=destination.toString();
+});
+})();
+</script>
+</body>
+</html>
