@@ -26,8 +26,8 @@ header{display:flex;justify-content:space-between;align-items:center;padding:cal
 .pill{font-size:11px;color:var(--wait);display:flex;align-items:center;gap:6px;background:rgba(var(--waitr),.1);padding:5px 12px;border-radius:20px;border:1px solid rgba(var(--waitr),.2)}
 .pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
 .pill.live{color:var(--buy);background:rgba(var(--buyr),.1);border-color:rgba(var(--buyr),.2)}
-.page{display:none;padding:16px}.page.on{display:block;animation:pi .45s cubic-bezier(.22,1,.36,1)}
-@keyframes pi{from{opacity:0;transform:translateY(16px)}}
+.page{display:none;padding:16px}.page.on{display:block;animation:pi .3s cubic-bezier(.22,1,.36,1)}
+@keyframes pi{from{opacity:0;transform:translateY(8px)}}
 .card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(var(--w),.08);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 8px 32px var(--sh)}
 .hero{text-align:center;padding:10px 0;display:flex;flex-direction:column;align-items:center}
 .avatar{width:70vw;max-width:280px;aspect-ratio:1;object-fit:cover;border-radius:28px;box-shadow:0 0 0 1px rgba(var(--w),.08),0 0 50px var(--pg),0 16px 32px rgba(0,0,0,.4);margin-bottom:18px;animation:fl 5s ease-in-out infinite}
@@ -48,9 +48,9 @@ header{display:flex;justify-content:space-between;align-items:center;padding:cal
 .adv{font-size:38px;font-weight:900;letter-spacing:-.5px;color:var(--wait)}.adv.buy{color:var(--buy)}.adv.sell{color:var(--sell)}
 .px{font-size:20px;font-weight:800;margin-top:2px}
 .tfs{display:flex;gap:6px;margin-bottom:12px}
-.tfs button{flex:1;padding:9px 0;border-radius:12px;border:1px solid var(--bd);background:rgba(var(--w),.03);color:var(--t2);font-size:12px;font-weight:700}
+.tfs button{flex:1;padding:0;min-height:44px;border-radius:12px;border:1px solid var(--bd);background:rgba(var(--w),.03);color:var(--t2);font-size:12px;font-weight:700}
 .tfs button.on{background:rgba(var(--w),.08);border-color:var(--accent);color:var(--accent);box-shadow:0 0 16px var(--glow)}
-canvas{width:100%;height:340px;display:block;border-radius:16px;background:var(--cvbg);touch-action:pan-y;cursor:grab}
+canvas{width:100%;height:340px;height:clamp(300px,calc(100svh - 360px),640px);display:block;border-radius:0;background:var(--cvbg);touch-action:pan-y;cursor:grab}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
 .g{background:rgba(var(--w),.03);border:1px solid rgba(var(--w),.06);border-radius:14px;padding:12px}
 .g div:last-child{font-size:14px;font-weight:700;margin-top:4px}
@@ -86,10 +86,10 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .pillx.hot{background:rgba(var(--sellr),.2);color:var(--sell)}.pillx.dn{opacity:.55}
 .nbar{margin:10px 16px 0;padding:12px 14px;border-radius:16px;font-size:13px;line-height:1.4;font-weight:600;border:1px solid rgba(var(--waitr),.45);background:rgba(var(--waitr),.1);color:var(--warnt)}
 .nbar.danger{border-color:rgba(var(--sellr),.55);background:rgba(var(--sellr),.12);color:var(--dgrt)}
-#menuBtn{width:40px;height:40px;border-radius:12px;border:1px solid var(--bd);background:rgba(var(--w),.06);color:var(--text);display:flex;align-items:center;justify-content:center}
+#menuBtn{width:44px;height:44px;border-radius:12px;border:1px solid var(--bd);background:rgba(var(--w),.06);color:var(--text);display:flex;align-items:center;justify-content:center}
 #menuBtn svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round}
 .fh{display:flex;align-items:center;gap:12px;margin:0 0 16px}
-.fb{width:42px;height:42px;border-radius:50%;border:1px solid var(--bd);background:rgba(var(--w),.06);color:var(--text);display:flex;align-items:center;justify-content:center;flex:none}
+.fb{width:44px;height:44px;border-radius:50%;border:1px solid var(--bd);background:rgba(var(--w),.06);color:var(--text);display:flex;align-items:center;justify-content:center;flex:none}
 .fb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 .fi{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 22px var(--glow);flex:none}
 .fi svg{width:24px;height:24px;stroke:var(--btn);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -110,7 +110,7 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .vd.u0{color:var(--wait);border-color:rgba(var(--waitr),.45);background:rgba(var(--waitr),.07)}
 .dots{font-size:12px;color:var(--t2);margin-left:12px;white-space:nowrap}.dots i{display:inline-block;width:9px;height:9px;border-radius:50%;margin-left:4px;background:rgba(var(--w),.15)}.dots i.on{background:var(--accent);box-shadow:0 0 8px var(--glow)}
 .pillx{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;padding:5px 10px;border-radius:20px;background:rgba(var(--w),.07);color:var(--t2);white-space:nowrap}.pillx.up{background:var(--glow);color:var(--text)}
-.chip{padding:9px 14px;font-size:12.5px}
+.chip{padding:9px 14px;font-size:12.5px;min-height:40px;display:inline-flex;align-items:center;justify-content:center}
 #thBack{position:fixed;inset:0;background:rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:.25s;z-index:150}
 #thPanel{position:fixed;top:0;left:0;bottom:0;width:min(290px,80vw);padding:calc(76px + env(safe-area-inset-top)) 22px 22px;background:var(--panel);overflow-y:auto;backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-right:1px solid var(--bd);transform:translateX(-100%);transition:transform .3s cubic-bezier(.22,1,.36,1);z-index:160}
 #thPanel .sw{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 6px;margin:14px 0}
@@ -120,6 +120,47 @@ nav button span{width:42px;height:42px;border-radius:50%;display:flex;align-item
 nav svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-shadow:0 0 20px var(--glow)}
 .sup a{color:var(--accent);font-weight:700;text-decoration:none}
+html{overscroll-behavior-y:contain}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.2s}
+nav button:active span{transform:scale(.9)}
+#p-ind{padding-bottom:90px}
+.ibar{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.ibar .inp{margin:0;flex:1;min-width:0;height:48px}
+.ibar .ir{text-align:right;flex:none;min-width:0}
+.ibar .px{font-size:18px;margin:0}
+.ibar .adv{font-size:15px;font-weight:900;letter-spacing:.3px;padding:3px 10px;border-radius:10px;border:1px solid currentColor;display:inline-block;margin-top:3px}
+.cvw{position:relative;margin:0 -16px}
+.cvw .ov{position:absolute;top:8px;display:flex;gap:6px}
+.cvw .chip{margin:0;background:var(--nav)}
+.zb{min-width:44px;min-height:44px;padding:0 !important}
+.fslbl{display:none;position:absolute;left:12px;bottom:calc(10px + env(safe-area-inset-bottom));font-size:12px;font-weight:800;color:var(--t2)}
+.cvw.fs{position:fixed;inset:0;margin:0;z-index:300;background:var(--bg);padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
+.cvw.fs canvas{height:100%}.cvw.fs .fslbl{display:block}
+body.fsm{overflow:hidden}
+.cvw.ld::after{content:'';position:absolute;inset:0;background:linear-gradient(90deg,transparent,rgba(var(--w),.08),transparent);background-size:200% 100%;animation:shim 1.2s linear infinite;pointer-events:none}
+@keyframes shim{to{background-position:-200% 0}}
+#st{margin-top:8px}
+#sheet{display:none;position:fixed;left:8px;right:8px;max-width:560px;margin:0 auto;bottom:calc(104px + env(safe-area-inset-bottom));z-index:90;background:var(--nav);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(var(--w),.12);border-radius:22px;box-shadow:0 -8px 30px var(--sh)}
+body.onind #sheet{display:block}body.fsm #sheet{display:none}
+.shh{padding:8px 16px 12px;cursor:pointer}
+.grab{display:block;width:38px;height:4px;border-radius:2px;background:rgba(var(--w),.25);margin:0 auto 8px}
+.shs{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.shs b{font-size:15px}.shs span{font-size:12px;color:var(--t2);text-align:right}
+.shb{max-height:0;overflow:hidden;padding:0 16px;transition:max-height .35s cubic-bezier(.22,1,.36,1)}
+#sheet.open .shb{max-height:min(58vh,520px);overflow-y:auto;padding-bottom:16px}
+.sk i{display:block;height:14px;border-radius:8px;margin:10px 0;background:linear-gradient(90deg,rgba(var(--w),.06),rgba(var(--w),.14),rgba(var(--w),.06));background-size:200% 100%;animation:shim 1.2s linear infinite}
+#ptr{position:fixed;top:calc(74px + env(safe-area-inset-top));left:50%;transform:translate(-50%,0);width:40px;height:40px;border-radius:50%;background:var(--nav);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;opacity:0;z-index:60;pointer-events:none;transition:opacity .2s,transform .2s}
+#ptr svg{width:20px;height:20px;stroke:var(--accent);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+#ptr.busy{opacity:1;transform:translate(-50%,22px)}#ptr.busy svg{animation:spin 1s linear infinite}
+.hl{display:flex;justify-content:space-between;gap:10px;align-items:flex-start}
+.ckrow{display:flex;align-items:center;gap:12px;padding:10px 0;border-top:1px solid rgba(var(--w),.06)}
+.ckc{width:24px;height:24px;border-radius:50%;border:2px solid rgba(var(--w),.25);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex:none}
+.ckc.on{background:var(--buy);border-color:var(--buy);color:var(--btn)}
+.seg{display:flex;gap:8px;margin-top:12px}
+.seg button{flex:1;min-height:44px;border-radius:12px;border:1px solid var(--bd);background:rgba(var(--w),.04);color:var(--t2);font-weight:800;font-size:13px}
+.seg button.on.win{background:rgba(var(--buyr),.18);border-color:var(--buy);color:var(--buy)}
+.seg button.on.loss{background:rgba(var(--sellr),.18);border-color:var(--sell);color:var(--sell)}
+.seg button.on.skip{background:rgba(var(--w),.12);color:var(--text)}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -143,20 +184,24 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div class="wm">Signals<span>Pro</span></div><div class="sub" id="who">Premium zone indicator</div>
 <div class="chips"><b>Live zones</b><b>Trade plans</b><b>Market scanner</b></div>
 <button class="go" id="go" aria-label="Start or stop"><i></i></button>
-<div class="hint" id="hint">Tap to start live signals</div></div><div id="news"></div></section>
+<div class="hint" id="hint">Tap to start live signals</div></div><div id="ck"></div><div id="news"></div></section>
 
 <section class="page" id="p-ind">
-<div class="card"><div class="dash"><div><div class="k" id="sym">Symbol</div><div class="px" id="px">—</div></div>
-<div style="text-align:right"><div class="k">Advice</div><div class="adv" id="adv">WAIT</div></div></div></div>
-<div class="card"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
+<div class="ibar"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
 <datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>SPX</option><option>NDX</option><option>DJI</option></datalist>
-<div class="tfs" id="tfs"></div><div style="position:relative"><canvas id="cv"></canvas><button class="chip" id="cvLatest" style="display:none;position:absolute;top:8px;left:8px;margin:0">Latest ›</button><div style="position:absolute;top:8px;right:60px;display:flex;gap:6px"><button class="chip" id="zOut" style="margin:0;padding:6px 14px" aria-label="Zoom out">−</button><button class="chip" id="zIn" style="margin:0;padding:6px 14px" aria-label="Zoom in">+</button></div></div>
-<div class="legend"><span style="--c:var(--buy)">Buy / support</span><span style="--c:var(--sell)">Sell / resistance</span></div>
+<div class="ir"><div class="px" id="px">—</div><div class="k" id="sym">Symbol</div></div>
+<div class="ir"><div class="k">Advice</div><div class="adv" id="adv">WAIT</div></div></div>
+<div class="tfs" id="tfs"></div>
+<div class="cvw" id="cvw"><canvas id="cv"></canvas><button class="chip" id="cvLatest" style="display:none;position:absolute;top:8px;left:8px">Latest ›</button>
+<div class="ov" style="right:60px"><button class="chip zb" id="zOut" aria-label="Zoom out">−</button><button class="chip zb" id="zIn" aria-label="Zoom in">+</button><button class="chip zb" id="fsBtn" aria-label="Full screen"></button></div><div class="fslbl" id="fsLbl"></div></div>
+<div id="st">Open Settings to add your data key.</div>
+<div id="sheet"><div class="shh" id="shH"><i class="grab"></i><div class="shs"><b id="shT">Trade plan</b><span id="shV">Load a chart</span></div></div>
+<div class="shb"><div id="plans"><div class="empty">Load a chart to see entries and targets.</div></div>
 <div class="grid"><div class="g s"><div class="k">Nearest support</div><div id="ns">—</div></div><div class="g r"><div class="k">Nearest resistance</div><div id="nr">—</div></div>
 <div class="g"><div class="k">Zones found</div><div id="zc">—</div></div><div class="g"><div class="k">Last signal</div><div id="ls">—</div></div></div>
-<div id="st">Open Settings to add your data key.</div></div>
-<div class="card"><div style="font-size:16px;font-weight:800;margin-bottom:12px">Trade plan</div><div id="plans"><div class="empty">Load a chart to see entries and targets.</div></div>
-<div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></section>
+<div class="legend"><span style="--c:var(--buy)">Buy / support</span><span style="--c:var(--sell)">Sell / resistance</span></div>
+<div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></div>
+</section>
 
 <section class="page" id="p-fund">
 <div class="fh"><button class="fb" id="fBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><div><div class="ft">Fundamentals</div><div class="fk" style="margin-top:2px">NFP · CPI · PPI · FOMC</div></div></div>
@@ -164,6 +209,11 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <div class="note" id="fSt" style="text-align:center">Loading…</div>
 <div class="note" style="padding:0 6px 10px">Pre-release positioning bias only. It comes from leading data, the macro picture and price momentum, so it is not a prediction and has not been backtested. Spreads widen and prices gap at the release, so stops can slip and a trade can lose in either direction. Calendar data comes from a free public feed and can be late or wrong. Not financial advice.</div></section>
 
+<section class="page" id="p-hist">
+<div class="fh"><button class="fb" id="jBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></div><div><div class="ft">Journal</div><div class="fk" style="margin-top:2px">Mark your results</div></div></div>
+<div id="jStats"></div><div class="tfs" id="jFlt" style="flex-wrap:wrap"></div><div id="jList"></div>
+<button class="btn ghost" id="jCopy" onclick="jCopy()">Copy journal (CSV)</button><button class="btn red" id="jClr" onclick="jClear()">Clear journal</button>
+<div class="note" style="text-align:center;padding:0 6px 10px">The journal is saved on this device only. Clearing the app's data or reinstalling deletes it, so copy it out now and then.</div></section>
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
 <label>Entry timeframe</label><select class="inp" id="scTf"><option>M5</option><option>M15</option></select>
@@ -188,7 +238,7 @@ nav button.on{color:var(--accent)}nav button.on span{background:var(--glow);box-
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div>
-<aside id="thPanel"><div class="lab">Theme</div><div class="sw" id="sw"></div><div style="height:1px;background:var(--bd);margin:18px 0 6px"></div><button class="btn" id="fundBtn">Fundamentals</button></aside>
+<aside id="thPanel"><div class="lab">Theme</div><div class="sw" id="sw"></div><div style="height:1px;background:var(--bd);margin:18px 0 6px"></div><button class="btn" id="fundBtn">Fundamentals</button><button class="btn" id="jrnBtn">Signal journal</button></aside>
 <script>
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
@@ -197,6 +247,7 @@ let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'midnight
 try{Object.assign(S,JSON.parse(localStorage.getItem('sp_cfg')||'{}'))}catch(e){}
 if(!['M5','M15'].includes(S.stf))S.stf='M15';
 let sigs=[];try{sigs=JSON.parse(localStorage.getItem('sp_sig')||'[]')}catch(e){}
+sigs.forEach((x,i)=>{if(!x.id)x.id='old'+i;if(x.out==null)x.out='';if(!x.src)x.src='zone'});
 let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
 const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}};
 
@@ -225,7 +276,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();if(!S.key)page('set')}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk()}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -260,11 +311,14 @@ function theme(n){
  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=T.bg[0];
  S.theme=n;save();document.querySelectorAll('#sw button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));if(D)draw()}
 Object.keys(THEMES).forEach(n=>{const T=THEMES[n],b=document.createElement('button');b.type='button';b.dataset.t=n;
- b.innerHTML=`<i style="background:linear-gradient(135deg,${T.bg[0]} 50%,${T.a} 50%)"></i><span>${T.n}</span>`;b.onclick=()=>theme(n);$('sw').append(b)});theme(S.theme);
+ b.innerHTML=`<i style="background:linear-gradient(135deg,${T.bg[0]} 50%,${T.a} 50%)"></i><span>${T.n}</span>`;b.onclick=()=>{try{localStorage.setItem('sp_ck_theme','1')}catch(e){}theme(n);renderCk()};$('sw').append(b)});theme(S.theme);
 // nav
-function page(n){document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
- window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;requestAnimationFrame(()=>window.scrollTo(0,0));
- document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));if(n==='ind'){fit();tick()}if(n==='fund')loadFund()}
+function page(n){
+ const sw=()=>{document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
+  window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');if(n==='ind')fit()};
+ if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
+ if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist')renderJournal();if(n==='home')renderCk()}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
@@ -333,7 +387,10 @@ function renderPlans(px){
   <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div>
   ${far?'<div class="note">Entry is more than 2 ATR away, so it is unlikely to fill soon. Treat it as a level to watch, not a trade.</div>':!conf&&!p.on?'<div class="note">Limit order: valid for about 12 candles. Cancel it if a candle closes beyond the stop level before it fills.</div>':''}
   ${p.r1<1?'<div class="note" style="color:var(--wait)">TP1 is under 1R, so this setup is weak. Consider skipping it.</div>':''}</div>`};
- $('plans').innerHTML=card(P2.buy)+card(P2.sell)||'<div class="empty">No zones near price.</div>';return P2}
+ $('plans').innerHTML=card(P2.buy)+card(P2.sell)||'<div class="empty">No zones near price.</div>';
+ const pl2=[P2.buy,P2.sell].filter(Boolean),best=pl2.find(x=>x.conf)||pl2.find(x=>x.on)||pl2.sort((a,b)=>a.dist-b.dist)[0];
+ if(best){const stt=best.conf?'ENTER NOW':best.on?'IN ZONE':best.dist>2?'WATCH':best.dist<=1?'NEAR ENTRY':'WAIT';$('shT').innerHTML=`<span style="color:${best.side==='BUY'?'var(--buy)':'var(--sell)'}">${best.side}</span> · ${stt}`;$('shV').textContent=`Entry ${f(best.e)} · SL ${f(best.sl)} · TP1 ${best.r1.toFixed(1)}R`}else{$('shT').textContent='Trade plan';$('shV').textContent='No zones near price'}
+ return P2}
 // chart
 function fit(){const cv=$('cv'),r=devicePixelRatio||1;cv.width=cv.clientWidth*r;cv.height=cv.clientHeight*r}
 let VN=70,VO=0;
@@ -381,21 +438,22 @@ function beep(){try{const a=new(window.AudioContext||window.webkitAudioContext)(
  setTimeout(()=>{try{a.close()}catch(e){}},1800)}catch(e){}}
 function fire(type,price,p){
  const t=new Date(),f=v=>v.toFixed(D.dec),pl=p?{e:f(p.e),sl:f(p.sl),t1:f(p.t1),t2:f(p.t2)}:null,msg=`${S.sym} ${S.tf} ${type}`+(pl?` · Entry ${pl.e} SL ${pl.sl} TP1 ${pl.t1} TP2 ${pl.t2}`:'');
- sigs.unshift({sym:S.sym,tf:S.tf,type,price:price.toFixed(D.dec),t:t.toLocaleString(),pl});sigs=sigs.slice(0,100);try{localStorage.setItem('sp_sig',JSON.stringify(sigs))}catch(e){}
+ logSig({src:'zone',sym:S.sym,tf:S.tf,type,price:price.toFixed(D.dec),pl});
  beep();navigator.vibrate&&navigator.vibrate([200,100,200]);
  if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro',{body:msg,icon:'icon-192.png'})).catch(()=>{});
  if(S.hook)fetch(S.hook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({symbol:S.sym,timeframe:S.tf,signal:type,price,plan:pl,time:t.toISOString().slice(0,19),indicator:'SignalsPro'})}).catch(()=>{})}
 // main loop
 async function tick(){
+ if(!D)$('cvw').classList.add('ld');
  try{D=await load();R=compute(D);const px=D.c[0],PL=renderPlans(px);PLN=PL;
   if(run){if(R.b)advice=1;if(R.s)advice=-1;const now=Date.now()/1000;
    if(R.b&&now-lastB>=P.cool){fire('BUY',px,PL.buy);lastB=now}if(R.s&&now-lastS>=P.cool){fire('SELL',px,PL.sell);lastS=now}}
   const a=$('adv');a.textContent=advice>0?'BUY':advice<0?'SELL':'WAIT';a.className='adv '+(advice>0?'buy':advice<0?'sell':'');
   $('sym').textContent=`${S.sym} · ${S.tf}`;$('px').textContent=px.toFixed(D.dec);
   const sup=R.zones.filter(z=>!z.res&&z.lo<px).sort((a,b)=>b.hi-a.hi)[0],res=R.zones.filter(z=>z.res&&z.hi>px).sort((a,b)=>a.lo-b.lo)[0],f=z=>z?`${z.lo.toFixed(D.dec)}–${z.hi.toFixed(D.dec)} · ${SN[z.s]}`:'None';
-  $('ns').textContent=f(sup);$('nr').textContent=f(res);$('zc').textContent=R.zones.length;$('ls').textContent=sigs[0]?`${sigs[0].type} ${sigs[0].price}`:'None yet';
-  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;draw()
- }catch(e){$('st').textContent='Error: '+e.message}}
+  $('ns').textContent=f(sup);$('nr').textContent=f(res);$('zc').textContent=R.zones.length;$('ls').textContent=(()=>{const z=sigs.find(x=>x.price);return z?z.type+' '+z.price:'None yet'})();
+  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;draw();$('cvw').classList.remove('ld')
+ }catch(e){$('cvw').classList.remove('ld');$('st').textContent='Error: '+e.message}}
 function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
  $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
 $('go').onclick=()=>{setRun(!run);if(run)page('ind')};
@@ -517,7 +575,7 @@ async function scan(auto){
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
   renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'?8000:300)}
- finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym]||0)>3600).forEach(x=>{notified[x.sym]=now;const f=v=>v.toFixed(x.dec);notify(`${x.sym} ${x.p.side} CONFIRMED · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
+ finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym]||0)>3600).forEach(x=>{notified[x.sym]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent='Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
 function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
 $('scWl').value=S.wl;$('scTf').value=S.stf;showCred();
@@ -612,11 +670,13 @@ function verdictFor(e,a,reg){
  const M=reg?reg.sc:0,lean=preLean(e).v,rx=reactionFor(e),pr=rx?rx.score:(LASTST?(LASTST.st.USD||0):0),total=s+.4*M+.6*lean+.8*pr;
  const sg=[s,M,lean,pr].map(x=>Math.abs(x)<.3?0:Math.sign(x)),dn=Math.sign(total),ag=sg.filter(x=>x===dn).length,op=sg.filter(x=>x===-dn).length;
  return{s,M,lean,pr,rx,total,dir:total>=1?1:total<=-1?-1:0,conv:Math.abs(total)<1?'Low':ag>=3&&!op?'High':ag>=2&&!op?'Medium':'Low'}}
+let FDLOAD=false;
+const skel=n=>Array.from({length:n},()=>'<div class="fcard sk"><i style="width:35%"></i><i style="width:75%;height:30px"></i><i style="width:55%"></i></div>').join('');
 async function loadFund(force){
  if(!force&&FD&&Date.now()-FDT<600000){renderFund();return}
- $('fSt').textContent='Loading fundamentals…';
- try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){showLock(j.msg);return}FD=j;FDT=Date.now();renderFund();renderNews()}
- catch(e){$('fSt').textContent='Cannot load fundamentals. Check your internet and try again.'}}
+ FDLOAD=true;$('fSt').textContent='Loading fundamentals…';if(!FD){$('fEvents').innerHTML=skel(3);renderNews()}
+ try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){FDLOAD=false;if(!FD)$('fEvents').innerHTML='';showLock(j.msg);return}FD=j;FDT=Date.now();FDLOAD=false;renderFund();renderNews()}
+ catch(e){FDLOAD=false;if(!FD)$('fEvents').innerHTML='';renderNews();$('fSt').textContent='Cannot load fundamentals. Check your internet and try again.'}}
 async function priceCheck(){
  const L=['EUR/USD','GBP/USD','USD/JPY','AUD/USD'],it=[],px={};
  for(let i=0;i<L.length;i++){$('fSt').textContent='Checking '+L[i]+' ('+(i+1)+'/4)…';
@@ -677,7 +737,7 @@ function inTxt(ms){const m=Math.max(0,Math.round(Math.abs(ms)/6e4)),h=Math.floor
 const getNA=()=>{try{return JSON.parse(localStorage.getItem('sp_na')||'{}')}catch(e){return{}}};
 function renderNews(){
  const card=$('news'),bar=$('newsBar');if(!card)return;
- if(!FD||!FD.events){card.innerHTML='';bar.style.display='none';return}
+ if(!FD||!FD.events){card.innerHTML=FDLOAD?skel(1):'';bar.style.display='none';return}
  const now=Date.now(),evs=FD.events.filter(e=>TRACK.includes(e.k)).map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
  const dayTxt=new Date().toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',timeZone:'Africa/Johannesburg'});
  const row=e=>{const d=e.t-now,soon=d>0&&d<36e5,done=d<=0&&d<-36e5*3,tag=d>0?inTxt(d):d>-36e5*3?'Released '+inTxt(d):'Released',w=FW[e.k],PS=d>0?preSignal(e):null,pt=PS&&PS.dir?' · Signal: '+sigTxt(PS):'';
@@ -692,15 +752,66 @@ function renderNews(){
  else bar.style.display='none';
  const NA=getNA(),sv=()=>{try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}};
  evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date,q=d>0&&d<=9e5?preSignal(e):null,tx=q&&q.dir?sigTxt(q):'';
-  if(d>0&&d<=15e4&&!NA[id+'|b']){NA[id+'|a']=1;NA[id+'|b']=1;sv();notify(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
+  if(d>0&&d<=15e4&&!NA[id+'|b']){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv})}notify(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
   else if(d>0&&d<=9e5&&!NA[id+'|a']){NA[id+'|a']=1;sv();notify(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${tx?' Signal: '+tx+'.':''}`,'High-impact news')}})}
 setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
+// journal: every alert is logged here and you mark the result
+const srcN={zone:'Zone',scan:'Scanner',news:'News'};let JF='all',jClr=0;
+function saveSigs(){try{localStorage.setItem('sp_sig',JSON.stringify(sigs.slice(0,300)))}catch(e){}}
+function logSig(o){sigs.unshift(Object.assign({id:Date.now()+'-'+Math.random().toString(36).slice(2,6),ts:Date.now(),t:new Date().toLocaleString(),out:''},o));sigs=sigs.slice(0,300);saveSigs();renderJournal()}
+function setOut(id,v){const x=sigs.find(z=>z.id===id);if(!x)return;x.out=x.out===v?'':v;saveSigs();renderJournal()}
+function renderJournal(){
+ if(!$('jList'))return;
+ const W=sigs.filter(x=>x.out==='win').length,Lz=sigs.filter(x=>x.out==='loss').length,K=sigs.filter(x=>x.out==='skip').length,U=sigs.filter(x=>!x.out).length,dn=W+Lz,wr=dn?Math.round(W/dn*100):null;
+ $('jStats').innerHTML=`<div class="fcard"><div class="fk">Win rate</div><div style="font-size:34px;font-weight:900;margin-top:4px;color:${wr==null?'var(--t2)':wr>=50?'var(--buy)':'var(--sell)'}">${wr==null?'—':wr+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${W}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${Lz}</b></div><div><span class="fk">Skipped</span><b>${K}</b></div></div><div class="note" style="margin:0">${U} not marked yet · ${sigs.length} logged. The win rate counts only signals you marked Win or Loss.</div></div>`;
+ $('jFlt').innerHTML=[['all','All'],['zone','Zones'],['scan','Scanner'],['news','News'],['unmarked','Unmarked']].map(([k,t])=>`<button class="${JF===k?'on':''}" onclick="JF='${k}';renderJournal()">${t}</button>`).join('');
+ const L=sigs.filter(x=>JF==='all'||(JF==='unmarked'?!x.out:x.src===JF));
+ $('jList').innerHTML=L.length?L.map(x=>{
+  const buy=x.type==='BUY',when=x.ts?new Date(x.ts).toLocaleString('en-ZA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' SAST':x.t,
+   det=x.src==='news'?`<div class="note" style="margin:10px 0 0">${x.ev||'News release'}${x.conv?' · '+x.conv+' conviction':''}</div>`:x.pl?`<div class="note" style="margin:10px 0 0">Entry ${x.pl.e} · SL ${x.pl.sl} · TP1 ${x.pl.t1}</div>`:x.price?`<div class="note" style="margin:10px 0 0">Price ${x.price}</div>`:'';
+  return `<div class="fcard ${buy?'bull':'bear'}"><div class="hl"><div><div style="font-size:17px;font-weight:800"><span style="color:${buy?'var(--buy)':'var(--sell)'}">${x.type}</span> ${String(x.sym).replace('/','')}${x.tf?' · '+x.tf:''}</div><div class="note" style="margin:3px 0 0">${when}</div></div><span class="pillx">${srcN[x.src]||'Zone'}</span></div>${det}<div class="seg">${['win','loss','skip'].map(k=>`<button class="${x.out===k?'on '+k:''}" onclick="setOut('${x.id}','${k}')">${k==='win'?'Win':k==='loss'?'Loss':'Skip'}</button>`).join('')}</div></div>`}).join(''):'<div class="empty">Nothing here yet.<br>Signals appear when the app fires an alert.</div>'}
+function jCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return ['time,source,symbol,tf,side,entry,sl,tp1,tp2,result'].concat(sigs.map(x=>[x.ts?new Date(x.ts).toISOString():x.t,x.src,x.sym,x.tf||'',x.type,x.pl?x.pl.e:x.price||'',x.pl?x.pl.sl:'',x.pl?x.pl.t1:'',x.pl?x.pl.t2:'',x.out].map(q).join(','))).join('\n')}
+function jCopy(){const t=jCsv(),done=()=>{$('jCopy').textContent='Copied';setTimeout(()=>{$('jCopy').textContent='Copy journal (CSV)'},1500)},
+ fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done).catch(fb);else fb()}
+function jClear(){if(!jClr){jClr=1;$('jClr').textContent='Tap again to delete everything';setTimeout(()=>{jClr=0;$('jClr').textContent='Clear journal'},3000)}else{sigs=[];saveSigs();jClr=0;$('jClr').textContent='Clear journal';renderJournal()}}
+$('jrnBtn').onclick=()=>{thOpen(false);page('hist')};$('jBack').onclick=()=>page('home');
+// first-run checklist
+function renderCk(){
+ const el=$('ck');if(!el)return;
+ if(localStorage.getItem('sp_ck_off')==='1'||!EM){el.innerHTML='';return}
+ const it=[{d:!!S.key,t:'Add your data key',s:'Needed for charts and the scanner',b:'Add key',f:"page('set');setTimeout(()=>$('key').focus(),350)"},
+  {d:localStorage.getItem('sp_ck_theme')==='1',t:'Pick your theme',s:'Make the app yours',b:'Choose',f:'thOpen(true)'}];
+ if(window.Notification)it.push({d:Notification.permission==='granted',t:'Turn on alerts',s:'Chimes for signals and news',b:'Enable',f:"$('notif').click()"});
+ if(it.every(i=>i.d)){el.innerHTML='';return}
+ el.innerHTML=`<div class="fcard"><div class="hl"><div><div class="fk">Get started</div><div class="note" style="margin:4px 0 6px">${it.filter(i=>i.d).length} of ${it.length} done</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="localStorage.setItem('sp_ck_off','1');renderCk();return false">Dismiss</a></div>${it.map(i=>`<div class="ckrow"><span class="ckc ${i.d?'on':''}">${i.d?'✓':''}</span><div style="flex:1"><b>${i.t}</b><div class="note" style="margin:2px 0 0">${i.s}</div></div>${i.d?'':`<button class="chip" style="margin:0" onclick="${i.f}">${i.b}</button>`}</div>`).join('')}</div>`}
+// chart: full screen, sheet, pull to refresh
+const ICE='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>',ICX='<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6l12 12M18 6L6 18"/></svg>';
+let fsPushed=false;$('fsBtn').innerHTML=ICE;
+function fsSet(on){const w=$('cvw');if(on===w.classList.contains('fs'))return;w.classList.toggle('fs',on);document.body.classList.toggle('fsm',on);$('fsLbl').textContent=S.sym+' · '+S.tf;$('fsBtn').innerHTML=on?ICX:ICE;
+ if(on){try{history.pushState({fs:1},'');fsPushed=true}catch(e){}try{if(w.requestFullscreen)w.requestFullscreen().then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock('landscape')).catch(()=>{})}catch(e){}}
+ else{try{if(document.fullscreenElement)document.exitFullscreen();if(screen.orientation&&screen.orientation.unlock)screen.orientation.unlock()}catch(e){}if(fsPushed){fsPushed=false;try{history.back()}catch(e){}}}
+ requestAnimationFrame(()=>draw())}
+$('fsBtn').onclick=()=>fsSet(!$('cvw').classList.contains('fs'));
+addEventListener('popstate',()=>{if($('cvw').classList.contains('fs')){fsPushed=false;fsSet(false)}});
+document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&$('cvw').classList.contains('fs'))fsSet(false)});
+$('shH').onclick=()=>$('sheet').classList.toggle('open');
+$('cv').addEventListener('pointerdown',()=>$('sheet').classList.remove('open'));
+const ptr=document.createElement('div');ptr.id='ptr';ptr.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 5v10M7 12l5 5 5-5"/></svg>';document.body.appendChild(ptr);
+function refreshNow(){const on=document.querySelector('.page.on'),id=on?on.id:'';let pr=null;if(id==='p-ind')pr=tick();else if(id==='p-home'||id==='p-fund')pr=loadFund(true);else return;
+ ptr.classList.add('busy');Promise.resolve(pr).catch(()=>{}).then(()=>setTimeout(()=>ptr.classList.remove('busy'),400))}
+(function(){let y0=0,pull=0,act=false;
+ const ok=t=>!t.closest('#cv,#sheet,input,select,textarea,#thPanel,#lock,#welcome')&&window.scrollY<=0&&!document.body.classList.contains('fsm');
+ addEventListener('touchstart',e=>{if(e.touches.length===1&&ok(e.target)){y0=e.touches[0].clientY;act=true;pull=0}else act=false},{passive:true});
+ addEventListener('touchmove',e=>{if(!act)return;pull=Math.max(0,e.touches[0].clientY-y0);if(window.scrollY>0){act=false;ptr.style.opacity=0;return}ptr.style.opacity=Math.min(1,pull/90);ptr.style.transform=`translate(-50%,${Math.min(pull*.4,44)}px)`},{passive:true});
+ addEventListener('touchend',()=>{if(!act)return;act=false;const go=pull>110;ptr.style.opacity='';ptr.style.transform='';if(go){navigator.vibrate&&navigator.vibrate(15);refreshNow()}},{passive:true})})();
+renderCk();renderJournal();
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
-$('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
+$('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
 $('logout').onclick=()=>{if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
-$('notif').onclick=()=>{window.Notification?Notification.requestPermission().then(p=>$('notif').textContent=p==='granted'?'Alerts on':'Alerts blocked'):$('notif').textContent='Not supported'};
+$('notif').onclick=()=>{window.Notification?Notification.requestPermission().then(p=>{$('notif').textContent=p==='granted'?'Alerts on':'Alerts blocked';renderCk()}):$('notif').textContent='Not supported'};
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 addEventListener('resize',draw);
 </script></body></html>
