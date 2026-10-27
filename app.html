@@ -597,7 +597,7 @@ function pairSignals(v){
  return PAIRS.map(([sym,dir])=>{const side=v*dir>0?'BUY':'SELL',sg=side==='BUY'?1:-1,[b,q]=sym.split('/');
   let edge=st&&st[b]!=null&&st[q]!=null?sg*(st[b]-st[q]):0;
   const safe=(sym==='USD/JPY'||sym==='USD/CHF')?-sg:sym==='XAU/USD'?sg:0,risky=(sym==='AUD/USD'||sym==='NZD/USD')?sg:0;
-  edge+=mood<0?.4*safe:mood>0?.3*risky:0;return{sym,side,edge}}).sort((a,b)=>b.edge-a.edge)}
+  edge+=mood<0?.4*safe:mood>0?.3*risky:0;return{sym,side,edge}}).filter(c=>c.sym==='XAU/USD')}
 // 3) what price did after the release (5, 15 and 60 minutes, from 5-minute candles)
 function reactionFor(e,list){
  if(!RX)return null;const evt=Date.parse(e.date);if(!evt||evt>Date.now())return null;const t0=Math.floor(evt/3e5)*3e5,legs=[0,2,11],sum=[0,0,0],cnt=[0,0,0];
@@ -649,17 +649,17 @@ function preSignal(e){
  const reg=regime(m),M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,total=2*lean+.4*M+.5*cs;
  const R=preConv(lean,M,cs);return{dir:R.dir,total:R.total,lean,M,cs,agree:R.ag,hasPrice:!!LASTST,conv:R.conv}}
 const TRACK=['NFP','CPI','PPI','FOMC'];
-const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym+' ('+q.conv+')'};
+const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym.replace('/','')+' ('+q.conv+')'};
 function sigCard(e){
  const d=new Date(e.date),now=Date.now(),PS=preSignal(e),dir=PS?PS.dir:0,conv=PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv==='Low'?1:0,f1=v=>(v>=0?'+':'')+v.toFixed(1),
   hm=t=>sastHM(new Date(t)),open=d.getTime()-12e4,
   when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'}),
-  chipRow=l=>l.map(c=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym}</button>`).join('');
+  chipRow=l=>l.map(c=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym.replace('/','')}</button>`).join('');
  let head='',why='';
  if(dir){const ps=pairSignals(dir),t=ps[0];
-  head=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 0"><span class="vd u${t.side==='BUY'?1:-1}">${t.side} ${t.sym}</span><span class="dots">${conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
+  head=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 0"><span class="vd u${t.side==='BUY'?1:-1}">${t.side} ${t.sym.replace('/','')}</span><span class="dots">${conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
   <div style="margin-top:12px;font-weight:800">${open>now?'Open position at '+hm(open)+' SAST':'Open window is on now'}</div><div class="note" style="margin:2px 0 0">2 minutes before the ${hm(d.getTime())} release. USD ${dir>0?'bullish':'bearish'}.</div>
-  <div class="fk" style="margin-top:12px">Also look at</div><div>${chipRow(ps.slice(1,4))}</div>`;
+  <div style="margin-top:12px">${chipRow(ps)}</div><div class="note" style="margin:6px 0 0">Tap to open the gold chart. Take entry, stop and targets from the Indicator zone plan.</div>`;
   why=`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}`}
  else head=PS?'<div style="margin-top:14px"><span class="vd u0">NO EDGE</span></div><div class="note" style="margin-top:8px">The leading data, macro picture and price are balanced, so there is no side to take before this release.</div>'
   :'<div class="note" style="margin-top:14px">Not enough data for a signal. Macro data is not connected, so only price momentum could be used.</div>';
