@@ -161,6 +161,7 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 .seg button.on.win{background:rgba(var(--buyr),.18);border-color:var(--buy);color:var(--buy)}
 .seg button.on.loss{background:rgba(var(--sellr),.18);border-color:var(--sell);color:var(--sell)}
 .seg button.on.skip{background:rgba(var(--w),.12);color:var(--text)}
+#scStrat button{min-width:30%}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -217,8 +218,9 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
 <label>Entry timeframe</label><select class="inp" id="scTf"><option>M5</option><option>M15</option></select>
+<label>Strategies (tap to pick one or more)</label><div class="tfs" id="scStrat" style="flex-wrap:wrap"></div><div class="note" id="scDesc" style="margin:0 0 10px"></div>
 <button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
-<div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit.</div><div class="note" id="scCr"></div></div>
+<div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit. Picking more strategies costs no extra credits.</div><div class="note" id="scCr"></div></div>
 <div id="scStr"></div><div id="scList"></div></section>
 
 <section class="page" id="p-set"><div class="card">
@@ -228,7 +230,7 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 <label>Refresh</label><select class="inp" id="iv"><option value="60">Every 1 min</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option></select>
 <label>Webhook URL (optional)</label><input class="inp" id="hook" placeholder="https://…">
 <button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button><button class="btn red" id="logout">Log out</button>
-<div class="note">Alerts fire only while the app is open and started.</div></div></section>
+<div class="note">Zone and scanner alerts fire only while the app is open and started. In the Android app, news alerts are scheduled on the phone and also arrive when the app is closed. Open the app now and then so they stay up to date.</div></div></section>
 
 <footer class="copy">© 2026 SignalsPro. All rights reserved.</footer>
 <nav id="nav">
@@ -440,7 +442,7 @@ function fire(type,price,p){
  const t=new Date(),f=v=>v.toFixed(D.dec),pl=p?{e:f(p.e),sl:f(p.sl),t1:f(p.t1),t2:f(p.t2)}:null,msg=`${S.sym} ${S.tf} ${type}`+(pl?` · Entry ${pl.e} SL ${pl.sl} TP1 ${pl.t1} TP2 ${pl.t2}`:'');
  logSig({src:'zone',sym:S.sym,tf:S.tf,type,price:price.toFixed(D.dec),pl});
  beep();navigator.vibrate&&navigator.vibrate([200,100,200]);
- if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro',{body:msg,icon:'icon-192.png'})).catch(()=>{});
+ if(window.AndroidBridge){try{AndroidBridge.notify('SignalsPro',msg)}catch(e){}}else if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification('SignalsPro',{body:msg,icon:'icon-192.png'})).catch(()=>{});
  if(S.hook)fetch(S.hook,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({symbol:S.sym,timeframe:S.tf,signal:type,price,plan:pl,time:t.toISOString().slice(0,19),indicator:'SignalsPro'})}).catch(()=>{})}
 // main loop
 async function tick(){
@@ -533,14 +535,127 @@ function rate(sym,d,Rr,hd){
  }
  raw=Math.max(0,Math.min(100,raw));
  return{sym,dec:d.dec,dir:p?(p.side==='BUY'?1:-1):0,p,v,why,cmsg,mode:'PO3',notes,raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,trend,phase:ph}}
+// ---- scanner strategies: PO3 (above), SMC, FVG, market structure, Fibonacci ----
+function swings(d,p){const F=fractals(d.h,d.l,d.n,p),H=[],L=[];for(let i=p;i<d.n-p;i++){if(F.up[i]>0)H.push({i,v:F.up[i]});if(F.dn[i]>0)L.push({i,v:F.dn[i]})}return{H,L}}
+function mkRes(sym,d,strat,o){const c=d.c,cc=sym.replace(/[^A-Za-z]/g,'').toUpperCase(),b=c[Math.min(48,c.length-1)],raw=Math.max(0,Math.min(100,o.raw||0));
+ return{sym,dec:d.dec,dir:o.p?(o.p.side==='BUY'?1:-1):0,p:o.p||null,v:o.v,why:o.why||'',cmsg:o.cmsg||'',mode:strat,strat,notes:o.notes||[],raw,score:Math.round(raw),base:cc.slice(0,3),quote:cc.slice(3,6),chg:(c[0]-b)/b,trend:o.trend||'',phase:''}}
+// shared entry logic: price reacts at a zone, entry near edge, stop beyond far edge, targets at the next swings
+function evalZone(side,zlo,zhi,slRef,cands,d,atr,born){
+ const{o,h,l,c}=d,bull=side==='BUY',px=c[0],e=bull?zhi:zlo;let sl=slRef!=null?slRef:(bull?zlo-.25*atr:zhi+.25*atr);
+ if(bull?sl>=e:sl<=e)sl=bull?zlo-.25*atr:zhi+.25*atr;
+ if(Math.abs(e-sl)<.3*atr)sl=bull?e-.3*atr:e+.3*atr;
+ if(Math.abs(e-sl)>5*atr)return{v:'NO TRADE',why:'The stop would be too wide'};
+ if(bull?px<=sl:px>=sl)return{v:'NO TRADE',why:'Price is already beyond the stop level'};
+ const mk=en=>{const k=Math.abs(en-sl),ts=cands.filter(t=>bull?t>en:t<en).sort((x,y)=>bull?x-y:y-x);
+  let t1=ts.find(t=>Math.abs(t-en)/k>=1);if(t1==null)t1=bull?en+1.5*k:en-1.5*k;
+  let t2=ts.find(t=>Math.abs(t-en)/k>=Math.abs(t1-en)/k+.5);if(t2==null)t2=bull?Math.max(en+3*k,t1+k):Math.min(en-3*k,t1-k);
+  return{side,e:en,sl,t1,t2,r1:Math.abs(t1-en)/k,r2:Math.abs(t2-en)/k,z:{s:0}}};
+ const rg=h[1]-l[1]||1e-9,lw=Math.min(o[1],c[1])-l[1],uw=h[1]-Math.max(o[1],c[1]),hit=l[1]<=zhi&&h[1]>=zlo,
+  conf=(born==null||born>1)&&hit&&(bull?c[1]>zlo&&(lw>=.5*rg||(c[1]>o[1]&&c[1]>=zhi)):c[1]<zhi&&(uw>=.5*rg||(c[1]<o[1]&&c[1]<=zlo))),
+  touch=l[0]<=zhi&&h[0]>=zlo,dd=(bull?px-e:e-px)/atr;
+ if(conf&&Math.abs(px-e)<=atr){const p=mk(px);p.on=true;p.dist=0;return{v:'CONFIRMED',p,cmsg:'A rejection candle closed at the zone, so the entry is at market.'}}
+ if(touch)return{v:'WATCH',cmsg:'Price is in the zone. Waiting for a rejection candle.'};
+ if(dd<0)return{v:'NO TRADE',why:'Price moved through the zone'};
+ if(dd>2.5)return{v:'WATCH',cmsg:'Price is '+dd.toFixed(1)+' ATR from the entry. A level to watch.'};
+ const p=mk(e);p.on=false;p.dist=dd;return{v:'WAIT FOR PRICE',p,cmsg:'Waiting for price to pull back to the entry.'}}
+function fin(sym,d,strat,E,q,trend,msg,hd){
+ if(E.v==='NO TRADE')return mkRes(sym,d,strat,{v:'NO TRADE',why:E.why});
+ const notes=[];let raw=E.p?35+q+Math.min(E.p.r1,3)/3*20+(E.v==='CONFIRMED'?15:0):10+q/2;
+ if(E.p&&hd!=null){const T=HT[S.stf]||'H1';if(hd===0)notes.push(T+' trend is neutral');else{const ag=(E.p.side==='BUY')===(hd>0);raw+=ag?8:-12;notes.push(T+' trend '+(ag?'agrees':'disagrees'))}}
+ return mkRes(sym,d,strat,{v:E.v,p:E.p,cmsg:msg+' '+(E.cmsg||''),trend,notes,raw})}
+const noTrade=(sym,d,k,why)=>mkRes(sym,d,k,{v:'NO TRADE',why});
+// Fair value gap: first retest of an untested three-candle gap
+function sFVG(sym,d,hd){
+ const{o,h,l,c,n}=d,atr=atr7(h,l,c,n)[0]||1e-9,px=c[0],f=v=>v.toFixed(d.dec);
+ if(n<80)return noTrade(sym,d,'fvg','Not enough data');
+ const sw=swings(d,3),tr=htfDir(d);let best=null;
+ for(let i=1;i<=Math.min(120,n-3);i++){
+  let side=null,zlo,zhi;
+  if(l[i]>h[i+2]){side='BUY';zlo=h[i+2];zhi=l[i]}else if(h[i]<l[i+2]){side='SELL';zlo=h[i];zhi=l[i+2]}
+  if(!side)continue;
+  const gap=zhi-zlo;if(gap<.2*atr||Math.abs(c[i+1]-o[i+1])<.8*atr)continue;
+  let dead=false,touches=0;
+  for(let j=i-1;j>=0;j--){if(side==='BUY'?c[j]<zlo:c[j]>zhi){dead=true;break}if(j>=1&&l[j]<=zhi&&h[j]>=zlo)touches++}
+  if(dead)continue;
+  const dist=side==='BUY'?Math.max(0,px-zhi):Math.max(0,zlo-px);
+  if(!best||dist<best.dist||(dist===best.dist&&i<best.i))best={side,zlo,zhi,i,gap,touches,dist}}
+ if(!best)return noTrade(sym,d,'fvg','No untested fair value gap found');
+ if(best.dist>4*atr)return noTrade(sym,d,'fvg','The nearest open gap is '+(best.dist/atr).toFixed(1)+' ATR away');
+ const bull=best.side==='BUY',E=evalZone(best.side,best.zlo,best.zhi,null,(bull?sw.H:sw.L).map(x=>x.v),d,atr,best.i),
+  q=Math.max(0,Math.min(25,10+(best.touches===0?8:0)+(best.gap>=.5*atr?5:0)+(tr===0?0:(bull===(tr>0)?5:-5))));
+ return fin(sym,d,'fvg',E,q,'FVG · '+(bull?'bullish':'bearish')+' gap',`Gap ${f(best.zlo)} – ${f(best.zhi)}, formed ${best.i} candles ago, ${best.touches?best.touches+' earlier test'+(best.touches>1?'s':''):'first retest'}.`,hd)}
+// Market structure: break of structure / change of character, entry on the retest of the broken level
+function sMS(sym,d,hd){
+ const{h,l,c,n}=d,atr=atr7(h,l,c,n)[0]||1e-9,P=3,F=fractals(h,l,n,P),f=v=>v.toFixed(d.dec);
+ if(n<100)return noTrade(sym,d,'ms','Not enough data');
+ let lastH=null,lastL=null,trend=0,ev=null;
+ for(let i=n-1;i>=1;i--){
+  const k=i+P;if(k<n){if(F.up[k]>0)lastH={i:k,v:F.up[k],b:0};if(F.dn[k]>0)lastL={i:k,v:F.dn[k],b:0}}
+  if(lastH&&!lastH.b&&c[i]>lastH.v){lastH.b=1;ev={dir:1,type:trend===-1?'CHoCH':'BOS',i,lvl:lastH.v,ref:lastL?lastL.v:null};trend=1}
+  else if(lastL&&!lastL.b&&c[i]<lastL.v){lastL.b=1;ev={dir:-1,type:trend===1?'CHoCH':'BOS',i,lvl:lastL.v,ref:lastH?lastH.v:null};trend=-1}}
+ if(!ev||ev.i>60||ev.ref==null)return noTrade(sym,d,'ms','No recent break of structure');
+ const bull=ev.dir>0,sw=swings(d,P);let ext=bull?-Infinity:Infinity;for(let k=0;k<=ev.i;k++)ext=bull?Math.max(ext,h[k]):Math.min(ext,l[k]);
+ const E=evalZone(bull?'BUY':'SELL',ev.lvl-.2*atr,ev.lvl+.2*atr,bull?ev.ref-.25*atr:ev.ref+.25*atr,[ext].concat((bull?sw.H:sw.L).map(x=>x.v)),d,atr),
+  q=Math.min(25,8+(ev.type==='CHoCH'?6:8)+(ev.i<=20?6:0)+(Math.abs(c[ev.i]-ev.lvl)>=.3*atr?5:0));
+ return fin(sym,d,'ms',E,q,'Structure · '+ev.type+' '+(bull?'bullish':'bearish'),`Price closed ${bull?'above':'below'} ${f(ev.lvl)} ${ev.i} candles ago${ev.type==='CHoCH'?' and the trend flipped':''}. The entry is the retest of that level.`,hd)}
+// Fibonacci: pullback into the 61.8% to 78.6% zone of the last swing
+function sFib(sym,d,hd){
+ const{h,l,c,n}=d,atr=atr7(h,l,c,n)[0]||1e-9,P=5,F=fractals(h,l,n,P),px=c[0],f=v=>v.toFixed(d.dec);
+ if(n<100)return noTrade(sym,d,'fib','Not enough data');
+ let B=null;for(let i=P;i<n-P;i++){if(F.up[i]>0||F.dn[i]>0){B={i,hi:F.up[i]>0};break}}
+ if(!B||B.i>150)return noTrade(sym,d,'fib','No recent swing to measure');
+ let A=null;for(let i=B.i+1;i<n-P;i++){if(B.hi?F.dn[i]>0:F.up[i]>0){A=i;break}}
+ if(A==null)return noTrade(sym,d,'fib','No swing to measure from');
+ let top=-Infinity,bot=Infinity;for(let k=B.i;k<=A;k++){top=Math.max(top,h[k]);bot=Math.min(bot,l[k])}
+ const leg=top-bot,bull=B.hi;
+ if(leg<2.5*atr)return noTrade(sym,d,'fib','The last swing is too small for Fibonacci levels');
+ if(bull?px>top:px<bot)return noTrade(sym,d,'fib','Price has moved past the swing, so wait for a new one');
+ if(bull?px<=bot:px>=top)return noTrade(sym,d,'fib','The swing has been broken');
+ const z1=bull?top-.618*leg:bot+.618*leg,z2=bull?top-.786*leg:bot+.786*leg,zlo=Math.min(z1,z2),zhi=Math.max(z1,z2),
+  E=evalZone(bull?'BUY':'SELL',zlo,zhi,null,bull?[top,top+.272*leg,top+.618*leg]:[bot,bot-.272*leg,bot-.618*leg],d,atr),
+  ret=bull?(top-px)/leg:(px-bot)/leg,q=10+(leg>=4*atr?6:0)+(ret>=.5&&ret<=.9?6:0)+(B.i<=60?3:0);
+ return fin(sym,d,'fib',E,q,'Fibonacci · '+(bull?'bullish':'bearish')+' swing',`Swing ${f(bot)} to ${f(top)}. Golden zone ${f(zlo)} – ${f(zhi)} (61.8% to 78.6%), now ${Math.round(ret*100)}% retraced.`,hd)}
+// Smart money concepts: liquidity sweep, break of structure, then entry at the order block
+function sSMC(sym,d,hd){
+ const{o,h,l,c,n}=d,atr=atr7(h,l,c,n)[0]||1e-9,P=3,f=v=>v.toFixed(d.dec);
+ if(n<100)return noTrade(sym,d,'smc','Not enough data');
+ const sw=swings(d,P);let X=null;
+ for(let i=2;i<=50&&!X;i++){
+  for(const bear of[true,false]){
+   const liq=(bear?sw.H:sw.L).find(x=>x.i>=i+P);if(!liq)continue;
+   if(!(bear?(h[i]>liq.v&&c[i]<liq.v):(l[i]<liq.v&&c[i]>liq.v)))continue;
+   let taken=false;for(let k=i+1;k<liq.i;k++)if(bear?h[k]>liq.v:l[k]<liq.v){taken=true;break}if(taken)continue;
+   const piv=(bear?sw.L:sw.H).find(x=>x.i>=i+P);if(!piv)continue;
+   let m=-1;for(let k=i-1;k>=1;k--)if(bear?c[k]<piv.v:c[k]>piv.v){m=k;break}if(m<0)continue;
+   let j=-1;for(let k=i;k<=i+4&&k<n;k++){if(bear?c[k]>o[k]:c[k]<o[k]){if(j<0||(bear?h[k]>h[j]:l[k]<l[j]))j=k}}if(j<0)j=i;
+   const zlo=bear?Math.min(o[j],c[j]):l[j],zhi=bear?h[j]:Math.max(o[j],c[j]);
+   let ext=bear?-Infinity:Infinity;for(let k=m;k<=i;k++)ext=bear?Math.max(ext,h[k]):Math.min(ext,l[k]);
+   let fvg=false;for(let k=m;k<=i-2;k++){if(bear?h[k]<l[k+2]:l[k]>h[k+2]){fvg=true;break}}
+   let mit=false;for(let k=1;k<m;k++)if(bear?h[k]>=zlo:l[k]<=zhi){mit=true;break}
+   X={bear,i,m,liq,piv,zlo,zhi,ext,fvg,mit};break}}
+ if(!X)return noTrade(sym,d,'smc','No liquidity sweep with a structure break in the last 50 candles');
+ const E=evalZone(X.bear?'SELL':'BUY',X.zlo,X.zhi,X.bear?X.ext+.25*atr:X.ext-.25*atr,(X.bear?sw.L:sw.H).map(x=>x.v),d,atr),
+  q=Math.max(0,Math.min(25,12+(X.fvg?8:0)+(X.mit?-8:5)+(Math.abs(X.ext-X.liq.v)>=.1*atr?3:0)));
+ return fin(sym,d,'smc',E,q,'SMC · '+(X.bear?'bearish':'bullish')+' sweep, structure break, order block',`Liquidity at ${f(X.liq.v)} was swept ${X.i} candles ago and structure broke at ${f(X.piv.v)} ${X.m} candles ago. Order block ${f(X.zlo)} – ${f(X.zhi)}${X.fvg?' with a fair value gap':''}${X.mit?', already tested once':''}.`,hd)}
+const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:(s,d,hd)=>rate(s,d,null,hd)},
+ smc:{n:'SMC',d:'Liquidity sweep, break of structure, then entry at the order block.',fn:sSMC},
+ fvg:{n:'FVG',d:'Entry on the first retest of an untested fair value gap.',fn:sFVG},
+ ms:{n:'Structure',d:'BOS or CHoCH, then entry on the retest of the broken level.',fn:sMS},
+ fib:{n:'Fibonacci',d:'Pullback into the 61.8% to 78.6% zone of the last swing.',fn:sFib}};
+const sl=r=>r.strat&&STRATS[r.strat]?' · '+STRATS[r.strat].n:'';
+if(!Array.isArray(S.strats)||!S.strats.length||S.strats.some(k=>!STRATS[k]))S.strats=['po3'];
+function strChips(){$('scStrat').innerHTML=Object.keys(STRATS).map(k=>`<button class="${S.strats.includes(k)?'on':''}" onclick="togStrat('${k}')">${STRATS[k].n}</button>`).join('')+`<button class="${S.strats.length===Object.keys(STRATS).length?'on':''}" onclick="allStrat()">All</button>`;
+ $('scDesc').textContent=S.strats.map(k=>STRATS[k].n+': '+STRATS[k].d).join('  ')}
+function togStrat(k){const i=S.strats.indexOf(k);if(i>=0){if(S.strats.length>1)S.strats.splice(i,1)}else S.strats.push(k);save();strChips()}
+function allStrat(){S.strats=Object.keys(STRATS);save();strChips()}
 function renderScan(list){
  const L=list.slice().sort((x,y)=>(y.score||0)-(x.score||0));
  $('scList').innerHTML=L.map(r=>{
   if(r.err)return `<div class="sg" style="border-left-color:var(--wait)"><div class="t"><span>${r.sym}</span><em style="background:rgba(var(--waitr),.15);color:var(--wait)">Error</em></div><div class="m">${r.err}</div></div>`;
-  if(r.v==='NO TRADE')return `<div class="sg" style="opacity:.6;border-left-color:rgba(var(--w),.3)"><div class="t"><span>${r.sym}</span><em style="background:rgba(var(--w),.08);color:var(--t2)">No trade</em></div><div class="m">${r.why}</div></div>`;
-  if(r.v==='WATCH')return `<div class="pl" onclick="openSym('${r.sym}')"><h4><span>${r.sym}</span><em>WATCH</em></h4><div class="note" style="margin:0">${r.trend}<br>${r.cmsg}</div></div>`;
+  if(r.v==='NO TRADE')return `<div class="sg" style="opacity:.6;border-left-color:rgba(var(--w),.3)"><div class="t"><span>${r.sym}${sl(r)}</span><em style="background:rgba(var(--w),.08);color:var(--t2)">No trade</em></div><div class="m">${r.why}</div></div>`;
+  if(r.v==='WATCH')return `<div class="pl" onclick="openSym('${r.sym}')"><h4><span>${r.sym}${sl(r)}</span><em>WATCH</em></h4><div class="note" style="margin:0">${r.trend}<br>${r.cmsg}</div></div>`;
   const p=r.p,f=v=>v.toFixed(r.dec),now=r.v==='CONFIRMED',cs=r.csa==null?'':r.csa>.15?'<span style="color:var(--buy)">Currency strength supports this trade</span>':r.csa<-.15?'<span style="color:var(--sell)">Currency strength is against this trade</span>':'Currency strength is neutral';
-  return `<div class="pl ${p.side==='SELL'?'sell':''} ${now?'on':''}" onclick="openSym('${r.sym}')"><h4><span>${r.sym} · ${p.side}</span><em>${r.v} · ${r.score}</em></h4>
+  return `<div class="pl ${p.side==='SELL'?'sell':''} ${now?'on':''}" onclick="openSym('${r.sym}')"><h4><span>${r.sym} · ${p.side}${sl(r)}</span><em>${r.v} · ${r.score}</em></h4>
   <div class="note" style="margin:0 0 6px">${r.trend}<br>${now?'✓ ':''}${r.cmsg}${cs?'<br>'+cs:''}${r.notes&&r.notes.length?'<br><span style="color:var(--t2)">'+r.notes.join(' · ')+'</span>':''}${r.dup&&r.dup.length?'<br><span style="color:var(--wait)">Overlaps: '+r.dup.join(', ')+'</span>':''}</div>
   <div class="pr"><span>${now?'Entry (market, now)':'Entry (limit)'}</span><span class="en">${f(p.e)}</span></div>
   <div class="pr"><span>Distance to entry</span><span>${now?'at market':p.dist.toFixed(1)+' ATR'}</span></div>
@@ -551,17 +666,18 @@ function renderStr(st){
  const L=Object.entries(st).sort((a,b)=>b[1]-a[1]);
  $('scStr').innerHTML=`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Currency strength</div>${L.map(([c,v])=>`<div class="pr" style="align-items:center"><span style="width:44px;color:var(--text)">${c}</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(var(--w),.07);position:relative;margin:0 10px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${v>=0?'var(--buy)':'var(--sell)'};${v>=0?'left:50%':'right:50%'};width:${Math.abs(v)*50}%"></i></span><span style="width:40px;text-align:right;color:${v>=0?'var(--buy)':'var(--sell)'}">${Math.round(v*100)}</span></div>`).join('')}<div class="note">From the price change of the pairs you scanned. Best trades pair a strong currency with a weak one.</div></div>`}
 function finalize(out){
- const ok=out.filter(x=>!x.err),sum={},cnt={};
- ok.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
+ const ok=out.filter(x=>!x.err),sum={},cnt={},us={},uq=ok.filter(x=>!us[x.sym]&&(us[x.sym]=1));
+ uq.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
  const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9);
- if(ok.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);LASTST={st,t:Date.now()};
+ if(uq.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);LASTST={st,t:Date.now()};
   ok.forEach(x=>{if(!x.p)return;x.csa=(x.p.side==='BUY'?st[x.base]-st[x.quote]:st[x.quote]-st[x.base])/2;x.score=Math.max(0,Math.min(100,Math.round(x.raw+x.csa*10)))})}
  const seen={};ok.slice().sort((a,b)=>b.score-a.score).forEach(x=>{if(!x.p||x.v==='NO TRADE')return;const sg=x.p.side==='BUY'?1:-1;x.dup=[];
-  [[x.base,sg],[x.quote,-sg]].forEach(([c,s])=>{const k=c+s;if(seen[k])x.dup.push(`${c} ${s>0?'long':'short'}, same as ${seen[k]}`);else seen[k]=x.sym})});
+  [[x.base,sg],[x.quote,-sg]].forEach(([c,s])=>{const k=c+s;if(seen[k]&&seen[k]!==x.sym)x.dup.push(`${c} ${s>0?'long':'short'}, same as ${seen[k]}`);else seen[k]=x.sym})});
  renderScan(out)}
 function addCred(){const t=new Date().toDateString();let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}if(c.d!==t)c={d:t,n:0};c.n++;try{localStorage.setItem('sp_cr',JSON.stringify(c))}catch(e){}showCred()}
 function showCred(){let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}$('scCr').textContent=`Scanner credits used today: ${c.d===new Date().toDateString()?c.n:0} (the daily limit of 800 is shared with the Indicator page)`}
-function notify(msg,ttl){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(ttl||'SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
+const nn=(m,t)=>window.AndroidBridge?beep():notify(m,t);
+function notify(msg,ttl){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.AndroidBridge){try{AndroidBridge.notify(ttl||'SignalsPro Scanner',msg)}catch(e){}}else if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(ttl||'SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
 async function scan(auto){
  if(scanning)return;
  const nd=new Date(),dy=nd.getUTCDay(),hr=nd.getUTCHours();
@@ -571,14 +687,15 @@ async function scan(auto){
   while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
    try{const d=await load(list[i],S.stf);addCred();let hd=null;
     if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'?8000:300);const d2=await load(list[i],HT[S.stf]);addCred();hd=htfDir(d2)}catch(_){hd=null}}
-    out.push(rate(list[i],d,null,hd));break}
+    const sel=S.strats.filter(k=>STRATS[k]),rs=sel.map(k=>{try{return Object.assign(STRATS[k].fn(list[i],d,hd),{strat:k})}catch(err){return noTrade(list[i],d,k,'Could not run this strategy')}});
+    if(rs.length>1){const use=rs.filter(r=>r.v!=='NO TRADE');if(use.length)use.forEach(r=>out.push(r));else out.push(Object.assign(rs[0],{why:'No setup on any picked strategy',strat:'all'}))}else out.push(rs[0]);break}
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
   renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'?8000:300)}
- finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym]||0)>3600).forEach(x=>{notified[x.sym]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
+ finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym+x.strat]||0)>3600).forEach(x=>{notified[x.sym+x.strat]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',strat:STRATS[x.strat]?STRATS[x.strat].n:'',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED${sl(x)} · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent='Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
 function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
-$('scWl').value=S.wl;$('scTf').value=S.stf;showCred();
+$('scWl').value=S.wl;$('scTf').value=S.stf;showCred();strChips();
 $('scWl').onchange=()=>{S.wl=$('scWl').value;save()};$('scTf').onchange=()=>{S.stf=$('scTf').value;save()};
 $('scBtn').onclick=()=>scan();
 const htfLbl=()=>$('scHtf').textContent='Higher-timeframe check: '+(S.htf?'On (uses 2x credits)':'Off');
@@ -675,7 +792,7 @@ const skel=n=>Array.from({length:n},()=>'<div class="fcard sk"><i style="width:3
 async function loadFund(force){
  if(!force&&FD&&Date.now()-FDT<600000){renderFund();return}
  FDLOAD=true;$('fSt').textContent='Loading fundamentals…';if(!FD){$('fEvents').innerHTML=skel(3);renderNews()}
- try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){FDLOAD=false;if(!FD)$('fEvents').innerHTML='';showLock(j.msg);return}FD=j;FDT=Date.now();FDLOAD=false;renderFund();renderNews()}
+ try{const j=await(await fetch(`${API}?action=fund&${qs()}`)).json();if(j.ok===false){FDLOAD=false;if(!FD)$('fEvents').innerHTML='';showLock(j.msg);return}FD=j;FDT=Date.now();FDLOAD=false;renderFund();renderNews();syncAlarms()}
  catch(e){FDLOAD=false;if(!FD)$('fEvents').innerHTML='';renderNews();$('fSt').textContent='Cannot load fundamentals. Check your internet and try again.'}}
 async function priceCheck(){
  const L=['EUR/USD','GBP/USD','USD/JPY','AUD/USD'],it=[],px={};
@@ -709,6 +826,14 @@ function preSignal(e){
  const reg=regime(m),M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,total=2*lean+.4*M+.5*cs;
  const R=preConv(lean,M,cs);return{dir:R.dir,total:R.total,lean,M,cs,agree:R.ag,hasPrice:!!LASTST,conv:R.conv}}
 const TRACK=['NFP','CPI','PPI','FOMC'];
+function syncAlarms(){
+ if(!window.AndroidBridge||!FD||!FD.events)return;
+ const now=Date.now(),out=[];
+ FD.events.filter(e=>TRACK.includes(e.k)).forEach(e=>{const t=Date.parse(e.date);if(!t||t<now+60000||t>now+7*864e5)return;
+  const q=preSignal(e),tx=q&&q.dir?sigTxt(q):'',nm=evName(e),hm=sastHM(new Date(t));
+  out.push({id:e.k+'|'+e.date+'|a',t:t-9e5,title:'High-impact news',body:nm+' at '+hm+' SAST.'+(tx?' Signal: '+tx+'.':'')});
+  out.push({id:e.k+'|'+e.date+'|b',t:t-12e4,title:'Open window',body:tx?'OPEN NOW: '+tx+' · '+nm+' at '+hm:nm+' at '+hm+'. No signal.'})});
+ try{AndroidBridge.schedule(JSON.stringify(out))}catch(e){}}
 const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym.replace('/','')+' ('+q.conv+')'};
 function sigCard(e){
  const d=new Date(e.date),now=Date.now(),PS=preSignal(e),dir=PS?PS.dir:0,conv=PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv==='Low'?1:0,f1=v=>(v>=0?'+':'')+v.toFixed(1),
@@ -752,8 +877,8 @@ function renderNews(){
  else bar.style.display='none';
  const NA=getNA(),sv=()=>{try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}};
  evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date,q=d>0&&d<=9e5?preSignal(e):null,tx=q&&q.dir?sigTxt(q):'';
-  if(d>0&&d<=15e4&&!NA[id+'|b']){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv})}notify(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
-  else if(d>0&&d<=9e5&&!NA[id+'|a']){NA[id+'|a']=1;sv();notify(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${tx?' Signal: '+tx+'.':''}`,'High-impact news')}})}
+  if(d>0&&d<=15e4&&!NA[id+'|b']){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv})}nn(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
+  else if(d>0&&d<=9e5&&!NA[id+'|a']){NA[id+'|a']=1;sv();nn(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${tx?' Signal: '+tx+'.':''}`,'High-impact news')}})}
 setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
 // journal: every alert is logged here and you mark the result
@@ -769,7 +894,7 @@ function renderJournal(){
  const L=sigs.filter(x=>JF==='all'||(JF==='unmarked'?!x.out:x.src===JF));
  $('jList').innerHTML=L.length?L.map(x=>{
   const buy=x.type==='BUY',when=x.ts?new Date(x.ts).toLocaleString('en-ZA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' SAST':x.t,
-   det=x.src==='news'?`<div class="note" style="margin:10px 0 0">${x.ev||'News release'}${x.conv?' · '+x.conv+' conviction':''}</div>`:x.pl?`<div class="note" style="margin:10px 0 0">Entry ${x.pl.e} · SL ${x.pl.sl} · TP1 ${x.pl.t1}</div>`:x.price?`<div class="note" style="margin:10px 0 0">Price ${x.price}</div>`:'';
+   det=x.src==='news'?`<div class="note" style="margin:10px 0 0">${x.ev||'News release'}${x.conv?' · '+x.conv+' conviction':''}</div>`:x.pl?`<div class="note" style="margin:10px 0 0">Entry ${x.pl.e} · SL ${x.pl.sl} · TP1 ${x.pl.t1}${x.strat?' · '+x.strat:''}</div>`:x.price?`<div class="note" style="margin:10px 0 0">Price ${x.price}</div>`:'';
   return `<div class="fcard ${buy?'bull':'bear'}"><div class="hl"><div><div style="font-size:17px;font-weight:800"><span style="color:${buy?'var(--buy)':'var(--sell)'}">${x.type}</span> ${String(x.sym).replace('/','')}${x.tf?' · '+x.tf:''}</div><div class="note" style="margin:3px 0 0">${when}</div></div><span class="pillx">${srcN[x.src]||'Zone'}</span></div>${det}<div class="seg">${['win','loss','skip'].map(k=>`<button class="${x.out===k?'on '+k:''}" onclick="setOut('${x.id}','${k}')">${k==='win'?'Win':k==='loss'?'Loss':'Skip'}</button>`).join('')}</div></div>`}).join(''):'<div class="empty">Nothing here yet.<br>Signals appear when the app fires an alert.</div>'}
 function jCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return ['time,source,symbol,tf,side,entry,sl,tp1,tp2,result'].concat(sigs.map(x=>[x.ts?new Date(x.ts).toISOString():x.t,x.src,x.sym,x.tf||'',x.type,x.pl?x.pl.e:x.price||'',x.pl?x.pl.sl:'',x.pl?x.pl.t1:'',x.pl?x.pl.t2:'',x.out].map(q).join(','))).join('\n')}
 function jCopy(){const t=jCsv(),done=()=>{$('jCopy').textContent='Copied';setTimeout(()=>{$('jCopy').textContent='Copy journal (CSV)'},1500)},
@@ -783,7 +908,7 @@ function renderCk(){
  if(localStorage.getItem('sp_ck_off')==='1'||!EM){el.innerHTML='';return}
  const it=[{d:!!S.key,t:'Add your data key',s:'Needed for charts and the scanner',b:'Add key',f:"page('set');setTimeout(()=>$('key').focus(),350)"},
   {d:localStorage.getItem('sp_ck_theme')==='1',t:'Pick your theme',s:'Make the app yours',b:'Choose',f:'thOpen(true)'}];
- if(window.Notification)it.push({d:Notification.permission==='granted',t:'Turn on alerts',s:'Chimes for signals and news',b:'Enable',f:"$('notif').click()"});
+ if(window.AndroidBridge)it.push({d:AndroidBridge.hasPermission(),t:'Turn on alerts',s:'Alerts for signals and news',b:'Enable',f:"$('notif').click()"});else if(window.Notification)it.push({d:Notification.permission==='granted',t:'Turn on alerts',s:'Chimes for signals and news',b:'Enable',f:"$('notif').click()"});
  if(it.every(i=>i.d)){el.innerHTML='';return}
  el.innerHTML=`<div class="fcard"><div class="hl"><div><div class="fk">Get started</div><div class="note" style="margin:4px 0 6px">${it.filter(i=>i.d).length} of ${it.length} done</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="localStorage.setItem('sp_ck_off','1');renderCk();return false">Dismiss</a></div>${it.map(i=>`<div class="ckrow"><span class="ckc ${i.d?'on':''}">${i.d?'✓':''}</span><div style="flex:1"><b>${i.t}</b><div class="note" style="margin:2px 0 0">${i.s}</div></div>${i.d?'':`<button class="chip" style="margin:0" onclick="${i.f}">${i.b}</button>`}</div>`).join('')}</div>`}
 // chart: full screen, sheet, pull to refresh
@@ -806,12 +931,16 @@ function refreshNow(){const on=document.querySelector('.page.on'),id=on?on.id:''
  addEventListener('touchstart',e=>{if(e.touches.length===1&&ok(e.target)){y0=e.touches[0].clientY;act=true;pull=0}else act=false},{passive:true});
  addEventListener('touchmove',e=>{if(!act)return;pull=Math.max(0,e.touches[0].clientY-y0);if(window.scrollY>0){act=false;ptr.style.opacity=0;return}ptr.style.opacity=Math.min(1,pull/90);ptr.style.transform=`translate(-50%,${Math.min(pull*.4,44)}px)`},{passive:true});
  addEventListener('touchend',()=>{if(!act)return;act=false;const go=pull>110;ptr.style.opacity='';ptr.style.transform='';if(go){navigator.vibrate&&navigator.vibrate(15);refreshNow()}},{passive:true})})();
-renderCk();renderJournal();
+renderCk();renderJournal();if(window.AndroidBridge){try{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Enable alerts'}catch(e){}}
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
 $('logout').onclick=()=>{if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
-$('notif').onclick=()=>{window.Notification?Notification.requestPermission().then(p=>{$('notif').textContent=p==='granted'?'Alerts on':'Alerts blocked';renderCk()}):$('notif').textContent='Not supported'};
+$('notif').onclick=()=>{
+ if(window.AndroidBridge){try{
+  if(!AndroidBridge.hasPermission()){AndroidBridge.requestPermission();setTimeout(()=>{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Alerts blocked';renderCk()},2500);return}
+  AndroidBridge.ensureExact();AndroidBridge.test();syncAlarms();$('notif').textContent='Test sent: close the app and wait 1 min';setTimeout(()=>{$('notif').textContent='Send test alert'},6000)}catch(e){}return}
+ window.Notification?Notification.requestPermission().then(p=>{$('notif').textContent=p==='granted'?'Alerts on':'Alerts blocked';renderCk()}):$('notif').textContent='Not supported'};
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 addEventListener('resize',draw);
 </script></body></html>
