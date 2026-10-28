@@ -162,6 +162,56 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 .seg button.on.loss{background:rgba(var(--sellr),.18);border-color:var(--sell);color:var(--sell)}
 .seg button.on.skip{background:rgba(var(--w),.12);color:var(--text)}
 #scStrat button{min-width:30%}
+/* ===== premium layer ===== */
+body{font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
+body::after{content:'';position:fixed;inset:-20%;z-index:-1;pointer-events:none;will-change:transform;background:radial-gradient(40% 35% at 25% 30%,var(--pg),transparent 70%),radial-gradient(35% 30% at 78% 66%,var(--glow),transparent 70%),radial-gradient(28% 24% at 62% 14%,rgba(var(--w),.05),transparent 70%);filter:blur(26px);animation:aur 24s ease-in-out infinite alternate}
+@keyframes aur{0%{transform:translate3d(-3%,-2%,0) rotate(0)}100%{transform:translate3d(4%,3%,0) rotate(8deg) scale(1.08)}}
+header{transition:box-shadow .3s,background .3s}header.sc{box-shadow:0 12px 30px -14px var(--sh)}
+.card,.fcard{box-shadow:inset 0 1px 0 rgba(var(--w),.12),0 18px 40px -20px var(--sh);transition:transform .25s,box-shadow .3s}
+.card{position:relative}
+.card::after,.fcard::after{content:'';position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(135deg,rgba(var(--w),.07),transparent 42%)}
+.page.on>*{animation:rise .55s cubic-bezier(.22,1,.36,1) backwards}
+.page.on>*:nth-child(2){animation-delay:.05s}.page.on>*:nth-child(3){animation-delay:.1s}.page.on>*:nth-child(4){animation-delay:.15s}.page.on>*:nth-child(5){animation-delay:.2s}.page.on>*:nth-child(6){animation-delay:.25s}.page.on>*:nth-child(n+7){animation-delay:.3s}
+@keyframes rise{from{opacity:0;transform:translateY(14px) scale(.985)}}
+.btn{position:relative;overflow:hidden;transition:transform .15s,box-shadow .25s,filter .25s}.btn:active{transform:scale(.98)}
+.btn:not(.ghost):not(.red)::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:sheen 5s ease-in-out infinite;pointer-events:none}
+@keyframes sheen{0%,62%{left:-60%}100%{left:140%}}
+.pl.on{animation:glowp 2.6s ease-in-out infinite}@keyframes glowp{50%{box-shadow:0 0 34px var(--glow)}}
+.imp-t{font-size:9px;font-weight:900;letter-spacing:1px;padding:3px 7px;border-radius:8px;margin-left:8px;vertical-align:3px;background:rgba(var(--w),.08);color:var(--t2)}.imp-t.hi{background:rgba(var(--sellr),.16);color:var(--sell)}
+.pillx .cd{font-variant-numeric:tabular-nums}
+/* hero countdown ring */
+.hero2{padding:18px 18px 20px 22px}
+.hrow{display:flex;align-items:center;gap:18px;margin-top:12px}
+.ring{position:relative;width:132px;height:132px;flex:none}
+.ring svg{width:100%;height:100%;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:7;stroke-linecap:round}
+.ring .rt{stroke:rgba(var(--w),.1)}
+.ring .rp{stroke:url(#rg);transition:stroke-dasharray 1s linear;filter:drop-shadow(0 0 6px var(--glow))}
+.ring .rp.urg{stroke:var(--sell);filter:drop-shadow(0 0 8px var(--sell));animation:urg 1s ease-in-out infinite}
+@keyframes urg{50%{opacity:.55}}
+.ring .rc{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.ring .rc .cd{font-size:20px;font-weight:900;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.ring .rc small{font-size:9.5px;letter-spacing:1.4px;text-transform:uppercase;color:var(--t2);margin-top:3px;font-weight:700}
+.hinfo{min-width:0;flex:1}.hn{font-size:19px;font-weight:900;letter-spacing:-.3px;line-height:1.15}
+/* menu */
+#thPanel{border-radius:0 28px 28px 0}
+.pt{font-size:11px;letter-spacing:1.6px;text-transform:uppercase;color:var(--t2);font-weight:800;margin-bottom:12px}
+.tile{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:left;padding:14px;margin-bottom:10px;border-radius:18px;border:1px solid rgba(var(--w),.1);background:linear-gradient(135deg,rgba(var(--w),.08),rgba(var(--w),.02));color:var(--text);transition:transform .15s,border-color .2s}
+.tile:active{transform:scale(.98);border-color:var(--accent)}
+.tile .ti{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 22px var(--glow);flex:none}
+.tile .ti svg{width:26px;height:26px;stroke:var(--btn);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.tile .tt b{display:block;font-size:15px}.tile .tt i{display:block;font-style:normal;font-size:11.5px;color:var(--t2);margin-top:2px}
+.tdot{position:absolute;top:12px;right:12px;width:9px;height:9px;border-radius:50%;background:var(--sell);box-shadow:0 0 8px var(--sell);display:none}
+#menuBtn{position:relative}
+.nbadge{position:absolute;top:7px;right:7px;width:9px;height:9px;border-radius:50%;background:var(--sell);box-shadow:0 0 8px var(--sell);display:none}
+/* nav: sliding lens */
+nav{overflow:visible}
+#navInd{position:absolute;left:0;top:7px;bottom:7px;border-radius:30px;pointer-events:none;background:linear-gradient(180deg,var(--glow),rgba(var(--w),.04));box-shadow:inset 0 0 0 1px rgba(var(--w),.14),0 0 26px var(--glow);transition:transform .5s cubic-bezier(.34,1.5,.64,1),width .5s cubic-bezier(.34,1.5,.64,1),opacity .3s;z-index:0}
+nav button{position:relative;z-index:1;transition:color .3s,transform .2s}
+nav button span{position:relative;background:none !important;box-shadow:none !important;transition:transform .4s cubic-bezier(.34,1.5,.64,1)}
+nav button.on span{transform:translateY(-3px) scale(1.12);filter:drop-shadow(0 0 8px var(--accent))}
+nav button:active span{transform:scale(.9)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -177,7 +227,7 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 <div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">What are we trading today?</div>
 <button class="btn" id="wgo" style="max-width:300px">Let’s go</button></div>
 
-<header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div></header>
+<header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><i class="nbadge" id="menuDot"></i></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div></header>
 <div id="newsBar" style="display:none"></div>
 
 <section class="page on" id="p-home"><div class="hero">
@@ -205,8 +255,8 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 </section>
 
 <section class="page" id="p-fund">
-<div class="fh"><button class="fb" id="fBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div><div><div class="ft">Fundamentals</div><div class="fk" style="margin-top:2px">NFP · CPI · PPI · FOMC</div></div></div>
-<div id="fEvents"></div><div id="fCS"></div>
+<div class="fh"><button class="fb" id="fBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></div><div><div class="ft">Fundamentals</div><div class="fk" style="margin-top:2px">US high-impact news</div></div></div>
+<div id="fHero"></div><div id="fEvents"></div><div id="fCS"></div>
 <div class="note" id="fSt" style="text-align:center">Loading…</div>
 <div class="note" style="padding:0 6px 10px">Pre-release positioning bias only. It comes from leading data, the macro picture and price momentum, so it is not a prediction and has not been backtested. Spreads widen and prices gap at the release, so stops can slip and a trade can lose in either direction. Calendar data comes from a free public feed and can be late or wrong. Not financial advice.</div></section>
 
@@ -233,14 +283,14 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 <div class="note">Zone and scanner alerts fire only while the app is open and started. In the Android app, news alerts are scheduled on the phone and also arrive when the app is closed. Open the app now and then so they stay up to date.</div></div></section>
 
 <footer class="copy">© 2026 SignalsPro. All rights reserved.</footer>
-<nav id="nav">
+<nav id="nav"><i id="navInd"></i>
 <button class="on" data-p="home"><span><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>Home</button>
 <button data-p="scan"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/></svg></span>Scanner</button>
 <button data-p="ind"><span><svg viewBox="0 0 24 24"><path d="M3 17l5-6 4 3 6-8 3 3"/><path d="M3 21h18"/></svg></span>Indicator</button>
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div>
-<aside id="thPanel"><div class="lab">Theme</div><div class="sw" id="sw"></div><div style="height:1px;background:var(--bd);margin:18px 0 6px"></div><button class="btn" id="fundBtn">Fundamentals</button><button class="btn" id="jrnBtn">Signal journal</button></aside>
+<aside id="thPanel"><div class="pt">Menu</div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><div class="pt" style="margin-top:24px">Theme</div><div class="sw" id="sw"></div></aside>
 <script>
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
@@ -318,7 +368,7 @@ Object.keys(THEMES).forEach(n=>{const T=THEMES[n],b=document.createElement('butt
 function page(n){
  const sw=()=>{document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
   window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
-  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');if(n==='ind')fit()};
+  document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');moveInd(n);if(n==='ind')fit()};
  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
  if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist')renderJournal();if(n==='home')renderCk()}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
@@ -803,8 +853,8 @@ async function priceCheck(){
 const GAUGE=(sc,l,rt)=>`<div class="gauge"><i style="left:${(sc+3)/6*100}%"></i></div><div class="gl"><span>${l}</span><span>${rt}</span></div>`;
 const colr=v=>v>0?'var(--buy)':v<0?'var(--sell)':'var(--wait)',pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
 const CCY_PAIR={EUR:['EUR/USD',1],GBP:['GBP/USD',1],AUD:['AUD/USD',1],NZD:['NZD/USD',1],JPY:['USD/JPY',-1],CAD:['USD/CAD',-1],CHF:['USD/CHF',-1]};
-const SHORT={NFP:'Non-Farm Payrolls (NFP)',CPI:'CPI',CORE_CPI:'Core CPI',PPI:'PPI',CORE_PPI:'Core PPI',FOMC:'FOMC Rate Decision'};
-const evName=e=>SHORT[e.k]||FW[e.k].n;
+const SHORT={NFP:'Non-Farm Payrolls (NFP)',CPI:'CPI',CORE_CPI:'Core CPI',PPI:'PPI',CORE_PPI:'Core PPI',FOMC:'FOMC Rate Decision',ADP:'ADP Employment',CLAIMS:'Jobless Claims',JOLTS:'JOLTS Job Openings',RS:'Retail Sales',CORE_PCE:'Core PCE',ISM_MFG:'ISM Manufacturing PMI',ISM_SVC:'ISM Services PMI',GDP:'GDP',INFO:'High-impact event'};
+const evName=e=>(e.k==='INFO'||e.k==='GDP')&&e.title?e.title:(SHORT[e.k]||FW[e.k].n);
 function reactionCcy(e){const pp=CCY_PAIR[e.c];return pp?reactionFor(e,[[pp[0],pp[1]]]):null}
 function verdictCcy(e,a){
  const w=FW[e.k],f=num(e.forecast);if(a==null||f==null)return null;
@@ -825,18 +875,31 @@ function preSignal(e){
  else if(GROUP[e.k])lean=preLean(e).v;else return null;
  const reg=regime(m),M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,total=2*lean+.4*M+.5*cs;
  const R=preConv(lean,M,cs);return{dir:R.dir,total:R.total,lean,M,cs,agree:R.ag,hasPrice:!!LASTST,conv:R.conv}}
-const TRACK=['NFP','CPI','PPI','FOMC'];
+const fmtCd=ms=>{const t=Math.max(0,Math.floor(ms/1000)),d=Math.floor(t/86400),h=Math.floor(t%86400/3600),m=Math.floor(t%3600/60),x=t%60,q=n=>String(n).padStart(2,'0');return d?d+'d '+h+'h '+q(m)+'m':q(h)+':'+q(m)+':'+q(x)};
+function tickCd(){const nw=Date.now();
+ document.querySelectorAll('.cd').forEach(el=>{const ms=+el.dataset.t-nw;el.textContent=ms>0?fmtCd(ms):'Released';if(ms<=0&&!el.dataset.d){el.dataset.d=1;setTimeout(()=>{if(FD)renderFund()},1500)}});
+ document.querySelectorAll('.ringp').forEach(el=>{const ms=+el.dataset.t-nw,C=2*Math.PI*54,pr=Math.max(0,Math.min(1,1-ms/(+el.dataset.w)));el.setAttribute('stroke-dasharray',(C*pr).toFixed(1)+' '+C.toFixed(1));el.classList.toggle('urg',ms>0&&ms<12e4)})}
+setInterval(tickCd,1000);
+function calDay(){const t=new Date().toLocaleDateString('en-ZA',{day:'numeric',timeZone:'Africa/Johannesburg'});document.querySelectorAll('.calDay').forEach(x=>x.textContent=t)}
+function heroCard(e){
+ const t=Date.parse(e.date),now=Date.now(),info=!!(FW[e.k]&&FW[e.k].info),PS=info?null:preSignal(e),dir=PS?PS.dir:0,hm=x=>sastHM(new Date(x)),win=864e5,C=2*Math.PI*54,pr=Math.max(0,Math.min(1,1-(t-now)/win));
+ let sig='',cls='';
+ if(dir){const tt=pairSignals(dir)[0];cls=tt.side==='BUY'?'bull':'bear';sig=`<span class="vd u${tt.side==='BUY'?1:-1}" style="font-size:17px;padding:8px 14px">${tt.side} ${tt.sym.replace('/','')}</span><div class="note" style="margin:8px 0 0">${PS.conv} conviction · open at ${hm(t-12e4)} SAST</div>`}
+ else sig=info?'<span class="vd u0" style="font-size:15px;padding:8px 14px">HEADS-UP</span>':PS?'<span class="vd u0" style="font-size:15px;padding:8px 14px">NO EDGE</span>':'<div class="note" style="margin:0">No signal data yet</div>';
+ return `<div class="fcard hero2 ${cls}"><div class="fk" style="letter-spacing:2px">Next up</div><div class="hrow"><div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent2)"/></linearGradient></defs><circle cx="60" cy="60" r="54" class="rt"/><circle cx="60" cy="60" r="54" class="rp ringp" data-t="${t}" data-w="${win}" stroke-dasharray="${(C*pr).toFixed(1)} ${C.toFixed(1)}"/></svg><div class="rc"><span class="cd" data-t="${t}">${fmtCd(t-now)}</span><small>until release</small></div></div><div class="hinfo"><div class="hn">${evName(e)}</div><div class="note" style="margin:3px 0 10px">${new Date(t).toLocaleDateString('en-ZA',{weekday:'short',day:'numeric',month:'short',timeZone:'Africa/Johannesburg'})} · ${hm(t)} SAST</div>${sig}</div></div></div>`}
+const TRACK=['NFP','CPI','PPI','FOMC','ADP','CLAIMS','JOLTS','RS','GDP','CORE_PCE','ISM_MFG','ISM_SVC','INFO'],CORE=['NFP','CPI','PPI','FOMC'];
+const showEv=e=>TRACK.includes(e.k)&&(CORE.includes(e.k)||e.impact==='High');
 function syncAlarms(){
  if(!window.AndroidBridge||!FD||!FD.events)return;
  const now=Date.now(),out=[];
- FD.events.filter(e=>TRACK.includes(e.k)).forEach(e=>{const t=Date.parse(e.date);if(!t||t<now+60000||t>now+7*864e5)return;
+ FD.events.filter(e=>showEv(e)).forEach(e=>{const t=Date.parse(e.date);if(!t||t<now+60000||t>now+7*864e5)return;
   const q=preSignal(e),tx=q&&q.dir?sigTxt(q):'',nm=evName(e),hm=sastHM(new Date(t));
   out.push({id:e.k+'|'+e.date+'|a',t:t-9e5,title:'High-impact news',body:nm+' at '+hm+' SAST.'+(tx?' Signal: '+tx+'.':'')});
-  out.push({id:e.k+'|'+e.date+'|b',t:t-12e4,title:'Open window',body:tx?'OPEN NOW: '+tx+' · '+nm+' at '+hm:nm+' at '+hm+'. No signal.'})});
+  if(!(FW[e.k]&&FW[e.k].info))out.push({id:e.k+'|'+e.date+'|b',t:t-12e4,title:'Open window',body:tx?'OPEN NOW: '+tx+' · '+nm+' at '+hm:nm+' at '+hm+'. No signal.'})});
  try{AndroidBridge.schedule(JSON.stringify(out))}catch(e){}}
 const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym.replace('/','')+' ('+q.conv+')'};
 function sigCard(e){
- const d=new Date(e.date),now=Date.now(),PS=preSignal(e),dir=PS?PS.dir:0,conv=PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv==='Low'?1:0,f1=v=>(v>=0?'+':'')+v.toFixed(1),
+ const d=new Date(e.date),now=Date.now(),info=!!(FW[e.k]&&FW[e.k].info),PS=info?null:preSignal(e),dir=PS?PS.dir:0,conv=PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv==='Low'?1:0,f1=v=>(v>=0?'+':'')+v.toFixed(1),
   hm=t=>sastHM(new Date(t)),open=d.getTime()-12e4,
   when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'}),
   chipRow=l=>l.map(c=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym.replace('/','')}</button>`).join('');
@@ -846,13 +909,14 @@ function sigCard(e){
   <div style="margin-top:12px;font-weight:800">${open>now?'Open position at '+hm(open)+' SAST':'Open window is on now'}</div><div class="note" style="margin:2px 0 0">2 minutes before the ${hm(d.getTime())} release. USD ${dir>0?'bullish':'bearish'}.</div>
   <div style="margin-top:12px">${chipRow(ps)}</div><div class="note" style="margin:6px 0 0">Tap to open the gold chart. Take entry, stop and targets from the Indicator zone plan.</div>`;
   why=`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}`}
- else head=PS?'<div style="margin-top:14px"><span class="vd u0">NO EDGE</span></div><div class="note" style="margin-top:8px">The leading data, macro picture and price are balanced, so there is no side to take before this release.</div>'
+ else head=info?'<div style="margin-top:14px"><span class="vd u0">HEADS-UP</span></div><div class="note" style="margin-top:8px">A high-impact event with no number to score, so there is no signal. Prices can move sharply on the wording or tone.</div>':PS?'<div style="margin-top:14px"><span class="vd u0">NO EDGE</span></div><div class="note" style="margin-top:8px">The leading data, macro picture and price are balanced, so there is no side to take before this release.</div>'
   :'<div class="note" style="margin-top:14px">Not enough data for a signal. Macro data is not connected, so only price momentum could be used.</div>';
- return `<div class="fcard ${dir>0?'bull':dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}</div><div class="note" style="margin:3px 0 0">${when} · SAST · Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}</div></div><span class="pillx up">${inTxt(d.getTime()-now)}</span></div>${head}${why?'<div class="note" style="margin-top:10px;opacity:.8">Why: '+why+'</div>':''}</div>`}
+ return `<div class="fcard ${dir>0?'bull':dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}<span class="imp-t ${e.impact==='High'?'hi':''}">${e.impact==='High'?'HIGH':'MED'}</span></div><div class="note" style="margin:3px 0 0">${when} · SAST${info?'':' · Forecast '+(e.forecast||'—')+' · Previous '+(e.previous||'—')}</div></div><span class="pillx up"><span class="cd" data-t="${d.getTime()}">${fmtCd(d.getTime()-now)}</span></span></div>${head}${why?'<div class="note" style="margin-top:10px;opacity:.8">Why: '+why+'</div>':''}</div>`}
 function renderFund(){
  if(!FD)return;const now=Date.now(),span=SHOWALL?30:14,
-  ev=(FD.events||[]).filter(e=>TRACK.includes(e.k)).filter(e=>{const t=Date.parse(e.date);return t>now&&t<now+span*864e5}).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
- $('fEvents').innerHTML=(ev.length?ev.map(sigCard).join(''):'<div class="fcard"><div class="note">No NFP, CPI, PPI or FOMC release in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>')+'<button class="btn ghost" onclick="SHOWALL=!SHOWALL;renderFund()">'+(SHOWALL?'Show fewer':'Show the next 30 days')+'</button>';
+  ev=(FD.events||[]).filter(e=>showEv(e)).filter(e=>{const t=Date.parse(e.date);return t>now&&t<now+span*864e5}).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
+ $('fHero').innerHTML=ev.length?heroCard(ev[0]):'';
+ $('fEvents').innerHTML=(ev.length?ev.map(sigCard).join(''):'<div class="fcard"><div class="note">No high-impact US release in this window.'+(FD.evErr?' (Calendar feed problem: '+FD.evErr+')':'')+'</div></div>')+'<button class="btn ghost" onclick="SHOWALL=!SHOWALL;renderFund()">'+(SHOWALL?'Show fewer':'Show the next 30 days')+'</button>'+(()=>{const last=Math.max(0,...(FD.events||[]).map(e=>Date.parse(e.date)||0));return last?'<div class="note" style="text-align:center">The calendar feed lists releases up to '+new Date(last).toLocaleDateString('en-ZA',{weekday:'short',day:'numeric',month:'short',timeZone:'Africa/Johannesburg'})+'. Nothing further ahead is available'+(SHOWALL?', so the 30-day view can only show what the feed has.':'.')+'</div>':''})();
  const age=LASTST?Math.round((Date.now()-LASTST.t)/6e4):null;
  $('fCS').innerHTML=`<button class="btn ghost" onclick="priceCheck()">Update price momentum (4 credits)</button><div class="note" style="text-align:center">${LASTST?'Last checked '+(age<1?'just now':age+' min ago')+'. ':'Optional. '}Run it shortly before the release for the freshest signal.</div>`;
  $('fSt').innerHTML='Updated '+new Date(FDT).toLocaleTimeString()+' · <a href="#" style="color:var(--accent)" onclick="loadFund(true);return false">Refresh</a>'}
@@ -863,21 +927,22 @@ const getNA=()=>{try{return JSON.parse(localStorage.getItem('sp_na')||'{}')}catc
 function renderNews(){
  const card=$('news'),bar=$('newsBar');if(!card)return;
  if(!FD||!FD.events){card.innerHTML=FDLOAD?skel(1):'';bar.style.display='none';return}
- const now=Date.now(),evs=FD.events.filter(e=>TRACK.includes(e.k)).map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
+ const now=Date.now(),evs=FD.events.filter(e=>showEv(e)).map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
  const dayTxt=new Date().toLocaleDateString('en-ZA',{weekday:'long',day:'numeric',month:'long',timeZone:'Africa/Johannesburg'});
  const row=e=>{const d=e.t-now,soon=d>0&&d<36e5,done=d<=0&&d<-36e5*3,tag=d>0?inTxt(d):d>-36e5*3?'Released '+inTxt(d):'Released',w=FW[e.k],PS=d>0?preSignal(e):null,pt=PS&&PS.dir?' · Signal: '+sigTxt(PS):'';
   return `<div class="nrow"><div class="nt">${sastHM(new Date(e.t))}</div><div class="nm"><b><i class="imp" style="background:${e.impact==='High'?'var(--sell)':'var(--wait)'}"></i>${evName(e)}</b><span>Forecast ${e.forecast||'—'} · Previous ${e.previous||'—'}${pt}</span></div><span class="pillx ${soon?'hot':d>0?'up':'dn'}">${tag}</span></div>`};
  card.innerHTML=`<div class="fcard" style="text-align:left"><div style="display:flex;justify-content:space-between;align-items:center"><div><div class="fk">Today's news · SAST</div><div style="font-size:16px;font-weight:800;margin-top:3px">${dayTxt}</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="page('fund');return false">All events ›</a></div>
-  <div style="margin-top:8px">${td.length?td.map(row).join(''):'<div class="note" style="margin:10px 0 4px">'+(FD.evErr?'The calendar feed is unavailable right now.':'No NFP, CPI, PPI or FOMC today.')+'</div>'}</div>
+  <div style="margin-top:8px">${td.length?td.map(row).join(''):'<div class="note" style="margin:10px 0 4px">'+(FD.evErr?'The calendar feed is unavailable right now.':'No high-impact US release today.')+'</div>'}</div>
   ${!td.length&&next?'<div class="note">Next: <b style="color:var(--text)">'+evName(next)+'</b> · '+new Date(next.t).toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' ('+inTxt(next.t-now)+')</div>':''}
   <div class="note" style="margin-top:8px"><i class="imp" style="background:var(--sell)"></i>High impact <i class="imp" style="background:var(--wait);margin-left:10px"></i>Medium impact</div></div>`;
  const hot=evs.filter(e=>(e.impact==='High'||FW[e.k].alert)&&e.t-now<=36e5&&e.t-now>=-9e5).sort((a,b)=>Math.abs(a.t-now)-Math.abs(b.t-now))[0];
  if(hot){const d=hot.t-now,nm=evName(hot);bar.className='nbar'+(d>0&&d<6e5?' danger':'');bar.style.display='block';
   bar.textContent=d>0?`High-impact news: ${nm} ${inTxt(d)} (${sastHM(new Date(hot.t))} SAST).${(()=>{const q=preSignal(hot);return q&&q.dir?' Signal: '+sigTxt(q)+'.':''})()}`:`${nm} was released ${inTxt(d)}.`}
  else bar.style.display='none';
+ ['menuDot','fundDot'].forEach(id=>{const x=$(id);if(x)x.style.display=hot?'block':'none'});
  const NA=getNA(),sv=()=>{try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}};
  evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date,q=d>0&&d<=9e5?preSignal(e):null,tx=q&&q.dir?sigTxt(q):'';
-  if(d>0&&d<=15e4&&!NA[id+'|b']){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv})}nn(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
+  if(d>0&&d<=15e4&&!NA[id+'|b']&&!(FW[e.k]&&FW[e.k].info)){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv})}nn(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
   else if(d>0&&d<=9e5&&!NA[id+'|a']){NA[id+'|a']=1;sv();nn(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${tx?' Signal: '+tx+'.':''}`,'High-impact news')}})}
 setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
@@ -932,6 +997,13 @@ function refreshNow(){const on=document.querySelector('.page.on'),id=on?on.id:''
  addEventListener('touchmove',e=>{if(!act)return;pull=Math.max(0,e.touches[0].clientY-y0);if(window.scrollY>0){act=false;ptr.style.opacity=0;return}ptr.style.opacity=Math.min(1,pull/90);ptr.style.transform=`translate(-50%,${Math.min(pull*.4,44)}px)`},{passive:true});
  addEventListener('touchend',()=>{if(!act)return;act=false;const go=pull>110;ptr.style.opacity='';ptr.style.transform='';if(go){navigator.vibrate&&navigator.vibrate(15);refreshNow()}},{passive:true})})();
 renderCk();renderJournal();if(window.AndroidBridge){try{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Enable alerts'}catch(e){}}
+// premium navigation: sliding lens, haptics, header glow
+function curPage(){const on=document.querySelector('.page.on');return on?on.id.slice(2):'home'}
+function moveInd(n){const ind=$('navInd');if(!ind)return;const b=document.querySelector(`#nav button[data-p="${n}"]`);if(!b){ind.style.opacity=0;return}ind.style.opacity=1;ind.style.width=b.offsetWidth+'px';ind.style.transform=`translateX(${b.offsetLeft}px)`}
+addEventListener('resize',()=>moveInd(curPage()));setTimeout(()=>moveInd(curPage()),50);setTimeout(()=>moveInd(curPage()),600);
+document.addEventListener('click',e=>{if(e.target.closest('button,.tile,.seg'))navigator.vibrate&&navigator.vibrate(7)},true);
+addEventListener('scroll',()=>document.querySelector('header').classList.toggle('sc',scrollY>8),{passive:true});
+calDay();setInterval(calDay,60000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
