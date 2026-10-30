@@ -263,7 +263,7 @@ nav button:active span{transform:scale(.9)}
 <section class="page" id="p-hist">
 <div class="fh"><button class="fb" id="jBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></div><div><div class="ft">Journal</div><div class="fk" style="margin-top:2px">Mark your results</div></div></div>
 <div id="jStats"></div><div class="tfs" id="jFlt" style="flex-wrap:wrap"></div><div id="jList"></div>
-<button class="btn ghost" id="jCopy" onclick="jCopy()">Copy journal (CSV)</button><button class="btn red" id="jClr" onclick="jClear()">Clear journal</button>
+<button class="btn ghost" id="jGrade" onclick="jGradeNow()">Grade news signals now (1 credit)</button><button class="btn ghost" id="jCopy" onclick="jCopy()">Copy journal (CSV)</button><button class="btn red" id="jClr" onclick="jClear()">Clear journal</button>
 <div class="note" style="text-align:center;padding:0 6px 10px">The journal is saved on this device only. Clearing the app's data or reinstalling deletes it, so copy it out now and then.</div></section>
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
@@ -370,18 +370,18 @@ function page(n){
   window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');moveInd(n);if(n==='ind')fit()};
  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
- if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist')renderJournal();if(n==='home')renderCk()}
+ if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist'){renderJournal();settleNews()}if(n==='home')renderCk()}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
 const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tf));mark();
 $('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO=0;save();tick()};
 // data
-async function load(sym,tf){
+async function load(sym,tf,size){
  sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
  if(gated)u=`${API}?action=candles&${qs()}&sym=${encodeURIComponent(sym)}&int=${TFT[tf]}`;
  else if(S.src==='binance')u=`https://api.binance.com/api/v3/klines?symbol=${sym.toUpperCase().replace('/','')}&interval=${TFB[tf]}&limit=1000`;
- else{if(!S.key)throw Error('Add your Twelve Data key in Settings');u=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=${TFT[tf]}&outputsize=1500&apikey=${S.key}`}
+ else{if(!S.key)throw Error('Add your Twelve Data key in Settings');u=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=${TFT[tf]}&outputsize=${size||1500}&apikey=${S.key}`}
  let j;try{j=await(await fetch(u)).json()}catch(e){throw Error('Cannot reach the data server. Open the app from your Netlify link, not a preview window, and check your internet.')}if(j.ok===false){showLock(j.msg);throw Error(j.msg)}let rows,dec=2;
  if(S.src==='binance'&&!gated){if(!Array.isArray(j))throw Error(j.msg||'Bad symbol');rows=j.reverse().map(k=>({o:+k[1],h:+k[2],l:+k[3],c:+k[4],s:k[4],t:+k[0]}))}
  else{if(j.status==='error')throw Error(j.message);rows=j.values.map(v=>({o:+v.open,h:+v.high,l:+v.low,c:+v.close,s:v.close,t:Date.parse(v.datetime.replace(' ','T')+(v.datetime.length<=10?'T00:00:00':'')+'Z')}))}
@@ -925,6 +925,7 @@ const sastKey=d=>new Intl.DateTimeFormat('en-CA',{timeZone:'Africa/Johannesburg'
 function inTxt(ms){const m=Math.max(0,Math.round(Math.abs(ms)/6e4)),h=Math.floor(m/60),t=h?h+'h '+String(m%60).padStart(2,'0')+'m':m+'m';return ms>0?'in '+t:t+' ago'}
 const getNA=()=>{try{return JSON.parse(localStorage.getItem('sp_na')||'{}')}catch(e){return{}}};
 function renderNews(){
+ snapPending();settleNews();
  const card=$('news'),bar=$('newsBar');if(!card)return;
  if(!FD||!FD.events){card.innerHTML=FDLOAD?skel(1):'';bar.style.display='none';return}
  const now=Date.now(),evs=FD.events.filter(e=>showEv(e)).map(e=>Object.assign({},e,{t:Date.parse(e.date)})).filter(e=>e.t).sort((a,b)=>a.t-b.t),today=sastKey(new Date()),td=evs.filter(e=>sastKey(new Date(e.t))===today),next=evs.find(e=>e.t>now);
@@ -942,7 +943,7 @@ function renderNews(){
  ['menuDot','fundDot'].forEach(id=>{const x=$(id);if(x)x.style.display=hot?'block':'none'});
  const NA=getNA(),sv=()=>{try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}};
  evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date,q=d>0&&d<=9e5?preSignal(e):null,tx=q&&q.dir?sigTxt(q):'';
-  if(d>0&&d<=15e4&&!NA[id+'|b']&&!(FW[e.k]&&FW[e.k].info)){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv})}nn(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
+  if(d>0&&d<=15e4&&!NA[id+'|b']&&!(FW[e.k]&&FW[e.k].info)){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv,evId:id,rel:e.t})}nn(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
   else if(d>0&&d<=9e5&&!NA[id+'|a']){NA[id+'|a']=1;sv();nn(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${tx?' Signal: '+tx+'.':''}`,'High-impact news')}})}
 setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
@@ -950,18 +951,71 @@ $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>pag
 const srcN={zone:'Zone',scan:'Scanner',news:'News'};let JF='all',jClr=0;
 function saveSigs(){try{localStorage.setItem('sp_sig',JSON.stringify(sigs.slice(0,300)))}catch(e){}}
 function logSig(o){sigs.unshift(Object.assign({id:Date.now()+'-'+Math.random().toString(36).slice(2,6),ts:Date.now(),t:new Date().toLocaleString(),out:''},o));sigs=sigs.slice(0,300);saveSigs();renderJournal()}
-function setOut(id,v){const x=sigs.find(z=>z.id===id);if(!x)return;x.out=x.out===v?'':v;saveSigs();renderJournal()}
+function setOut(id,v){const x=sigs.find(z=>z.id===id);if(!x)return;x.out=x.out===v?'':v;if(x.auto)x.manual=1;saveSigs();renderJournal()}
 function renderJournal(){
  if(!$('jList'))return;
  const W=sigs.filter(x=>x.out==='win').length,Lz=sigs.filter(x=>x.out==='loss').length,K=sigs.filter(x=>x.out==='skip').length,U=sigs.filter(x=>!x.out).length,dn=W+Lz,wr=dn?Math.round(W/dn*100):null;
  $('jStats').innerHTML=`<div class="fcard"><div class="fk">Win rate</div><div style="font-size:34px;font-weight:900;margin-top:4px;color:${wr==null?'var(--t2)':wr>=50?'var(--buy)':'var(--sell)'}">${wr==null?'—':wr+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${W}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${Lz}</b></div><div><span class="fk">Skipped</span><b>${K}</b></div></div><div class="note" style="margin:0">${U} not marked yet · ${sigs.length} logged. The win rate counts only signals you marked Win or Loss.</div></div>`;
+ $('jStats').innerHTML+=newsStats();
  $('jFlt').innerHTML=[['all','All'],['zone','Zones'],['scan','Scanner'],['news','News'],['unmarked','Unmarked']].map(([k,t])=>`<button class="${JF===k?'on':''}" onclick="JF='${k}';renderJournal()">${t}</button>`).join('');
  const L=sigs.filter(x=>JF==='all'||(JF==='unmarked'?!x.out:x.src===JF));
  $('jList').innerHTML=L.length?L.map(x=>{
   const buy=x.type==='BUY',when=x.ts?new Date(x.ts).toLocaleString('en-ZA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' SAST':x.t,
-   det=x.src==='news'?`<div class="note" style="margin:10px 0 0">${x.ev||'News release'}${x.conv?' · '+x.conv+' conviction':''}</div>`:x.pl?`<div class="note" style="margin:10px 0 0">Entry ${x.pl.e} · SL ${x.pl.sl} · TP1 ${x.pl.t1}${x.strat?' · '+x.strat:''}</div>`:x.price?`<div class="note" style="margin:10px 0 0">Price ${x.price}</div>`:'';
-  return `<div class="fcard ${buy?'bull':'bear'}"><div class="hl"><div><div style="font-size:17px;font-weight:800"><span style="color:${buy?'var(--buy)':'var(--sell)'}">${x.type}</span> ${String(x.sym).replace('/','')}${x.tf?' · '+x.tf:''}</div><div class="note" style="margin:3px 0 0">${when}</div></div><span class="pillx">${srcN[x.src]||'Zone'}</span></div>${det}<div class="seg">${['win','loss','skip'].map(k=>`<button class="${x.out===k?'on '+k:''}" onclick="setOut('${x.id}','${k}')">${k==='win'?'Win':k==='loss'?'Loss':'Skip'}</button>`).join('')}</div></div>`}).join(''):'<div class="empty">Nothing here yet.<br>Signals appear when the app fires an alert.</div>'}
-function jCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return ['time,source,symbol,tf,side,entry,sl,tp1,tp2,result'].concat(sigs.map(x=>[x.ts?new Date(x.ts).toISOString():x.t,x.src,x.sym,x.tf||'',x.type,x.pl?x.pl.e:x.price||'',x.pl?x.pl.sl:'',x.pl?x.pl.t1:'',x.pl?x.pl.t2:'',x.out].map(q).join(','))).join('\n')}
+   det=x.src==='news'?`<div class="note" style="margin:10px 0 0">${x.ev||'News release'}${x.conv?' · '+x.conv+' conviction':''}</div>`+newsLine(x):x.pl?`<div class="note" style="margin:10px 0 0">Entry ${x.pl.e} · SL ${x.pl.sl} · TP1 ${x.pl.t1}${x.strat?' · '+x.strat:''}</div>`:x.price?`<div class="note" style="margin:10px 0 0">Price ${x.price}</div>`:'';
+  return `<div class="fcard ${buy?'bull':'bear'}"><div class="hl"><div><div style="font-size:17px;font-weight:800"><span style="color:${buy?'var(--buy)':'var(--sell)'}">${x.type}</span> ${String(x.sym).replace('/','')}${x.tf?' · '+x.tf:''}</div><div class="note" style="margin:3px 0 0">${when}</div></div><span style="display:flex;gap:6px;align-items:flex-start">${x.auto&&!x.manual?'<span class="pillx" style="color:var(--accent)">Auto</span>':''}<span class="pillx">${srcN[x.src]||'Zone'}</span></span></div>${det}<div class="seg">${['win','loss','skip'].map(k=>`<button class="${x.out===k?'on '+k:''}" onclick="setOut('${x.id}','${k}')">${k==='win'?'Win':k==='loss'?'Loss':'Skip'}</button>`).join('')}</div></div>`}).join(''):'<div class="empty">Nothing here yet.<br>Signals appear when the app fires an alert.</div>'}
+// ---- auto-graded news signals ----
+// The gold signal is saved as it stands before each release. Once the release is 16 minutes old the app
+// pulls 1-minute gold candles and records where gold went after 5 and 15 minutes, then marks Win / Loss / Flat.
+const NG_FLAT=.00015;
+const usd=v=>(v>=0?'+':'-')+'$'+Math.abs(v).toFixed(2);
+const getPend=()=>{try{return JSON.parse(localStorage.getItem('sp_pend')||'{}')}catch(e){return{}}};
+const setPend=o=>{try{localStorage.setItem('sp_pend',JSON.stringify(o))}catch(e){}};
+function snapPending(){
+ if(!FD||!FD.events)return;const now=Date.now(),P=getPend();
+ FD.events.filter(showEv).forEach(e=>{const t=Date.parse(e.date);if(!t||t<=now||t>now+7*864e5||(FW[e.k]&&FW[e.k].info))return;
+  const id=e.k+'|'+e.date,q=preSignal(e);
+  if(q&&q.dir){const g=pairSignals(q.dir)[0];P[id]={id,t,ev:evName(e),sym:g.sym,side:g.side,conv:q.conv}}else delete P[id]});
+ Object.keys(P).forEach(id=>{if(P[id].t<now-3*864e5)delete P[id]});
+ setPend(P)}
+function gradeNews(x,d){
+ const find=ms=>d.t.indexOf(Math.floor(ms/6e4)*6e4),i0=find(x.rel-12e4),i5=find(x.rel+4*6e4),i15=find(x.rel+14*6e4);
+ if(i0<0||i5<0||i15<0)return null;
+ const entry=d.o[i0],dir=x.type==='BUY'?1:-1,m5=(d.c[i5]-entry)*dir,m15=(d.c[i15]-entry)*dir;
+ let hi=-Infinity,lo=Infinity;for(let k=i0;k>=i15;k--){hi=Math.max(hi,d.h[k]);lo=Math.min(lo,d.l[k])}
+ return{entry,m5,m15,mfe:dir>0?hi-entry:entry-lo,mae:dir>0?entry-lo:hi-entry}}
+let NGBUSY=false,NGWAIT=0;
+async function settleNews(force){
+ if(NGBUSY||(!force&&Date.now()<NGWAIT))return;
+ const now=Date.now(),P=getPend();let ch=false;
+ Object.values(P).forEach(r=>{if(now>r.t+6e4){
+  if(!sigs.some(x=>x.evId===r.id))logSig({src:'news',sym:r.sym,type:r.side,ev:r.ev,conv:r.conv,evId:r.id,rel:r.t,ts:r.t-12e4,t:new Date(r.t-12e4).toLocaleString()});
+  delete P[r.id];ch=true}});
+ if(ch)setPend(P);
+ const todo=sigs.filter(x=>x.src==='news'&&x.rel&&!x.gr&&now>x.rel+16*6e4);
+ if(!todo.length||!S.key)return;
+ NGBUSY=true;
+ try{const d=await load('XAU/USD','M1',5000);addCred();
+  todo.forEach(x=>{const g=gradeNews(x,d);if(g){x.auto=g;x.gr='done';if(!x.out)x.out=Math.abs(g.m15)<g.entry*NG_FLAT?'flat':g.m15>0?'win':'loss'}});
+  const oldest=d.t[d.n-1];todo.forEach(x=>{if(!x.gr&&(x.rel-12e4<oldest||now>x.rel+4*864e5))x.gr='fail'});
+  saveSigs();renderJournal()}
+ catch(e){NGWAIT=Date.now()+5*6e4}
+ NGBUSY=false}
+async function jGradeNow(){const b=$('jGrade');b.textContent='Grading…';NGWAIT=0;await settleNews(true);b.textContent='Grade news signals now (1 credit)'}
+function newsLine(x){
+ if(x.auto){const A=x.auto,c=v=>v>=0?'var(--buy)':'var(--sell)';
+  return `<div class="note" style="margin:6px 0 0">Gold from ${A.entry.toFixed(2)}: <b style="color:${c(A.m5)}">${usd(A.m5)}</b> after 5 min · <b style="color:${c(A.m15)}">${usd(A.m15)}</b> after 15 min · best ${usd(A.mfe)} · worst ${usd(-A.mae)}${x.out==='flat'?'<br>Flat: gold barely moved, so no win or loss.':''}</div>`}
+ if(x.rel&&x.gr==='fail')return '<div class="note" style="margin:6px 0 0">Could not grade: the price history for that time was not available.</div>';
+ if(x.rel)return '<div class="note" style="margin:6px 0 0">'+(Date.now()<x.rel+16*6e4?'Gets graded 15 minutes after the release.':'Waiting to be graded. Open the app with a data key set, or tap Grade news signals now.')+'</div>';
+ return ''}
+function wilson(w,n){const z=1.96,p=w/n,den=1+z*z/n,c=(p+z*z/(2*n))/den,h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/den;return[Math.max(0,c-h),Math.min(1,c+h)]}
+function newsStats(){
+ const all=sigs.filter(x=>x.src==='news'&&x.rel);if(!all.length)return '';
+ const g=all.filter(x=>x.auto&&!x.manual),w=g.filter(x=>x.out==='win').length,l=g.filter(x=>x.out==='loss').length,f=g.filter(x=>x.out==='flat').length,n=w+l,wait=all.filter(x=>!x.gr).length,
+  avg=g.length?g.reduce((a,x)=>a+x.auto.m15,0)/g.length:null,r=n?Math.round(w/n*100):null;let msg;
+ if(n<30)msg=`Only ${n} graded so far, which is too few to tell skill from luck. Aim for 30 or more.`;
+ else{const[lo,hi]=wilson(w,n),a=Math.round(lo*100),b=Math.round(hi*100);msg=`Win rate ${r}% (95% range ${a}% to ${b}%). `+(lo>.5?'The whole range is above 50%, so this looks better than a coin flip.':hi<.5?'The whole range is below 50%, so this signal has not worked.':'50% sits inside that range, so it is not clearly better than a coin flip yet.')}
+ return `<div class="fcard"><div class="fk">News signals · auto-graded</div><div style="font-size:30px;font-weight:900;margin-top:4px;color:${r==null?'var(--t2)':r>=50?'var(--buy)':'var(--sell)'}">${r==null?'—':r+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${w}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${l}</b></div><div><span class="fk">Flat</span><b>${f}</b></div></div><div class="note" style="margin:0 0 6px">${msg}</div><div class="note" style="margin:0">${avg!=null?'Average gold move in the signal direction after 15 minutes: '+usd(avg)+'. ':''}${wait?wait+' waiting to be graded. ':''}Graded 15 minutes after the release: win if gold moved your way, loss if against, flat if under 0.015% either way. Spread and slippage are not included.</div></div>`}
+function jCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return ['time,source,symbol,tf,side,entry,sl,tp1,tp2,result,move5,move15'].concat(sigs.map(x=>[x.ts?new Date(x.ts).toISOString():x.t,x.src,x.sym,x.tf||'',x.type,x.pl?x.pl.e:x.price||'',x.pl?x.pl.sl:'',x.pl?x.pl.t1:'',x.pl?x.pl.t2:'',x.out,x.auto?x.auto.m5.toFixed(2):'',x.auto?x.auto.m15.toFixed(2):''].map(q).join(','))).join('\n')}
 function jCopy(){const t=jCsv(),done=()=>{$('jCopy').textContent='Copied';setTimeout(()=>{$('jCopy').textContent='Copy journal (CSV)'},1500)},
  fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()};
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done).catch(fb);else fb()}
