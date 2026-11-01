@@ -212,6 +212,9 @@ nav button span{position:relative;background:none !important;box-shadow:none !im
 nav button.on span{transform:translateY(-3px) scale(1.12);filter:drop-shadow(0 0 8px var(--accent))}
 nav button:active span{transform:scale(.9)}
 @media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}}
+.comp{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-top:12px}
+.comp>div{background:rgba(var(--w),.04);border:1px solid rgba(var(--w),.07);border-radius:14px;padding:10px 8px;text-align:center}
+.comp .fk{display:block;font-size:9.5px;letter-spacing:.8px}.comp b{display:block;font-size:16px;margin-top:5px}.comp small{display:block;font-size:10.5px;color:var(--t2);margin-top:2px}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -898,6 +901,10 @@ function syncAlarms(){
   if(!(FW[e.k]&&FW[e.k].info))out.push({id:e.k+'|'+e.date+'|b',t:t-12e4,title:'Open window',body:tx?'OPEN NOW: '+tx+' · '+nm+' at '+hm:nm+' at '+hm+'. No signal.'})});
  try{AndroidBridge.schedule(JSON.stringify(out))}catch(e){}}
 const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym.replace('/','')+' ('+q.conv+')'};
+const COMP={NFP:['UNRATE','AHE'],CPI:['CORE_CPI'],PPI:['CORE_PPI'],RS:['CORE_RS'],CORE_PCE:['PCE']};
+function compRows(e){const t=Date.parse(e.date),ks=COMP[e.k];if(!ks||!FD||!FD.events)return '';
+ const L=FD.events.filter(x=>ks.includes(x.k)&&FW[x.k]&&Math.abs(Date.parse(x.date)-t)<=6e4);if(!L.length)return '';
+ return '<div class="comp">'+L.map(x=>`<div><span class="fk">${evName(x)}</span><b>${x.forecast||'—'}</b><small>prev ${x.previous||'—'}</small></div>`).join('')+'</div>'}
 function sigCard(e){
  const d=new Date(e.date),now=Date.now(),info=!!(FW[e.k]&&FW[e.k].info),PS=info?null:preSignal(e),dir=PS?PS.dir:0,conv=PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv==='Low'?1:0,f1=v=>(v>=0?'+':'')+v.toFixed(1),
   hm=t=>sastHM(new Date(t)),open=d.getTime()-12e4,
@@ -911,7 +918,7 @@ function sigCard(e){
   why=`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}`}
  else head=info?'<div style="margin-top:14px"><span class="vd u0">HEADS-UP</span></div><div class="note" style="margin-top:8px">A high-impact event with no number to score, so there is no signal. Prices can move sharply on the wording or tone.</div>':PS?'<div style="margin-top:14px"><span class="vd u0">NO EDGE</span></div><div class="note" style="margin-top:8px">The leading data, macro picture and price are balanced, so there is no side to take before this release.</div>'
   :'<div class="note" style="margin-top:14px">Not enough data for a signal. Macro data is not connected, so only price momentum could be used.</div>';
- return `<div class="fcard ${dir>0?'bull':dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}<span class="imp-t ${e.impact==='High'?'hi':''}">${e.impact==='High'?'HIGH':'MED'}</span></div><div class="note" style="margin:3px 0 0">${when} · SAST${info?'':' · Forecast '+(e.forecast||'—')+' · Previous '+(e.previous||'—')}</div></div><span class="pillx up"><span class="cd" data-t="${d.getTime()}">${fmtCd(d.getTime()-now)}</span></span></div>${head}${why?'<div class="note" style="margin-top:10px;opacity:.8">Why: '+why+'</div>':''}</div>`}
+ return `<div class="fcard ${dir>0?'bull':dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}<span class="imp-t ${e.impact==='High'?'hi':''}">${e.impact==='High'?'HIGH':'MED'}</span></div><div class="note" style="margin:3px 0 0">${when} · SAST${info?'':' · Forecast '+(e.forecast||'—')+' · Previous '+(e.previous||'—')}</div></div><span class="pillx up"><span class="cd" data-t="${d.getTime()}">${fmtCd(d.getTime()-now)}</span></span></div>${compRows(e)}${head}${why?'<div class="note" style="margin-top:10px;opacity:.8">Why: '+why+'</div>':''}</div>`}
 function renderFund(){
  if(!FD)return;const now=Date.now(),span=SHOWALL?30:14,
   ev=(FD.events||[]).filter(e=>showEv(e)).filter(e=>{const t=Date.parse(e.date);return t>now&&t<now+span*864e5}).sort((a,b)=>Date.parse(a.date)-Date.parse(b.date));
