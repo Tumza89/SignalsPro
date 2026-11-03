@@ -227,8 +227,8 @@ nav button:active span{transform:scale(.9)}
 <div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
 
 <div id="welcome"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
-<div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">What are we trading today?</div>
-<button class="btn" id="wgo" style="max-width:300px">Let’s go</button></div>
+<div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">Your desk is ready.</div>
+<button class="btn" id="wgo" style="max-width:300px">Enter terminal</button></div>
 
 <header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><i class="nbadge" id="menuDot"></i></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div></header>
 <div id="newsBar" style="display:none"></div>
@@ -310,7 +310,7 @@ const save=()=>{try{localStorage.setItem('sp_cfg',JSON.stringify(S))}catch(e){}}
 let welcomed=false,welcomeShown=false;
 function speakWelcome(){
  if(welcomed||!window.speechSynthesis)return;
- const u=new SpeechSynthesisUtterance('Welcome to SignalsPro. What are we trading today?');u.rate=.95;u.volume=1;
+ const u=new SpeechSynthesisUtterance('Welcome to SignalsPro. Your desk is ready.');u.rate=.95;u.volume=1;
  const vs=speechSynthesis.getVoices(),v=vs.find(x=>/^en[-_](GB|US|ZA|AU)/i.test(x.lang)&&/(Samantha|Daniel|Karen|Serena|Moira|Google)/i.test(x.name))||vs.find(x=>/^en/i.test(x.lang));if(v)u.voice=v;
  u.onstart=()=>{welcomed=true};speechSynthesis.cancel();speechSynthesis.speak(u)}
 function showWelcome(){if(welcomeShown)return;welcomeShown=true;$('welcome').classList.add('on');speakWelcome()}
