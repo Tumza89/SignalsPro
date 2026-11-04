@@ -215,15 +215,32 @@ nav button:active span{transform:scale(.9)}
 .comp{display:grid;grid-template-columns:repeat(auto-fit,minmax(104px,1fr));gap:8px;margin-top:12px}
 .comp>div{background:rgba(var(--w),.04);border:1px solid rgba(var(--w),.07);border-radius:14px;padding:10px 8px;text-align:center}
 .comp .fk{display:block;font-size:9.5px;letter-spacing:.8px}.comp b{display:block;font-size:16px;margin-top:5px}.comp small{display:block;font-size:10.5px;color:var(--t2);margin-top:2px}
+.lbox{width:100%;max-width:300px}
+.ckl{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:12px;color:var(--t2);line-height:1.45;margin:2px 0 12px}
+.lnk{color:var(--accent);font-weight:700;text-decoration:none}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
 <div class="wm">Signals<span>Pro</span></div><div class="sub" style="margin:6px 0 26px">Premium market zones. Live.</div>
-<input type="email" class="inp" id="emailIn" placeholder="Your subscriber email" autocapitalize="none" autocomplete="email" style="max-width:300px;text-align:center">
+<div id="loginBox" class="lbox"><input type="email" class="inp" id="emailIn" placeholder="Your subscriber email" autocapitalize="none" autocomplete="email" style="max-width:300px;text-align:center">
 <button class="btn" style="max-width:300px" id="btnU">Unlock</button>
 <div id="lerr" style="color:var(--sell);font-size:13px;margin-top:14px;max-width:300px;display:none"></div>
 <div class="note" style="max-width:300px;text-align:center">Subscriber access only. One device per subscription.</div>
 <div class="note sup" id="hlp" style="max-width:300px;text-align:center">Need help? <a href="tel:+27696750129">Call +27 69 675 0129</a> · <a href="https://wa.me/27696750129" target="_blank" rel="noopener">WhatsApp</a></div>
+<div class="note" style="margin-top:14px;text-align:center"><a href="#" id="goReg" class="lnk">New here? Register for access</a></div></div>
+<div id="regBox" class="lbox" style="display:none">
+<div id="regForm"><div style="font-size:18px;font-weight:800;margin-bottom:4px">Request access</div>
+<div class="note" style="margin:0 0 14px">Fill in your details. Your access is switched on once your registration has been approved.</div>
+<input class="inp" id="rName" placeholder="Name" autocomplete="given-name" style="text-align:center">
+<input class="inp" id="rSurname" placeholder="Surname" autocomplete="family-name" style="text-align:center">
+<input type="email" class="inp" id="rEmail" placeholder="Email address" autocapitalize="none" autocomplete="email" style="text-align:center">
+<input id="rHp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px;opacity:0">
+<label class="ckl"><input type="checkbox" id="rOk" style="margin-top:2px"><span>I agree that SignalsPro stores my name and email address to manage my access.</span></label>
+<button class="btn" id="btnR">Request access</button>
+<div id="rerr" style="color:var(--sell);font-size:13px;margin-top:12px;display:none"></div></div>
+<div id="regDone" style="display:none"><div style="font-size:18px;font-weight:800;margin-bottom:8px">Registration received</div><div class="note" id="regDoneMsg" style="margin:0"></div></div>
+<div class="note" style="margin-top:16px;text-align:center"><a href="#" id="goLogin" class="lnk">Already approved? Sign in</a></div>
+<div class="note sup" style="text-align:center">Need help? <a href="tel:+27696750129">Call +27 69 675 0129</a> · <a href="https://wa.me/27696750129" target="_blank" rel="noopener">WhatsApp</a></div></div>
 <div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
 
 <div id="welcome"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -268,6 +285,10 @@ nav button:active span{transform:scale(.9)}
 <div id="jStats"></div><div class="tfs" id="jFlt" style="flex-wrap:wrap"></div><div id="jList"></div>
 <button class="btn ghost" id="jGrade" onclick="jGradeNow()">Grade news signals now (1 credit)</button><button class="btn ghost" id="jCopy" onclick="jCopy()">Copy journal (CSV)</button><button class="btn red" id="jClr" onclick="jClear()">Clear journal</button>
 <div class="note" style="text-align:center;padding:0 6px 10px">The journal is saved on this device only. Clearing the app's data or reinstalling deletes it, so copy it out now and then.</div></section>
+<section class="page" id="p-admin">
+<div class="fh"><button class="fb" id="aBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></div><div><div class="ft">Admin</div><div class="fk" style="margin-top:2px">Registrations</div></div></div>
+<div id="aGate" class="card"><div style="font-size:16px;font-weight:800;margin-bottom:6px">Admin PIN</div><div class="note" style="margin:0 0 12px">Enter the PIN you set in the script properties. It is only kept in memory for 10 minutes.</div><input class="inp" id="aPin" type="password" placeholder="Admin PIN" autocomplete="off"><button class="btn" id="aGo">Unlock admin</button><div id="aErr" style="color:var(--sell);font-size:13px;margin-top:12px;display:none"></div></div>
+<div id="aMain" style="display:none"><div id="aSum"></div><div class="tfs" id="aFlt" style="flex-wrap:wrap"></div><input class="inp" id="aQ" placeholder="Search name or email" autocapitalize="none"><label>Activate for</label><select class="inp" id="aDays"><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option><option value="0">No expiry</option></select><div id="aMsg" class="note" style="display:none;margin:0 0 10px"></div><div id="aList"></div><button class="btn ghost" id="aRef">Refresh</button></div></section>
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
 <label>Entry timeframe</label><select class="inp" id="scTf"><option>M5</option><option>M15</option></select>
@@ -293,7 +314,7 @@ nav button:active span{transform:scale(.9)}
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div>
-<aside id="thPanel"><div class="pt">Menu</div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><div class="pt" style="margin-top:24px">Theme</div><div class="sw" id="sw"></div></aside>
+<aside id="thPanel"><div class="pt">Menu</div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin</b><i>Approve registrations</i></span></button><div class="pt" style="margin-top:24px">Theme</div><div class="sw" id="sw"></div></aside>
 <script>
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
@@ -321,7 +342,7 @@ let DEV=localStorage.getItem('sp_dev');if(!DEV){DEV=(crypto.randomUUID?crypto.ra
 let EM=localStorage.getItem('sp_em')||'';
 const qs=()=>`email=${encodeURIComponent(EM)}&dev=${encodeURIComponent(DEV)}`;
 // shows the login screen; any error message also gets the support contact (call + WhatsApp)
-function showLock(m){if(run)setRun(false);$('welcome').classList.remove('on');welcomeShown=false;$('lock').classList.remove('hidden');
+function showLock(m){if(run)setRun(false);$('welcome').classList.remove('on');welcomeShown=false;$('lock').classList.remove('hidden');showReg(false);
  const e=$('lerr');e.textContent=m||'';
  if(m){const s=document.createElement('div');s.style.cssText='margin-top:10px;font-size:12px;color:var(--t2)';s.append('Need help? Contact support: ');
   const a=document.createElement('a');a.href='tel:+27696750129';a.textContent='+27 69 675 0129';a.style.cssText='color:var(--accent);font-weight:700;text-decoration:none';s.append(a);s.append(' · ');
@@ -331,7 +352,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk()}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk()}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -373,7 +394,7 @@ function page(n){
   window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');moveInd(n);if(n==='ind')fit()};
  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
- if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist'){renderJournal();settleNews()}if(n==='home')renderCk()}
+ if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home')renderCk()}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
@@ -1028,6 +1049,52 @@ function jCopy(){const t=jCsv(),done=()=>{$('jCopy').textContent='Copied';setTim
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done).catch(fb);else fb()}
 function jClear(){if(!jClr){jClr=1;$('jClr').textContent='Tap again to delete everything';setTimeout(()=>{jClr=0;$('jClr').textContent='Clear journal'},3000)}else{sigs=[];saveSigs();jClr=0;$('jClr').textContent='Clear journal';renderJournal()}}
 $('jrnBtn').onclick=()=>{thOpen(false);page('hist')};$('jBack').onclick=()=>page('home');
+// ---- registration and admin ----
+let ROLE='user',ADMPIN='',ADMT=0,ADMU=[],ADMF='pending',ADMQ='',ADMCF='',ADMBUSY=false;
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const encA=v=>encodeURIComponent(v).replace(/'/g,'%27');
+function showReg(on){$('loginBox').style.display=on?'none':'';$('regBox').style.display=on?'':'none';$('rerr').style.display='none';if(on){$('regForm').style.display='';$('regDone').style.display='none'}}
+$('goReg').onclick=e=>{e.preventDefault();showReg(true)};$('goLogin').onclick=e=>{e.preventDefault();showReg(false)};
+async function doRegister(){
+ const n=$('rName').value.trim(),sn=$('rSurname').value.trim(),em=$('rEmail').value.trim().toLowerCase(),hp=$('rHp').value,err=m=>{$('rerr').textContent=m;$('rerr').style.display='block'};
+ if(n.length<2||sn.length<2)return err('Enter your name and surname.');
+ if(!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em))return err('Enter a valid email address.');
+ if(!$('rOk').checked)return err('Please tick the box to agree.');
+ $('rerr').style.display='none';$('btnR').disabled=true;$('btnR').textContent='Sending…';
+ try{const j=await(await fetch(`${API}?action=register&name=${encodeURIComponent(n)}&surname=${encodeURIComponent(sn)}&email=${encodeURIComponent(em)}&dev=${encodeURIComponent(DEV)}&hp=${encodeURIComponent(hp)}`)).json();
+  if(j.ok){$('regForm').style.display='none';$('regDone').style.display='block';$('regDoneMsg').textContent=j.msg||'Your registration was received. You will get access once it has been approved.'}
+  else err(j.msg||'Could not register. Please try again.')}
+ catch(e){err('Cannot reach the server. Check your internet and try again.')}
+ $('btnR').disabled=false;$('btnR').textContent='Request access'}
+$('btnR').onclick=doRegister;$('rEmail').onkeypress=e=>{if(e.key==='Enter')doRegister()};
+const admCall=async(a,extra)=>{const j=await(await fetch(`${API}?action=${a}&${qs()}&pin=${encodeURIComponent(ADMPIN)}${extra||''}`)).json();if(j.ok===false&&j.pinErr)ADMPIN='';return j};
+function admShow(on){$('aGate').style.display=on?'none':'';$('aMain').style.display=on?'':'none'}
+function admOpen(){if(ROLE!=='admin'){page('home');return}
+ if(ADMPIN&&Date.now()-ADMT<6e5){admShow(true);admLoad()}else{ADMPIN='';admShow(false);$('aPin').value='';$('aErr').style.display='none'}}
+async function admUnlock(){const v=$('aPin').value;if(!v)return;ADMPIN=v;$('aGo').disabled=true;$('aGo').textContent='Checking…';$('aErr').style.display='none';
+ try{const j=await admCall('admin_list');if(j.ok){ADMT=Date.now();ADMU=j.users;admShow(true);admRender()}else{$('aErr').textContent=j.msg||'Could not unlock.';$('aErr').style.display='block'}}
+ catch(e){$('aErr').textContent='Cannot reach the server.';$('aErr').style.display='block'}
+ $('aGo').disabled=false;$('aGo').textContent='Unlock admin';$('aPin').value=''}
+async function admLoad(){try{const j=await admCall('admin_list');if(j.ok){ADMT=Date.now();ADMU=j.users;admRender()}else if(j.pinErr)admShow(false)}catch(e){}}
+function admMsg(m,bad){const x=$('aMsg');x.textContent=m;x.style.color=bad?'var(--sell)':'var(--buy)';x.style.display=m?'block':'none';if(m)setTimeout(()=>{if(x.textContent===m)x.style.display='none'},4000)}
+async function admAct(enc,kind){const email=decodeURIComponent(enc),key=email+'|'+kind;
+ if((kind==='block'||kind==='reset')&&ADMCF!==key){ADMCF=key;admRender();setTimeout(()=>{if(ADMCF===key){ADMCF='';admRender()}},3000);return}
+ ADMCF='';if(ADMBUSY)return;ADMBUSY=true;
+ let a='admin_set',x='&target='+encodeURIComponent(email);
+ if(kind==='activate')x+='&status=active&days='+$('aDays').value;else if(kind==='unblock')x+='&status=active';else if(kind==='block')x+='&status=blocked';else if(kind==='reset')a='admin_reset';
+ try{const j=await admCall(a,x);if(j.ok){admMsg(kind==='activate'?'Activated.':kind==='block'?'Blocked.':kind==='reset'?'Device reset.':'Unblocked.');await admLoad()}else{admMsg(j.msg||'That did not work.',true);if(j.pinErr)admShow(false)}}
+ catch(e){admMsg('Cannot reach the server.',true)}
+ ADMBUSY=false;admRender()}
+function admRender(){
+ const U=ADMU.slice().reverse(),cnt=k=>ADMU.filter(u=>u.status===k).length,q=ADMQ.toLowerCase();
+ $('aSum').innerHTML=`<div class="fcard"><div class="fk">Registrations</div><div class="fgrid"><div><span class="fk">Pending</span><b style="color:${cnt('pending')?'var(--wait)':'var(--text)'}">${cnt('pending')}</b></div><div><span class="fk">Active</span><b style="color:var(--buy)">${cnt('active')}</b></div><div><span class="fk">Blocked</span><b style="color:var(--sell)">${cnt('blocked')}</b></div></div></div>`;
+ $('aFlt').innerHTML=[['pending','Pending'],['active','Active'],['blocked','Blocked'],['all','All']].map(([k,t])=>`<button class="${ADMF===k?'on':''}" onclick="ADMF='${k}';admRender()">${t}</button>`).join('');
+ const L=U.filter(u=>(ADMF==='all'||u.status===ADMF)&&(!q||(u.email+' '+u.name+' '+u.surname).toLowerCase().includes(q)));
+ $('aList').innerHTML=L.length?L.map(u=>{const e=encA(u.email),cf=k=>ADMCF===u.email+'|'+k,nm=((u.name||'')+' '+(u.surname||'')).trim()||'(no name)',
+   b=(k,t,t2)=>`<button onclick="admAct('${e}','${k}')">${cf(k)?'Tap again':t}</button>`;
+  const acts=u.status==='pending'?b('activate','Activate')+b('block','Block'):u.status==='active'?b('activate','Extend')+(u.device?b('reset','Reset device'):'')+b('block','Block'):u.status==='blocked'?b('unblock','Unblock'):'';
+  return `<div class="fcard ${u.status==='pending'?'bear':u.status==='active'?'bull':''}"><div class="hl"><div style="min-width:0"><div style="font-size:16px;font-weight:800">${esc(nm)}</div><div class="note" style="margin:3px 0 0;word-break:break-all">${esc(u.email)}</div></div><span class="pillx ${u.status==='active'?'up':''}">${esc(u.status)}</span></div><div class="note" style="margin:8px 0 0">Registered ${esc(u.registered||'—')} · Expires ${esc(u.expires||'never')} · ${u.device?'Device linked':'No device yet'}</div>${acts?'<div class="seg">'+acts+'</div>':'<div class="note" style="margin:8px 0 0">Admin accounts are managed in the sheet.</div>'}</div>`}).join(''):'<div class="empty">Nobody here.</div>'}
+$('admBtn').onclick=()=>{thOpen(false);page('admin')};$('aBack').onclick=()=>page('home');$('aGo').onclick=admUnlock;$('aPin').onkeypress=e=>{if(e.key==='Enter')admUnlock()};$('aRef').onclick=admLoad;$('aQ').oninput=()=>{ADMQ=$('aQ').value;admRender()};
 // first-run checklist
 function renderCk(){
  const el=$('ck');if(!el)return;
@@ -1068,7 +1135,7 @@ calDay();setInterval(calDay,60000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
-$('logout').onclick=()=>{if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
+$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{
  if(window.AndroidBridge){try{
   if(!AndroidBridge.hasPermission()){AndroidBridge.requestPermission();setTimeout(()=>{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Alerts blocked';renderCk()},2500);return}
