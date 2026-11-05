@@ -908,7 +908,7 @@ function calDay(){const t=new Date().toLocaleDateString('en-ZA',{day:'numeric',t
 function heroCard(e){
  const t=Date.parse(e.date),now=Date.now(),info=!!(FW[e.k]&&FW[e.k].info),PS=info?null:preSignal(e),dir=PS?PS.dir:0,hm=x=>sastHM(new Date(x)),win=864e5,C=2*Math.PI*54,pr=Math.max(0,Math.min(1,1-(t-now)/win));
  let sig='',cls='';
- if(dir){const tt=pairSignals(dir)[0];cls=tt.side==='BUY'?'bull':'bear';sig=`<span class="vd u${tt.side==='BUY'?1:-1}" style="font-size:17px;padding:8px 14px">${tt.side} ${tt.sym.replace('/','')}</span><div class="note" style="margin:8px 0 0">${PS.conv} conviction · open at ${hm(t-12e4)} SAST</div>`}
+ if(dir){const tt=pairSignals(dir)[0];cls=tt.side==='BUY'?'bull':'bear';sig=`<span class="vd u${tt.side==='BUY'?1:-1}" style="font-size:17px;padding:8px 14px">${tt.side} ${tt.sym.replace('/','')}</span><div class="note" style="margin:8px 0 0">${PS.conv} conviction · open at ${hm(t-6e4)} SAST</div>`}
  else sig=info?'<span class="vd u0" style="font-size:15px;padding:8px 14px">HEADS-UP</span>':PS?'<span class="vd u0" style="font-size:15px;padding:8px 14px">NO EDGE</span>':'<div class="note" style="margin:0">No signal data yet</div>';
  return `<div class="fcard hero2 ${cls}"><div class="fk" style="letter-spacing:2px">Next up</div><div class="hrow"><div class="ring"><svg viewBox="0 0 120 120"><defs><linearGradient id="rg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--accent)"/><stop offset="1" style="stop-color:var(--accent2)"/></linearGradient></defs><circle cx="60" cy="60" r="54" class="rt"/><circle cx="60" cy="60" r="54" class="rp ringp" data-t="${t}" data-w="${win}" stroke-dasharray="${(C*pr).toFixed(1)} ${C.toFixed(1)}"/></svg><div class="rc"><span class="cd" data-t="${t}">${fmtCd(t-now)}</span><small>until release</small></div></div><div class="hinfo"><div class="hn">${evName(e)}</div><div class="note" style="margin:3px 0 10px">${new Date(t).toLocaleDateString('en-ZA',{weekday:'short',day:'numeric',month:'short',timeZone:'Africa/Johannesburg'})} · ${hm(t)} SAST</div>${sig}</div></div></div>`}
 const TRACK=['NFP','CPI','PPI','FOMC','ADP','CLAIMS','JOLTS','RS','GDP','CORE_PCE','ISM_MFG','ISM_SVC','INFO'],CORE=['NFP','CPI','PPI','FOMC'];
@@ -919,7 +919,7 @@ function syncAlarms(){
  FD.events.filter(e=>showEv(e)).forEach(e=>{const t=Date.parse(e.date);if(!t||t<now+60000||t>now+7*864e5)return;
   const q=preSignal(e),tx=q&&q.dir?sigTxt(q):'',nm=evName(e),hm=sastHM(new Date(t));
   out.push({id:e.k+'|'+e.date+'|a',t:t-9e5,title:'High-impact news',body:nm+' at '+hm+' SAST.'+(tx?' Signal: '+tx+'.':'')});
-  if(!(FW[e.k]&&FW[e.k].info))out.push({id:e.k+'|'+e.date+'|b',t:t-12e4,title:'Open window',body:tx?'OPEN NOW: '+tx+' · '+nm+' at '+hm:nm+' at '+hm+'. No signal.'})});
+  if(!(FW[e.k]&&FW[e.k].info))out.push({id:e.k+'|'+e.date+'|b',t:t-6e4,title:'Open window',body:tx?'OPEN NOW: '+tx+' · '+nm+' at '+hm:nm+' at '+hm+'. No signal.'})});
  try{AndroidBridge.schedule(JSON.stringify(out))}catch(e){}}
 const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym.replace('/','')+' ('+q.conv+')'};
 const COMP={NFP:['UNRATE','AHE'],CPI:['CORE_CPI'],PPI:['CORE_PPI'],RS:['CORE_RS'],CORE_PCE:['PCE']};
@@ -928,13 +928,13 @@ function compRows(e){const t=Date.parse(e.date),ks=COMP[e.k];if(!ks||!FD||!FD.ev
  return '<div class="comp">'+L.map(x=>`<div><span class="fk">${evName(x)}</span><b>${x.forecast||'—'}</b><small>prev ${x.previous||'—'}</small></div>`).join('')+'</div>'}
 function sigCard(e){
  const d=new Date(e.date),now=Date.now(),info=!!(FW[e.k]&&FW[e.k].info),PS=info?null:preSignal(e),dir=PS?PS.dir:0,conv=PS?PS.conv:'',nd=conv==='High'?3:conv==='Medium'?2:conv==='Low'?1:0,f1=v=>(v>=0?'+':'')+v.toFixed(1),
-  hm=t=>sastHM(new Date(t)),open=d.getTime()-12e4,
+  hm=t=>sastHM(new Date(t)),open=d.getTime()-6e4,
   when=d.toLocaleString('en-ZA',{weekday:'short',day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'}),
   chipRow=l=>l.map(c=>`<button class="chip ${c.side}" onclick="openSym('${c.sym}')">${c.side} ${c.sym.replace('/','')}</button>`).join('');
  let head='',why='';
  if(dir){const ps=pairSignals(dir),t=ps[0];
   head=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 0"><span class="vd u${t.side==='BUY'?1:-1}">${t.side} ${t.sym.replace('/','')}</span><span class="dots">${conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
-  <div style="margin-top:12px;font-weight:800">${open>now?'Open position at '+hm(open)+' SAST':'Open window is on now'}</div><div class="note" style="margin:2px 0 0">2 minutes before the ${hm(d.getTime())} release. USD ${dir>0?'bullish':'bearish'}.</div>
+  <div style="margin-top:12px;font-weight:800">${open>now?'Open position at '+hm(open)+' SAST':'Open window is on now'}</div><div class="note" style="margin:2px 0 0">1 minute before the ${hm(d.getTime())} release. USD ${dir>0?'bullish':'bearish'}.</div>
   <div style="margin-top:12px">${chipRow(ps)}</div><div class="note" style="margin:6px 0 0">Tap to open the gold chart. Take entry, stop and targets from the Indicator zone plan.</div>`;
   why=`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}`}
  else head=info?'<div style="margin-top:14px"><span class="vd u0">HEADS-UP</span></div><div class="note" style="margin-top:8px">A high-impact event with no number to score, so there is no signal. Prices can move sharply on the wording or tone.</div>':PS?'<div style="margin-top:14px"><span class="vd u0">NO EDGE</span></div><div class="note" style="margin-top:8px">The leading data, macro picture and price are balanced, so there is no side to take before this release.</div>'
@@ -971,7 +971,7 @@ function renderNews(){
  ['menuDot','fundDot'].forEach(id=>{const x=$(id);if(x)x.style.display=hot?'block':'none'});
  const NA=getNA(),sv=()=>{try{localStorage.setItem('sp_na',JSON.stringify(NA))}catch(_){}};
  evs.forEach(e=>{const d=e.t-now,id=e.k+'|'+e.date,q=d>0&&d<=9e5?preSignal(e):null,tx=q&&q.dir?sigTxt(q):'';
-  if(d>0&&d<=15e4&&!NA[id+'|b']&&!(FW[e.k]&&FW[e.k].info)){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv,evId:id,rel:e.t})}nn(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
+  if(d>0&&d<=9e4&&!NA[id+'|b']&&!(FW[e.k]&&FW[e.k].info)){NA[id+'|a']=1;NA[id+'|b']=1;sv();if(q&&q.dir){const t0=pairSignals(q.dir)[0];logSig({src:'news',sym:t0.sym,type:t0.side,ev:evName(e),conv:q.conv,evId:id,rel:e.t})}nn(tx?`OPEN NOW: ${tx} · ${evName(e)} at ${sastHM(new Date(e.t))}`:`${evName(e)} at ${sastHM(new Date(e.t))}. No signal.`,'Open window')}
   else if(d>0&&d<=9e5&&!NA[id+'|a']){NA[id+'|a']=1;sv();nn(`${evName(e)} in ${Math.max(1,Math.round(d/6e4))} minutes.${tx?' Signal: '+tx+'.':''}`,'High-impact news')}})}
 setInterval(renderNews,30000);setInterval(()=>{if(GATED&&EM&&!document.hidden)loadFund(true)},9e5);
 $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>page('home');
@@ -1006,7 +1006,7 @@ function snapPending(){
  Object.keys(P).forEach(id=>{if(P[id].t<now-3*864e5)delete P[id]});
  setPend(P)}
 function gradeNews(x,d){
- const find=ms=>d.t.indexOf(Math.floor(ms/6e4)*6e4),i0=find(x.rel-12e4),i5=find(x.rel+4*6e4),i15=find(x.rel+14*6e4);
+ const find=ms=>d.t.indexOf(Math.floor(ms/6e4)*6e4),i0=find(x.rel-6e4),i5=find(x.rel+4*6e4),i15=find(x.rel+14*6e4);
  if(i0<0||i5<0||i15<0)return null;
  const entry=d.o[i0],dir=x.type==='BUY'?1:-1,m5=(d.c[i5]-entry)*dir,m15=(d.c[i15]-entry)*dir;
  let hi=-Infinity,lo=Infinity;for(let k=i0;k>=i15;k--){hi=Math.max(hi,d.h[k]);lo=Math.min(lo,d.l[k])}
@@ -1016,7 +1016,7 @@ async function settleNews(force){
  if(NGBUSY||(!force&&Date.now()<NGWAIT))return;
  const now=Date.now(),P=getPend();let ch=false;
  Object.values(P).forEach(r=>{if(now>r.t+6e4){
-  if(!sigs.some(x=>x.evId===r.id))logSig({src:'news',sym:r.sym,type:r.side,ev:r.ev,conv:r.conv,evId:r.id,rel:r.t,ts:r.t-12e4,t:new Date(r.t-12e4).toLocaleString()});
+  if(!sigs.some(x=>x.evId===r.id))logSig({src:'news',sym:r.sym,type:r.side,ev:r.ev,conv:r.conv,evId:r.id,rel:r.t,ts:r.t-6e4,t:new Date(r.t-6e4).toLocaleString()});
   delete P[r.id];ch=true}});
  if(ch)setPend(P);
  const todo=sigs.filter(x=>x.src==='news'&&x.rel&&!x.gr&&now>x.rel+16*6e4);
@@ -1024,7 +1024,7 @@ async function settleNews(force){
  NGBUSY=true;
  try{const d=await load('XAU/USD','M1',5000);addCred();
   todo.forEach(x=>{const g=gradeNews(x,d);if(g){x.auto=g;x.gr='done';if(!x.out)x.out=Math.abs(g.m15)<g.entry*NG_FLAT?'flat':g.m15>0?'win':'loss'}});
-  const oldest=d.t[d.n-1];todo.forEach(x=>{if(!x.gr&&(x.rel-12e4<oldest||now>x.rel+4*864e5))x.gr='fail'});
+  const oldest=d.t[d.n-1];todo.forEach(x=>{if(!x.gr&&(x.rel-6e4<oldest||now>x.rel+4*864e5))x.gr='fail'});
   saveSigs();renderJournal()}
  catch(e){NGWAIT=Date.now()+5*6e4}
  NGBUSY=false}
