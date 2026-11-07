@@ -21,7 +21,7 @@ body::before{content:'';position:fixed;inset:0;z-index:-2;background:radial-grad
 .btn{width:100%;border:none;padding:15px;border-radius:14px;font-weight:800;font-size:15px;cursor:pointer;background:linear-gradient(90deg,var(--accent),var(--accent2));color:var(--btn);box-shadow:0 8px 25px var(--glow);margin-top:6px}
 .btn.ghost{background:transparent;border:1px solid var(--bd);color:var(--text);box-shadow:none}
 .btn.red{background:transparent;border:1px solid rgba(var(--sellr),.45);color:var(--sell);box-shadow:none}
-header{display:flex;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;position:sticky;top:0;z-index:50;background:var(--hdr);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(var(--w),.06)}
+header{display:flex;flex-wrap:wrap;row-gap:8px;justify-content:space-between;align-items:center;padding:calc(12px + env(safe-area-inset-top)) 16px 12px;position:sticky;top:0;z-index:50;background:var(--hdr);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid rgba(var(--w),.06)}
 .brand{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800}
 .pill{font-size:11px;color:var(--wait);display:flex;align-items:center;gap:6px;background:rgba(var(--waitr),.1);padding:5px 12px;border-radius:20px;border:1px solid rgba(var(--waitr),.2)}
 .pill::before{content:'';width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 6px currentColor}
@@ -218,6 +218,20 @@ nav button:active span{transform:scale(.9)}
 .lbox{width:100%;max-width:300px}
 .ckl{display:flex;gap:10px;align-items:flex-start;text-align:left;font-size:12px;color:var(--t2);line-height:1.45;margin:2px 0 12px}
 .lnk{color:var(--accent);font-weight:700;text-decoration:none}
+.sess{flex:0 0 100%;display:flex;align-items:center;gap:8px;padding:7px 12px;border-radius:12px;font-size:11.5px;font-weight:700;color:var(--t2);background:rgba(var(--w),.05);border:1px solid rgba(var(--w),.08);cursor:pointer}
+.sess i{width:7px;height:7px;border-radius:50%;background:var(--t2);flex:none}
+.sess.on i{background:var(--buy);box-shadow:0 0 8px var(--buy);animation:blink 2s ease-in-out infinite}
+.sess.cl i{background:var(--wait)}.sess.on span{color:var(--text)}
+.sess span{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.sess b{opacity:.55}
+@keyframes blink{50%{opacity:.35}}
+#sessPanel{display:none;position:fixed;left:12px;right:12px;max-width:440px;margin:0 auto;z-index:70;background:var(--nav);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:1px solid rgba(var(--w),.12);border-radius:20px;padding:16px;box-shadow:0 20px 50px -10px var(--sh)}
+#sessPanel.on{display:block;animation:rise .3s cubic-bezier(.22,1,.36,1) backwards}
+.sr{margin-bottom:14px}.srh{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px}.srh span{color:var(--t2);font-size:12px;flex:1;text-align:right;margin-right:6px}
+.srh em{font-style:normal;font-size:10.5px;font-weight:800;padding:3px 9px;border-radius:12px;background:rgba(var(--w),.08);color:var(--t2);white-space:nowrap}.srh em.on{background:rgba(var(--buyr),.18);color:var(--buy)}
+.trk{position:relative;height:8px;border-radius:5px;background:rgba(var(--w),.08);margin-top:8px}
+.trk i{position:absolute;top:0;bottom:0;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:.85}
+.trk u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text);border-radius:1px;box-shadow:0 0 8px var(--text)}
+.ax{display:flex;justify-content:space-between;font-size:10px;color:var(--t2);margin-top:-4px}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -247,7 +261,7 @@ nav button:active span{transform:scale(.9)}
 <div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">Your desk is ready.</div>
 <button class="btn" id="wgo" style="max-width:300px">Enter terminal</button></div>
 
-<header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><i class="nbadge" id="menuDot"></i></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div></header>
+<header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><i class="nbadge" id="menuDot"></i></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div><div class="sess" id="sess"><i></i><span id="sessTx">…</span><b>›</b></div></header><div id="sessPanel"></div>
 <div id="newsBar" style="display:none"></div>
 
 <section class="page on" id="p-home"><div class="hero">
@@ -259,7 +273,7 @@ nav button:active span{transform:scale(.9)}
 
 <section class="page" id="p-ind">
 <div class="ibar"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
-<datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>SPX</option><option>NDX</option><option>DJI</option></datalist>
+<datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>BTC/USD</option><option>ETH/USD</option><option>SOL/USD</option><option>XRP/USD</option><option>SPX</option><option>NDX</option><option>DJI</option></datalist>
 <div class="ir"><div class="px" id="px">—</div><div class="k" id="sym">Symbol</div></div>
 <div class="ir"><div class="k">Advice</div><div class="adv" id="adv">WAIT</div></div></div>
 <div class="tfs" id="tfs"></div>
@@ -522,13 +536,15 @@ function fire(type,price,p){
 async function tick(){
  if(!D)$('cvw').classList.add('ld');
  try{D=await load();R=compute(D);const px=D.c[0],PL=renderPlans(px);PLN=PL;
-  if(run){if(R.b)advice=1;if(R.s)advice=-1;const now=Date.now()/1000;
+  const closed=marketClosed(S.sym);
+  if(run&&!closed){if(R.b)advice=1;if(R.s)advice=-1;const now=Date.now()/1000;
    if(R.b&&now-lastB>=P.cool){fire('BUY',px,PL.buy);lastB=now}if(R.s&&now-lastS>=P.cool){fire('SELL',px,PL.sell);lastS=now}}
-  const a=$('adv');a.textContent=advice>0?'BUY':advice<0?'SELL':'WAIT';a.className='adv '+(advice>0?'buy':advice<0?'sell':'');
+  const a=$('adv');a.textContent=closed?'CLOSED':advice>0?'BUY':advice<0?'SELL':'WAIT';a.className='adv '+(closed?'':advice>0?'buy':advice<0?'sell':'');
   $('sym').textContent=`${S.sym} · ${S.tf}`;$('px').textContent=px.toFixed(D.dec);
   const sup=R.zones.filter(z=>!z.res&&z.lo<px).sort((a,b)=>b.hi-a.hi)[0],res=R.zones.filter(z=>z.res&&z.hi>px).sort((a,b)=>a.lo-b.lo)[0],f=z=>z?`${z.lo.toFixed(D.dec)}–${z.hi.toFixed(D.dec)} · ${SN[z.s]}`:'None';
   $('ns').textContent=f(sup);$('nr').textContent=f(res);$('zc').textContent=R.zones.length;$('ls').textContent=(()=>{const z=sigs.find(x=>x.price);return z?z.type+' '+z.price:'None yet'})();
-  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;draw();$('cvw').classList.remove('ld')
+  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;if(closed){const no=fmtSast(nextFxOpen(Date.now()));$('st').textContent+=' · Market closed, reopens '+no;$('shT').textContent='Market closed';$('shV').textContent='Reopens '+no}
+  draw();$('cvw').classList.remove('ld')
  }catch(e){$('cvw').classList.remove('ld');$('st').textContent='Error: '+e.message}}
 function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
  $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
@@ -754,9 +770,9 @@ const nn=(m,t)=>window.AndroidBridge?beep():notify(m,t);
 function notify(msg,ttl){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.AndroidBridge){try{AndroidBridge.notify(ttl||'SignalsPro Scanner',msg)}catch(e){}}else if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(ttl||'SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
 async function scan(auto){
  if(scanning)return;
- const nd=new Date(),dy=nd.getUTCDay(),hr=nd.getUTCHours();
- if(dy===6||(dy===0&&hr<21)||(dy===5&&hr>=21)){if(auto)return;if(!scanForce){scanForce=true;$('scSt').textContent='The forex market is closed, so prices are stale. Tap Scan now again to scan anyway.';return}}
- scanForce=false;scanning=true;const list=S.wl.split(',').map(x=>x.trim()).filter(Boolean),out=[];let stop=false;$('scBtn').disabled=true;
+ let list=S.wl.split(',').map(x=>x.trim()).filter(Boolean),wkNote='';
+ if(fxClosed(Date.now())){const cr=list.filter(isCrypto);list=cr.length?cr:CRYPTO_DEFAULT.slice();wkNote='Forex and metals are closed, so only crypto was scanned ('+list.join(', ')+'). '}
+ scanning=true;const out=[];let stop=false;$('scBtn').disabled=true;
  for(let i=0;i<list.length&&!stop;i++){let tries=0;
   while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
    try{const d=await load(list[i],S.stf);addCred();let hd=null;
@@ -767,7 +783,7 @@ async function scan(auto){
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
   renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'?8000:300)}
  finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym+x.strat]||0)>3600).forEach(x=>{notified[x.sym+x.strat]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',strat:STRATS[x.strat]?STRATS[x.strat].n:'',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED${sl(x)} · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
- scanning=false;$('scBtn').disabled=false;$('scSt').textContent='Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
+ scanning=false;$('scBtn').disabled=false;$('scSt').textContent=wkNote+'Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
 function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
 $('scWl').value=S.wl;$('scTf').value=S.stf;showCred();strChips();
 $('scWl').onchange=()=>{S.wl=$('scWl').value;save()};$('scTf').onchange=()=>{S.stf=$('scTf').value;save()};
@@ -1125,6 +1141,35 @@ function refreshNow(){const on=document.querySelector('.page.on'),id=on?on.id:''
  addEventListener('touchmove',e=>{if(!act)return;pull=Math.max(0,e.touches[0].clientY-y0);if(window.scrollY>0){act=false;ptr.style.opacity=0;return}ptr.style.opacity=Math.min(1,pull/90);ptr.style.transform=`translate(-50%,${Math.min(pull*.4,44)}px)`},{passive:true});
  addEventListener('touchend',()=>{if(!act)return;act=false;const go=pull>110;ptr.style.opacity='';ptr.style.transform='';if(go){navigator.vibrate&&navigator.vibrate(15);refreshNow()}},{passive:true})})();
 renderCk();renderJournal();if(window.AndroidBridge){try{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Enable alerts'}catch(e){}}
+// ---- market hours and trading sessions ----
+const CRY=['BTC','ETH','SOL','XRP','BNB','ADA','DOGE','LTC','DOT','AVAX','LINK','MATIC','POL','TRX','SHIB','BCH','XLM','ATOM','UNI','ETC','NEAR','APT','ARB','OP','SUI','TON','PEPE','FIL','ALGO','XMR'],CRYPTO_DEFAULT=['BTC/USD','ETH/USD','SOL/USD','XRP/USD'];
+function isCrypto(sym){const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(/(USDT|USDC|BUSD)$/.test(u))return true;return CRY.some(c=>u.startsWith(c)&&['','USD','EUR','GBP','JPY','BTC','ETH'].includes(u.slice(c.length)))}
+function tzParts(tz,t){const o={};new Intl.DateTimeFormat('en-US',{timeZone:tz,hourCycle:'h23',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',second:'2-digit',weekday:'short'}).formatToParts(new Date(t)).forEach(x=>o[x.type]=x.value);return o}
+function localToMs(tz,y,m,d,h,mi){const g=Date.UTC(y,m,d,h,mi),off=t=>{const o=tzParts(tz,t);return Date.UTC(+o.year,+o.month-1,+o.day,+o.hour,+o.minute,+o.second)-t};let t=g-off(g);t=g-off(t);return t}
+// forex, metals and indices trade from Sunday 17:00 to Friday 17:00 New York time (follows US daylight saving)
+function fxClosed(ms){const o=tzParts('America/New_York',ms),h=+o.hour;return o.weekday==='Sat'||(o.weekday==='Fri'&&h>=17)||(o.weekday==='Sun'&&h<17)}
+const marketClosed=sym=>!isCrypto(sym)&&fxClosed(Date.now());
+function nextFxOpen(ms){let t=ms;for(let i=0;i<400&&fxClosed(t);i++)t+=9e5;return t}
+const fmtSast=ms=>new Date(ms).toLocaleString('en-ZA',{weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
+const SESS=[{n:'Asia',tz:'Asia/Tokyo',o:[9,0],c:[18,0]},{n:'London',tz:'Europe/London',o:[8,0],c:[17,0]},{n:'New York',tz:'America/New_York',o:[8,0],c:[17,0]}];
+function sessWins(se,now){const lp=tzParts(se.tz,now),base=Date.UTC(+lp.year,+lp.month-1,+lp.day),w=[];
+ for(let k=-1;k<=1;k++){const dt=new Date(base+k*864e5),wd=dt.getUTCDay();if(wd<1||wd>5)continue;const y=dt.getUTCFullYear(),m=dt.getUTCMonth(),d=dt.getUTCDate();w.push([localToMs(se.tz,y,m,d,se.o[0],se.o[1]),localToMs(se.tz,y,m,d,se.c[0],se.c[1])])}return w}
+function sessState(now){return{fxc:fxClosed(now),rows:SESS.map(se=>{const w=sessWins(se,now),cur=w.find(x=>now>=x[0]&&now<x[1]),nx=w.filter(x=>x[0]>now).sort((a,b)=>a[0]-b[0])[0];return{n:se.n,w,active:!!cur,close:cur?cur[1]:null,open:nx?nx[0]:null}})}}
+const durTx=ms=>{const m=Math.max(1,Math.round(ms/6e4)),h=Math.floor(m/60);return h?h+'h '+String(m%60).padStart(2,'0')+'m':m+'m'};
+function sessText(now){const st=sessState(now),act=st.rows.filter(r=>r.active);
+ if(st.fxc)return{cls:'cl',txt:'Forex & metals closed · reopens '+fmtSast(nextFxOpen(now))+' · crypto 24/7'};
+ if(act.length){const ev=act.map(r=>({t:r.close,k:r.n+' closes'})).concat(st.rows.filter(r=>!r.active&&r.open).map(r=>({t:r.open,k:r.n+' opens'}))).sort((a,b)=>a.t-b.t)[0];
+  return{cls:'on',txt:(act.length>1?act.map(r=>r.n).join(' + ')+' overlap':act[0].n+' session')+(ev?' · '+ev.k+' in '+durTx(ev.t-now):'')}}
+ const nx=st.rows.filter(r=>r.open).sort((a,b)=>a.open-b.open)[0];return{cls:'q',txt:'Quiet hours'+(nx?' · '+nx.n+' opens in '+durTx(nx.open-now):'')}}
+function renderSess(){const r=sessText(Date.now()),e=$('sess');e.className='sess '+r.cls;$('sessTx').textContent=r.txt;if($('sessPanel').classList.contains('on'))$('sessPanel').innerHTML=sessPanelHtml()}
+function sessPanelHtml(){const now=Date.now(),st=sessState(now),day0=Math.floor((now+72e5)/864e5)*864e5-72e5,pct=ms=>Math.max(0,Math.min(100,(ms-day0)/864e3)),hm=ms=>new Date(ms).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
+ return '<div class="fk" style="margin-bottom:10px">Trading sessions · SAST</div>'+st.rows.map(r=>{
+  const win=r.w.find(x=>x[1]>day0&&x[0]<day0+864e5),segs=r.w.map(x=>[Math.max(x[0],day0),Math.min(x[1],day0+864e5)]).filter(x=>x[1]>x[0]);
+  return `<div class="sr"><div class="srh"><b>${r.n}</b><span>${win?hm(win[0])+' – '+hm(win[1]):'Closed today'}</span><em class="${r.active?'on':''}">${r.active?'Open · closes in '+durTx(r.close-now):r.open&&!st.fxc?'Opens in '+durTx(r.open-now):'Closed'}</em></div><div class="trk">${segs.map(x=>`<i style="left:${pct(x[0])}%;width:${pct(x[1])-pct(x[0])}%"></i>`).join('')}<u style="left:${pct(now)}%"></u></div></div>`}).join('')+
+  '<div class="ax"><span>00</span><span>06</span><span>12</span><span>18</span><span>24</span></div><div class="note" style="margin:8px 0 0">Typical session hours. London and New York shift with daylight saving. Crypto trades all day, every day.</div>'}
+$('sess').onclick=e=>{e.stopPropagation();const p=$('sessPanel');if(p.classList.contains('on')){p.classList.remove('on');return}p.innerHTML=sessPanelHtml();p.style.top=(document.querySelector('header').getBoundingClientRect().bottom+6)+'px';p.classList.add('on')};
+document.addEventListener('click',e=>{if(!e.target.closest('#sessPanel'))$('sessPanel').classList.remove('on')});
+renderSess();setInterval(renderSess,30000);
 // premium navigation: sliding lens, haptics, header glow
 function curPage(){const on=document.querySelector('.page.on');return on?on.id.slice(2):'home'}
 function moveInd(n){const ind=$('navInd');if(!ind)return;const b=document.querySelector(`#nav button[data-p="${n}"]`);if(!b){ind.style.opacity=0;return}ind.style.opacity=1;ind.style.width=b.offsetWidth+'px';ind.style.transform=`translateX(${b.offsetLeft}px)`}
