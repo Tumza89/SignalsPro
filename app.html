@@ -906,19 +906,23 @@ function verdictCcy(e,a){
  const rx=reactionCcy(e),st=LASTST&&LASTST.st[e.c]!=null?LASTST.st[e.c]:0,pr=rx?rx.score:st,total=s+.8*pr;
  const sg=[s,pr].map(x=>Math.abs(x)<.3?0:Math.sign(x)),dn=Math.sign(total),ag=sg.filter(x=>x===dn).length,op=sg.filter(x=>x===-dn).length;
  return{s,pr,rx,total,hasPrice:!!rx||(LASTST&&LASTST.st[e.c]!=null),dir:total>=1?1:total<=-1?-1:0,conv:Math.abs(total)<1?'Low':ag>=2&&!op&&Math.abs(total)>=2?'High':ag>=1&&!op?'Medium':'Low'}}
-function preConv(lean,M,cs){
- const total=2*lean+.4*M+.5*cs,cand=total>0?1:total<0?-1:0,sg=Math.sign;
- const ag=[Math.abs(lean)>=.17&&sg(lean)===cand,Math.abs(M)>=.5&&sg(M)===cand,Math.abs(cs)>=.2&&sg(cs)===cand].filter(Boolean).length;
- const op=[Math.abs(lean)>=.17&&sg(lean)===-cand,Math.abs(M)>=.5&&sg(M)===-cand,Math.abs(cs)>=.4&&sg(cs)===-cand].filter(Boolean).length;
+// What the market expects: forecast against the previous reading, scaled by a typical move for that release.
+// Higher expected = USD supportive (lower expected for jobless claims). It is a lean, not a prediction of the surprise.
+function expLean(e){const w=FW[e.k];if(!w||w.info||w.x)return{v:0,has:false};const f=num(e.forecast),p=num(e.previous);
+ if(f==null||p==null)return{v:0,has:false};return{v:clamp((f-p)/w.u,-2,2)/2*(w.inv?-1:1),has:true}}
+function preConv(lean,M,cs,ex){
+ ex=ex||0;const total=2*lean+.4*M+.5*cs+.6*ex,cand=total>0?1:total<0?-1:0,sg=Math.sign;
+ const ag=[Math.abs(lean)>=.17&&sg(lean)===cand,Math.abs(M)>=.5&&sg(M)===cand,Math.abs(cs)>=.2&&sg(cs)===cand,Math.abs(ex)>=.25&&sg(ex)===cand].filter(Boolean).length;
+ const op=[Math.abs(lean)>=.17&&sg(lean)===-cand,Math.abs(M)>=.5&&sg(M)===-cand,Math.abs(cs)>=.4&&sg(cs)===-cand,Math.abs(ex)>=.5&&sg(ex)===-cand].filter(Boolean).length;
  let conv='None';
- if(cand){if(ag>=2&&!op)conv=ag===3&&Math.abs(total)>=1.6?'High':'Medium';else if(ag>=2&&Math.abs(total)>=.8)conv='Low';else if(ag===1&&!op&&Math.abs(total)>=1.2)conv='Low'}
+ if(cand){if(ag>=2&&!op)conv=ag>=3&&Math.abs(total)>=1.6?'High':'Medium';else if(ag>=2&&Math.abs(total)>=.8)conv='Low';else if(ag===1&&!op&&Math.abs(total)>=1.2)conv='Low'}
  const edge=cand&&Math.abs(total)>=.15;if(edge&&conv==='None')conv='Low';return{dir:edge?cand:0,conv:edge?conv:'None',ag,total}}
 function preSignal(e){
  const m=FD&&FD.macro,w=FW[e.k];if(!m||!w||w.x||w.info)return null;let lean=0;
  if(e.k==='FOMC'){const L=labour(m),I=inflation(m),P=pricing(m);if(!L&&!I)return null;lean=clamp(((L?L.sc:0)+(I?I.sc:0))/6-(P?.3*P.Pu/3:0),-1,1)}
  else if(GROUP[e.k])lean=preLean(e).v;else return null;
- const reg=regime(m),M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,total=2*lean+.4*M+.5*cs;
- const R=preConv(lean,M,cs);return{dir:R.dir,total:R.total,lean,M,cs,agree:R.ag,hasPrice:!!LASTST,conv:R.conv}}
+ const reg=regime(m),M=reg?reg.sc:0,cs=LASTST?(LASTST.st.USD||0):0,X=expLean(e);
+ const R=preConv(lean,M,cs,X.v);return{dir:R.dir,total:R.total,lean,M,cs,ex:X.v,hasEx:X.has,agree:R.ag,hasPrice:!!LASTST,conv:R.conv}}
 const fmtCd=ms=>{const t=Math.max(0,Math.floor(ms/1000)),d=Math.floor(t/86400),h=Math.floor(t%86400/3600),m=Math.floor(t%3600/60),x=t%60,q=n=>String(n).padStart(2,'0');return d?d+'d '+h+'h '+q(m)+'m':q(h)+':'+q(m)+':'+q(x)};
 function tickCd(){const nw=Date.now();
  document.querySelectorAll('.cd').forEach(el=>{const ms=+el.dataset.t-nw;el.textContent=ms>0?fmtCd(ms):'Released';if(ms<=0&&!el.dataset.d){el.dataset.d=1;setTimeout(()=>{if(FD)renderFund()},1500)}});
@@ -956,7 +960,7 @@ function sigCard(e){
   head=`<div style="margin-top:14px;display:flex;align-items:center;flex-wrap:wrap;gap:8px 0"><span class="vd u${t.side==='BUY'?1:-1}">${t.side} ${t.sym.replace('/','')}</span><span class="dots">${conv} conviction<i class="${nd>0?'on':''}"></i><i class="${nd>1?'on':''}"></i><i class="${nd>2?'on':''}"></i></span></div>
   <div style="margin-top:12px;font-weight:800">${open>now?'Open position at '+hm(open)+' SAST':'Open window is on now'}</div><div class="note" style="margin:2px 0 0">1 minute before the ${hm(d.getTime())} release. USD ${dir>0?'bullish':'bearish'}.</div>
   <div style="margin-top:12px">${chipRow(ps)}</div><div class="note" style="margin:6px 0 0">Tap to open the gold chart. Take entry, stop and targets from the Indicator zone plan.</div>`;
-  why=`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}`}
+  why=`Leading data ${f1(PS.lean*2)} · Macro ${f1(PS.M*.4)} · Price momentum ${PS.hasPrice?f1(PS.cs*.5):'not checked'}${PS.hasEx?' · Forecast vs previous '+f1(PS.ex*.6):''}`}
  else head=info?'<div style="margin-top:14px"><span class="vd u0">HEADS-UP</span></div><div class="note" style="margin-top:8px">A high-impact event with no number to score, so there is no signal. Prices can move sharply on the wording or tone.</div>':PS?'<div style="margin-top:14px"><span class="vd u0">NO EDGE</span></div><div class="note" style="margin-top:8px">The leading data, macro picture and price are balanced, so there is no side to take before this release.</div>'
   :'<div class="note" style="margin-top:14px">Not enough data for a signal. Macro data is not connected, so only price momentum could be used.</div>';
  return `<div class="fcard ${dir>0?'bull':dir<0?'bear':''}"><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px"><div><div style="font-size:18px;font-weight:800">${evName(e)}<span class="imp-t ${e.impact==='High'?'hi':''}">${e.impact==='High'?'HIGH':'MED'}</span></div><div class="note" style="margin:3px 0 0">${when} · SAST${info?'':' · Forecast '+(e.forecast||'—')+' · Previous '+(e.previous||'—')}</div></div><span class="pillx up"><span class="cd" data-t="${d.getTime()}">${fmtCd(d.getTime()-now)}</span></span></div>${compRows(e)}${head}${why?'<div class="note" style="margin-top:10px;opacity:.8">Why: '+why+'</div>':''}</div>`}
