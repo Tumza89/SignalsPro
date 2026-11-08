@@ -232,6 +232,10 @@ nav button:active span{transform:scale(.9)}
 .trk i{position:absolute;top:0;bottom:0;border-radius:5px;background:linear-gradient(90deg,var(--accent),var(--accent2));opacity:.85}
 .trk u{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--text);border-radius:1px;box-shadow:0 0 8px var(--text)}
 .ax{display:flex;justify-content:space-between;font-size:10px;color:var(--t2);margin-top:-4px}
+html,body{overscroll-behavior-x:none;touch-action:pan-y}
+body{max-width:100%}
+body::after{inset:0}
+@media (pointer:coarse){.inp,select.inp{font-size:16px}}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -543,7 +547,7 @@ async function tick(){
   $('sym').textContent=`${S.sym} · ${S.tf}`;$('px').textContent=px.toFixed(D.dec);
   const sup=R.zones.filter(z=>!z.res&&z.lo<px).sort((a,b)=>b.hi-a.hi)[0],res=R.zones.filter(z=>z.res&&z.hi>px).sort((a,b)=>a.lo-b.lo)[0],f=z=>z?`${z.lo.toFixed(D.dec)}–${z.hi.toFixed(D.dec)} · ${SN[z.s]}`:'None';
   $('ns').textContent=f(sup);$('nr').textContent=f(res);$('zc').textContent=R.zones.length;$('ls').textContent=(()=>{const z=sigs.find(x=>x.price);return z?z.type+' '+z.price:'None yet'})();
-  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;if(closed){const no=fmtSast(nextFxOpen(Date.now()));$('st').textContent+=' · Market closed, reopens '+no;$('shT').textContent='Market closed';$('shV').textContent='Reopens '+no}
+  $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;if(closed){$('st').textContent='Market closed';$('shT').textContent='Market closed';$('shV').textContent=''}
   draw();$('cvw').classList.remove('ld')
  }catch(e){$('cvw').classList.remove('ld');$('st').textContent='Error: '+e.message}}
 function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
@@ -795,7 +799,7 @@ $('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').t
 let FD=null,FDT=0,LASTST=null,RX=null,SHOWALL=false;
 const FW={NFP:{n:'Non-Farm Payrolls',u:75,w:1,unit:'K',alert:1},ADP:{n:'ADP Employment',u:50,w:.4,unit:'K'},CLAIMS:{n:'Jobless Claims',u:10,w:.5,unit:'K',inv:1},UNRATE:{n:'Unemployment Rate',u:.1,w:.8,unit:'%',inv:1},AHE:{n:'Avg Hourly Earnings m/m',u:.1,w:.6,unit:'%'},JOLTS:{n:'JOLTS Job Openings',u:.25,w:.4,unit:'M',off:2},
  CPI:{n:'CPI m/m',u:.1,w:1,unit:'%',alert:1},CORE_CPI:{n:'Core CPI m/m',u:.1,w:1.2,unit:'%',alert:1},PPI:{n:'PPI m/m',u:.2,w:.5,unit:'%',alert:1},CORE_PPI:{n:'Core PPI m/m',u:.2,w:.6,unit:'%',alert:1},CORE_PCE:{n:'Core PCE m/m',u:.1,w:1,unit:'%'},PCE:{n:'PCE m/m',u:.1,w:.6,unit:'%'},
- RS:{n:'Retail Sales m/m',u:.3,w:.6,unit:'%'},CORE_RS:{n:'Core Retail Sales m/m',u:.3,w:.6,unit:'%'},GDP:{n:'GDP q/q',u:.3,w:.7,unit:'%'},ISM_MFG:{n:'ISM Manufacturing PMI',u:1,w:.6,unit:''},ISM_SVC:{n:'ISM Services PMI',u:1,w:.6,unit:''},PMI_MFG:{n:'S&P Global Manufacturing PMI',u:1,w:.5,unit:''},PMI_SVC:{n:'S&P Global Services PMI',u:1,w:.5,unit:''},INFO:{n:'High-impact event',u:1,w:0,unit:'',alert:1,info:1},FOMC:{n:'FOMC rate decision',u:.25,w:1.5,unit:'%',alert:1},X_RATE:{n:'Rate decision',u:.25,w:1.5,unit:'%',alert:1,x:1},X_CPI:{n:'CPI',u:.1,w:1,unit:'%',alert:1,x:1},X_EMP:{n:'Employment change',u:15,w:.8,unit:'K',x:1},X_UNR:{n:'Unemployment rate',u:.1,w:.8,unit:'%',inv:1,x:1},X_GDP:{n:'GDP',u:.2,w:.8,unit:'%',x:1},X_RS:{n:'Retail sales',u:.3,w:.6,unit:'%',x:1}};
+ RS:{n:'Retail Sales m/m',u:.3,w:.6,unit:'%'},CORE_RS:{n:'Core Retail Sales m/m',u:.3,w:.6,unit:'%'},GDP:{n:'GDP q/q',u:.3,w:.7,unit:'%'},ISM_MFG:{n:'ISM Manufacturing PMI',u:1,w:.6,unit:''},ISM_SVC:{n:'ISM Services PMI',u:1,w:.6,unit:''},PMI_MFG:{n:'S&P Global Manufacturing PMI',u:1,w:.5,unit:''},PMI_SVC:{n:'S&P Global Services PMI',u:1,w:.5,unit:''},CPI_YY:{n:'CPI y/y',u:.1,w:0,unit:'%'},CORE_CPI_YY:{n:'Core CPI y/y',u:.1,w:0,unit:'%'},INFO:{n:'High-impact event',u:1,w:0,unit:'',alert:1,info:1},FOMC:{n:'FOMC rate decision',u:.25,w:1.5,unit:'%',alert:1},X_RATE:{n:'Rate decision',u:.25,w:1.5,unit:'%',alert:1,x:1},X_CPI:{n:'CPI',u:.1,w:1,unit:'%',alert:1,x:1},X_EMP:{n:'Employment change',u:15,w:.8,unit:'K',x:1},X_UNR:{n:'Unemployment rate',u:.1,w:.8,unit:'%',inv:1,x:1},X_GDP:{n:'GDP',u:.2,w:.8,unit:'%',x:1},X_RS:{n:'Retail sales',u:.3,w:.6,unit:'%',x:1}};
 const GROUP={NFP:'L',ADP:'L',CLAIMS:'L',UNRATE:'L',AHE:'L',JOLTS:'L',CPI:'I',CORE_CPI:'I',PPI:'I',CORE_PPI:'I',CORE_PCE:'I',PCE:'I',RS:'G',CORE_RS:'G',GDP:'G',ISM_MFG:'G',ISM_SVC:'G',PMI_MFG:'G',PMI_SVC:'G'};
 const PAIRS=[['EUR/USD',-1],['GBP/USD',-1],['AUD/USD',-1],['NZD/USD',-1],['USD/JPY',1],['USD/CAD',1],['USD/CHF',1],['XAU/USD',-1]];
 const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
@@ -893,7 +897,7 @@ async function priceCheck(){
 const GAUGE=(sc,l,rt)=>`<div class="gauge"><i style="left:${(sc+3)/6*100}%"></i></div><div class="gl"><span>${l}</span><span>${rt}</span></div>`;
 const colr=v=>v>0?'var(--buy)':v<0?'var(--sell)':'var(--wait)',pc=v=>v==null?'—':(v>=0?'+':'')+v.toFixed(2)+'%';
 const CCY_PAIR={EUR:['EUR/USD',1],GBP:['GBP/USD',1],AUD:['AUD/USD',1],NZD:['NZD/USD',1],JPY:['USD/JPY',-1],CAD:['USD/CAD',-1],CHF:['USD/CHF',-1]};
-const SHORT={NFP:'Non-Farm Payrolls (NFP)',CPI:'CPI',CORE_CPI:'Core CPI',PPI:'PPI',CORE_PPI:'Core PPI',FOMC:'FOMC Rate Decision',ADP:'ADP Employment',CLAIMS:'Jobless Claims',JOLTS:'JOLTS Job Openings',RS:'Retail Sales',CORE_PCE:'Core PCE',ISM_MFG:'ISM Manufacturing PMI',ISM_SVC:'ISM Services PMI',GDP:'GDP',INFO:'High-impact event'};
+const SHORT={NFP:'Non-Farm Payrolls (NFP)',CPI:'CPI',CORE_CPI:'Core CPI',CPI_YY:'CPI y/y',CORE_CPI_YY:'Core CPI y/y',PPI:'PPI',CORE_PPI:'Core PPI',FOMC:'FOMC Rate Decision',ADP:'ADP Employment',CLAIMS:'Jobless Claims',JOLTS:'JOLTS Job Openings',RS:'Retail Sales',CORE_PCE:'Core PCE',ISM_MFG:'ISM Manufacturing PMI',ISM_SVC:'ISM Services PMI',GDP:'GDP',INFO:'High-impact event'};
 const evName=e=>(e.k==='INFO'||e.k==='GDP')&&e.title?e.title:(SHORT[e.k]||FW[e.k].n);
 function reactionCcy(e){const pp=CCY_PAIR[e.c];return pp?reactionFor(e,[[pp[0],pp[1]]]):null}
 function verdictCcy(e,a){
@@ -938,7 +942,7 @@ function syncAlarms(){
   if(!(FW[e.k]&&FW[e.k].info))out.push({id:e.k+'|'+e.date+'|b',t:t-6e4,title:'Open window',body:tx?'OPEN NOW: '+tx+' · '+nm+' at '+hm:nm+' at '+hm+'. No signal.'})});
  try{AndroidBridge.schedule(JSON.stringify(out))}catch(e){}}
 const sigTxt=q=>{const t=pairSignals(q.dir)[0];return t.side+' '+t.sym.replace('/','')+' ('+q.conv+')'};
-const COMP={NFP:['UNRATE','AHE'],CPI:['CORE_CPI'],PPI:['CORE_PPI'],RS:['CORE_RS'],CORE_PCE:['PCE']};
+const COMP={NFP:['UNRATE','AHE'],CPI:['CORE_CPI','CPI_YY','CORE_CPI_YY'],PPI:['CORE_PPI'],RS:['CORE_RS'],CORE_PCE:['PCE']};
 function compRows(e){const t=Date.parse(e.date),ks=COMP[e.k];if(!ks||!FD||!FD.events)return '';
  const L=FD.events.filter(x=>ks.includes(x.k)&&FW[x.k]&&Math.abs(Date.parse(x.date)-t)<=6e4);if(!L.length)return '';
  return '<div class="comp">'+L.map(x=>`<div><span class="fk">${evName(x)}</span><b>${x.forecast||'—'}</b><small>prev ${x.previous||'—'}</small></div>`).join('')+'</div>'}
@@ -1056,9 +1060,9 @@ function newsStats(){
  const all=sigs.filter(x=>x.src==='news'&&x.rel);if(!all.length)return '';
  const g=all.filter(x=>x.auto&&!x.manual),w=g.filter(x=>x.out==='win').length,l=g.filter(x=>x.out==='loss').length,f=g.filter(x=>x.out==='flat').length,n=w+l,wait=all.filter(x=>!x.gr).length,
   avg=g.length?g.reduce((a,x)=>a+x.auto.m15,0)/g.length:null,r=n?Math.round(w/n*100):null;let msg;
- if(n<30)msg=`Only ${n} graded so far, which is too few to tell skill from luck. Aim for 30 or more.`;
+ if(n<30)msg='';
  else{const[lo,hi]=wilson(w,n),a=Math.round(lo*100),b=Math.round(hi*100);msg=`Win rate ${r}% (95% range ${a}% to ${b}%). `+(lo>.5?'The whole range is above 50%, so this looks better than a coin flip.':hi<.5?'The whole range is below 50%, so this signal has not worked.':'50% sits inside that range, so it is not clearly better than a coin flip yet.')}
- return `<div class="fcard"><div class="fk">News signals · auto-graded</div><div style="font-size:30px;font-weight:900;margin-top:4px;color:${r==null?'var(--t2)':r>=50?'var(--buy)':'var(--sell)'}">${r==null?'—':r+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${w}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${l}</b></div><div><span class="fk">Flat</span><b>${f}</b></div></div><div class="note" style="margin:0 0 6px">${msg}</div><div class="note" style="margin:0">${avg!=null?'Average gold move in the signal direction after 15 minutes: '+usd(avg)+'. ':''}${wait?wait+' waiting to be graded. ':''}Graded 15 minutes after the release: win if gold moved your way, loss if against, flat if under 0.015% either way. Spread and slippage are not included.</div></div>`}
+ return `<div class="fcard"><div class="fk">News signals · auto-graded</div><div style="font-size:30px;font-weight:900;margin-top:4px;color:${r==null?'var(--t2)':r>=50?'var(--buy)':'var(--sell)'}">${r==null?'—':r+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${w}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${l}</b></div><div><span class="fk">Flat</span><b>${f}</b></div></div>${msg?'<div class="note" style="margin:0 0 6px">'+msg+'</div>':''}<div class="note" style="margin:0">${avg!=null?'Average gold move in the signal direction after 15 minutes: '+usd(avg)+'. ':''}${wait?wait+' waiting to be graded. ':''}Graded 15 minutes after the release: win if gold moved your way, loss if against, flat if under 0.015% either way. Spread and slippage are not included.</div></div>`}
 function jCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return ['time,source,symbol,tf,side,entry,sl,tp1,tp2,result,move5,move15'].concat(sigs.map(x=>[x.ts?new Date(x.ts).toISOString():x.t,x.src,x.sym,x.tf||'',x.type,x.pl?x.pl.e:x.price||'',x.pl?x.pl.sl:'',x.pl?x.pl.t1:'',x.pl?x.pl.t2:'',x.out,x.auto?x.auto.m5.toFixed(2):'',x.auto?x.auto.m15.toFixed(2):''].map(q).join(','))).join('\n')}
 function jCopy(){const t=jCsv(),done=()=>{$('jCopy').textContent='Copied';setTimeout(()=>{$('jCopy').textContent='Copy journal (CSV)'},1500)},
  fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()};
@@ -1157,7 +1161,7 @@ function sessWins(se,now){const lp=tzParts(se.tz,now),base=Date.UTC(+lp.year,+lp
 function sessState(now){return{fxc:fxClosed(now),rows:SESS.map(se=>{const w=sessWins(se,now),cur=w.find(x=>now>=x[0]&&now<x[1]),nx=w.filter(x=>x[0]>now).sort((a,b)=>a[0]-b[0])[0];return{n:se.n,w,active:!!cur,close:cur?cur[1]:null,open:nx?nx[0]:null}})}}
 const durTx=ms=>{const m=Math.max(1,Math.round(ms/6e4)),h=Math.floor(m/60);return h?h+'h '+String(m%60).padStart(2,'0')+'m':m+'m'};
 function sessText(now){const st=sessState(now),act=st.rows.filter(r=>r.active);
- if(st.fxc)return{cls:'cl',txt:'Forex & metals closed · reopens '+fmtSast(nextFxOpen(now))+' · crypto 24/7'};
+ if(st.fxc)return{cls:'cl',txt:'Market closed'};
  if(act.length){const ev=act.map(r=>({t:r.close,k:r.n+' closes'})).concat(st.rows.filter(r=>!r.active&&r.open).map(r=>({t:r.open,k:r.n+' opens'}))).sort((a,b)=>a.t-b.t)[0];
   return{cls:'on',txt:(act.length>1?act.map(r=>r.n).join(' + ')+' overlap':act[0].n+' session')+(ev?' · '+ev.k+' in '+durTx(ev.t-now):'')}}
  const nx=st.rows.filter(r=>r.open).sort((a,b)=>a.open-b.open)[0];return{cls:'q',txt:'Quiet hours'+(nx?' · '+nx.n+' opens in '+durTx(nx.open-now):'')}}
@@ -1176,6 +1180,12 @@ function moveInd(n){const ind=$('navInd');if(!ind)return;const b=document.queryS
 addEventListener('resize',()=>moveInd(curPage()));setTimeout(()=>moveInd(curPage()),50);setTimeout(()=>moveInd(curPage()),600);
 document.addEventListener('click',e=>{if(e.target.closest('button,.tile,.seg'))navigator.vibrate&&navigator.vibrate(7)},true);
 addEventListener('scroll',()=>document.querySelector('header').classList.toggle('sc',scrollY>8),{passive:true});
+// keep the app still: never scroll or drag sideways
+addEventListener('scroll',()=>{if(scrollX)scrollTo(0,scrollY)},{passive:true});
+(function(){let x0=0,y0=0;
+ addEventListener('touchstart',e=>{if(e.touches.length===1){x0=e.touches[0].clientX;y0=e.touches[0].clientY}},{passive:true});
+ addEventListener('touchmove',e=>{if(e.touches.length!==1)return;const dx=Math.abs(e.touches[0].clientX-x0),dy=Math.abs(e.touches[0].clientY-y0);
+  if(dx>dy&&dx>8&&!e.target.closest('#cv,input,select,textarea,.shb'))e.preventDefault()},{passive:false})})();
 calDay();setInterval(calDay,60000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('hook').value=S.hook;$('tz').value=S.tz;
