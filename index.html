@@ -211,6 +211,7 @@ input:focus{outline:none;border-color:var(--blue);box-shadow:0 0 0 4px rgba(59,1
 .dev .badge{display:inline-block;font-size:11px;font-weight:800;padding:4px 10px;border-radius:20px;margin-bottom:12px}
 .ios .badge{color:var(--amb);background:rgba(255,200,107,.1)}
 .and .badge{color:var(--up);background:rgba(77,242,173,.1)}
+.dev .btn{width:100%}.devnote{margin:0!important;font-size:13px!important;color:var(--dim)!important}
 .updates{max-width:800px;margin:16px auto 0;border:1px solid rgba(77,242,173,.3);background:rgba(77,242,173,.06);border-radius:var(--r);padding:20px;text-align:center}
 .updates p{margin:0 0 12px;color:#cfe9dc;font-size:14px}
 .updates .wa{width:auto;display:inline-flex}
@@ -382,29 +383,20 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 </section>
 
 <section class="sec wrap" id="install">
-  <div class="head rv"><h2>Install the app first</h2><p>New users: install SignalsPro on your phone <b>before</b> you register or connect your data.</p></div>
+  <div class="head rv"><h2>Get the app first</h2><p>New users: get the app <b>before</b> you register or connect your data. Android users download the app. Everyone else launches the web app.</p></div>
   <div class="inst rv">
-    <div class="dev ios">
-      <span class="badge">iPhone and iPad</span>
-      <h3>Add to Home Screen</h3>
-      <p>On iOS, do not download anything. Just add the app to your home screen.</p>
-      <ol>
-        <li>Open this page in <b>Safari</b>.</li>
-        <li>Tap the <b>Share</b> button.</li>
-        <li>Choose <b>Add to Home Screen</b>.</li>
-        <li>Tap <b>Add</b>, then open SignalsPro from your home screen.</li>
-      </ol>
-    </div>
     <div class="dev and">
       <span class="badge">Android</span>
-      <h3>Install the app</h3>
-      <p>Android users should install the app, then open it from the home screen or app drawer.</p>
-      <ol>
-        <li>Open this page in <b>Chrome</b>.</li>
-        <li>Tap <b>Install app</b> below, or the <b>⋮</b> menu then <b>Install app</b>.</li>
-        <li>Open SignalsPro from your home screen.</li>
-      </ol>
-      <button class="btn primary" id="installBtn" type="button" hidden>Install app</button>
+      <h3>Download the Android app</h3>
+      <p>Download the SignalsPro APK, install it on your phone, then open the app. If Android asks, allow installs from your browser or file manager for this one app.</p>
+      <a class="btn primary" id="apkBtn" href="./SignalsPro.apk" download>Download Android app (APK) ↓</a>
+      <p class="devnote" id="apkNote">Open this page on your Android phone to download the app.</p>
+    </div>
+    <div class="dev ios">
+      <span class="badge">iPhone, iPad and desktop</span>
+      <h3>Launch the web app</h3>
+      <p>No download needed. Open the web app in your browser and sign in with your access email.</p>
+      <a class="btn ghost" href="./app.html">Launch web app ↗</a>
     </div>
   </div>
   <div class="updates rv">
@@ -414,10 +406,10 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 </section>
 
 <section class="sec wrap" id="setup">
-  <div class="head rv"><h2>Install, then connect your data in 2 minutes</h2><p>Signals load using your own Twelve Data API key.</p></div>
+  <div class="head rv"><h2>Get the app, then connect your data in 2 minutes</h2><p>Signals load using your own Twelve Data API key.</p></div>
   <div class="setup rv">
     <ol>
-      <li><div><h3>Install the app</h3><p>Android: install it. iPhone: Add to Home Screen. See <a href="#install">Install the app first</a>.</p></div></li>
+      <li><div><h3>Get the app</h3><p>Android: download the app. iPhone: launch the web app. See <a href="#install">Get the app first</a>.</p></div></li>
       <li><div><h3>Register</h3><p>Create an account at <a href="https://twelvedata.com" target="_blank" rel="noopener noreferrer">twelvedata.com</a>.</p></div></li>
       <li><div><h3>Copy your API key</h3><p>Find it in your Twelve Data dashboard.</p></div></li>
       <li><div><h3>Paste it in the app</h3><p>Open SignalsPro, go to Settings, paste the key and save.</p></div></li>
@@ -440,7 +432,7 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
       <span><b>✓</b> Market zones and charts</span><span><b>✓</b> Manual buy and sell plans</span>
       <span><b>✓</b> Scanner and news context</span><span><b>✓</b> Position size calculator</span>
     </div>
-    <div class="instnote"><b>New users:</b> install the app before registering. Android: install it. iPhone and iPad: Add to Home Screen. <a href="#install">See how</a>.</div>
+    <div class="instnote"><b>New users:</b> get the app before registering. Android: download the app (APK). iPhone, iPad and desktop: launch the web app. <a href="#install">See how</a>.</div>
     <form id="purchase-form">
       <label for="purchase-email">Email for your SignalsPro access</label>
       <input id="purchase-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com">
@@ -456,7 +448,7 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 <section class="sec wrap" id="faq">
   <div class="head rv" style="text-align:center;margin-inline:auto"><h2>FAQ</h2></div>
   <div class="faq rv">
-    <details><summary>How do I install SignalsPro?</summary><p>Install it before registering. On Android, use Chrome and tap Install app. On iPhone or iPad, open the page in Safari, tap Share, then Add to Home Screen. Nothing is downloaded from the App Store.</p></details>
+    <details><summary>How do I get SignalsPro on my phone?</summary><p>Android users download the Android app (APK) from the Get the app section and install it. iPhone and iPad users tap Launch web app and use it in the browser. Do this before you register.</p></details>
     <details><summary>When do I get access?</summary><p>Once payment is verified, your email is added. If you wait longer than 5 minutes, WhatsApp +27 69 675 0129.</p></details>
     <details><summary>Why am I not seeing signals?</summary><p>Add your Twelve Data API key in the app Settings. See the setup steps above.</p></details>
     <details><summary>Does it place trades for me?</summary><p>No. Every buy and sell decision is manual, with your own broker.</p></details>
@@ -632,11 +624,10 @@ form.addEventListener("submit",function(event){
 });
 })();
 
-/* Android install prompt */
-(function(){var dp,b=document.getElementById("installBtn");if(!b)return;
-window.addEventListener("beforeinstallprompt",function(e){e.preventDefault();dp=e;b.hidden=false});
-b.addEventListener("click",function(){if(!dp)return;dp.prompt();dp.userChoice.finally(function(){dp=null;b.hidden=true})});
-window.addEventListener("appinstalled",function(){b.hidden=true});
+/* show APK download to Android only */
+(function(){var android=/Android/i.test(navigator.userAgent),btn=document.getElementById("apkBtn"),note=document.getElementById("apkNote");
+if(!btn||!note)return;
+if(android){note.hidden=true}else{btn.hidden=true}
 })();
 </script>
 </body>
