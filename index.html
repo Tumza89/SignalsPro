@@ -166,6 +166,23 @@ h1{font-size:clamp(50px,8.2vw,104px);line-height:.92;letter-spacing:-.05em;text-
 .sticky{display:none}
 @media(max-width:760px){.sticky{display:flex;position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:60;justify-content:center;padding:16px;border-radius:16px;font-weight:800;color:#04101f;background:linear-gradient(100deg,#2b7bff,#25c3ea);box-shadow:0 14px 44px rgba(37,130,255,.55)}footer{padding-bottom:calc(90px + env(safe-area-inset-bottom,0px))}}
 @media(prefers-reduced-motion:reduce){.plan svg g path,.plan svg g rect{opacity:1}}
+
+/* free spots */
+.side{display:grid;gap:16px;min-width:0}
+.free{border:1px solid rgba(255,200,107,.4);border-radius:22px;padding:22px;background:radial-gradient(ellipse at 50% 0,rgba(255,200,107,.16),transparent 65%),#0e1220;box-shadow:0 0 50px rgba(255,200,107,.12)}
+.free h3{font-size:24px;letter-spacing:-.02em;margin:10px 0 4px}
+.free .tag{display:inline-flex;align-items:center;gap:8px;font:800 12px Manrope,sans-serif;color:#1a1100;background:linear-gradient(100deg,#ffc86b,#ffe2a6);padding:5px 12px;border-radius:20px}
+.free .tag i{width:7px;height:7px;border-radius:50%;background:#1a1100;animation:pl 1.6s infinite}
+.free p{margin:0 0 14px;color:#d9c9a6;font-size:14px}
+.spots{margin:0 0 14px}
+.spots div{display:flex;justify-content:space-between;font-size:13px;font-weight:700;color:#f3e3bd;margin-bottom:6px}
+.spots span{display:block;height:8px;border-radius:8px;background:rgba(255,255,255,.08);overflow:hidden}
+.spots i{display:block;height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#ffc86b,#ff7690);transition:width .8s}
+.free input{margin-bottom:10px}
+.gold{background:linear-gradient(100deg,#ffc86b,#ffa94d);color:#1a1100;box-shadow:0 10px 34px rgba(255,170,60,.35);width:100%}
+.gold:hover{box-shadow:0 14px 46px rgba(255,170,60,.55)}
+.fmsg{margin:10px 0 0;font-size:13px;text-align:center;color:#f3e3bd}
+.fmsg.ok{color:var(--up)}.fmsg.err{color:var(--dn)}
 </style>
 <script>(function(){var L=new Date("2026-11-16T00:00:00+02:00").getTime();if(Date.now()<L&&!/[?&]preview/.test(location.search)){document.documentElement.classList.add("pre")}})()</script>
 </head>
@@ -232,6 +249,21 @@ h1{font-size:clamp(50px,8.2vw,104px);line-height:.92;letter-spacing:-.05em;text-
       </div>
     </div>
 
+    <div class="side">
+    <div class="free" id="free">
+      <span class="tag"><i></i>FREE ACCESS · FIRST 20 ONLY</span>
+      <h3>Secure your free spot</h3>
+      <p>The first 20 people to claim get SignalsPro access at no cost. One spot per email.</p>
+      <div class="spots" id="spots" hidden><div><span id="sl" style="background:none;height:auto"></span><span id="st" style="background:none;height:auto"></span></div><span><i id="sb"></i></span></div>
+      <form id="free-form">
+        <label for="free-email">Your email</label>
+        <input id="free-email" type="email" autocomplete="email" required placeholder="you@example.com">
+        <label for="free-wa">WhatsApp number (optional)</label>
+        <input id="free-wa" type="tel" autocomplete="tel" placeholder="+27 …">
+        <button class="btn gold" type="submit" id="free-btn">Secure my free spot</button>
+      </form>
+      <p class="fmsg" id="fmsg" role="status"></p>
+    </div>
     <div class="buy" id="buy"><div class="buy-in">
       <div class="btop"><b>SignalsPro Premium</b><span class="once">Once-off · Lifetime</span></div>
       <div class="price">$60 <small>USD, no subscription</small></div>
@@ -244,6 +276,7 @@ h1{font-size:clamp(50px,8.2vw,104px);line-height:.92;letter-spacing:-.05em;text-
       <p class="pn">Use the same email at PayPal checkout. Access is activated manually once payment is verified.</p>
       <p class="have">Already have access? <a href="./app.html">Launch the web app</a></p>
     </div></div>
+    </div>
   </section>
 
   <section class="ess" id="start">
@@ -333,6 +366,32 @@ function frame(now){var dt=Math.min((now-lt)/1000||0,.05);lt=now;
  if(!document.hidden){var d=SP*dt;K.forEach(function(k){k.x-=d;if(!k.fired&&k.x<=W*(W<700?.62:.72)){k.fired=true;if(k.sig)k.tf=now}});while(K.length&&K[0].x<-30)K.shift();while(K[K.length-1].x<W+40)K.push(mk(K[K.length-1].x+G));draw(now)}
  requestAnimationFrame(frame)}
 size();addEventListener("resize",size);if(!still)requestAnimationFrame(frame);
+})();
+
+/* free spots */
+(function(){
+var FREE_API="https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec",CAP=20; /* paste your Apps Script web app URL here (see apps-script.gs) */
+var form=document.getElementById("free-form"),em=document.getElementById("free-email"),wa=document.getElementById("free-wa"),btn=document.getElementById("free-btn"),msg=document.getElementById("fmsg"),box=document.getElementById("spots");
+if(!form)return;
+function devId(){try{var k=localStorage.getItem("sp_dev");if(!k){k=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem("sp_dev",k)}return k}catch(e){return"none"}}
+function show(left){if(typeof left!=="number")return;box.hidden=false;document.getElementById("sl").textContent=left>0?left+" of "+CAP+" spots left":"All "+CAP+" spots claimed";document.getElementById("st").textContent=(CAP-left)+" claimed";document.getElementById("sb").style.width=((CAP-left)/CAP*100)+"%";
+ if(left<=0){form.hidden=true;msg.className="fmsg";msg.innerHTML='All free spots are gone. <a href="#buy" style="color:#8bc3ff;text-decoration:underline">Get lifetime access for $60</a>.'}}
+if(FREE_API){fetch(FREE_API+"?action=free_count").then(function(r){return r.json()}).then(function(d){if(d&&d.ok)show(d.left)}).catch(function(){})}
+form.addEventListener("submit",function(e){
+ e.preventDefault();if(!em.reportValidity())return;
+ var email=em.value.trim().toLowerCase(),phone=wa.value.trim();
+ if(!FREE_API){window.open("https://wa.me/27696750129?text="+encodeURIComponent("Hi SignalsPro, I want to secure one of the 20 free spots. My email: "+email),"_blank","noopener");msg.className="fmsg";msg.textContent="WhatsApp opened. Send the message to confirm your spot.";return}
+ var old=btn.textContent;btn.disabled=true;btn.textContent="Securing your spot…";msg.textContent="";
+ fetch(FREE_API+"?action=free_claim&email="+encodeURIComponent(email)+"&whatsapp="+encodeURIComponent(phone)+"&dev="+encodeURIComponent(devId()))
+ .then(function(r){return r.json()})
+ .then(function(d){btn.disabled=false;btn.textContent=old;
+  if(d&&d.status==="claimed"){msg.className="fmsg ok";msg.textContent="Spot secured. We'll activate "+email+" and message you. Create your Twelve Data key while you wait.";form.reset();show(d.left)}
+  else if(d&&d.status==="duplicate"){msg.className="fmsg ok";msg.textContent="This email already holds a spot."}
+  else if(d&&d.status==="exists"){msg.className="fmsg";msg.textContent="This email is already registered. Open the web app and sign in."}
+  else if(d&&d.status==="full"){show(0)}
+  else throw 0})
+ .catch(function(){btn.disabled=false;btn.textContent=old;msg.className="fmsg err";msg.textContent="Couldn't secure your spot. Try again or WhatsApp +27 69 675 0129."});
+});
 })();
 
 /* checkout */
