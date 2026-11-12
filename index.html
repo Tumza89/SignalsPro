@@ -200,6 +200,21 @@ h1{font-size:clamp(50px,8.2vw,104px);line-height:.92;letter-spacing:-.05em;text-
       <div class="cu"><div><b id="cd-m">00</b><span>Minutes</span></div></div>
       <div class="cu"><div><b id="cd-s">00</b><span>Seconds</span></div></div>
     </div>
+    
+    <div style="max-width:520px;margin:28px auto 0;text-align:left"><div class="free" id="free">
+      <span class="tag"><i></i>FREE ACCESS · FIRST 20 ONLY</span>
+      <h3>Secure your free spot</h3>
+      <p>The first 20 people to claim get SignalsPro free. Claim now: access is activated on launch day, Monday 16 November. One spot per email.</p>
+      <div class="spots" id="spots" hidden><div><span id="sl" style="background:none;height:auto"></span><span id="st" style="background:none;height:auto"></span></div><span><i id="sb"></i></span></div>
+      <form id="free-form">
+        <label for="free-email">Your email</label>
+        <input id="free-email" type="email" autocomplete="email" required placeholder="you@example.com">
+        <label for="free-wa">WhatsApp number (optional)</label>
+        <input id="free-wa" type="tel" autocomplete="tel" placeholder="+27 …">
+        <button class="btn gold" type="submit" id="free-btn">Secure my free spot</button>
+      </form>
+      <p class="fmsg" id="fmsg" role="status"></p>
+    </div></div>
     <div class="gprep"><b>Get ready:</b> create your free account at <a href="https://twelvedata.com" target="_blank" rel="noopener noreferrer">twelvedata.com</a> so your API key is ready on launch day. Questions? <a href="https://wa.me/27696750129" target="_blank" rel="noopener noreferrer">WhatsApp +27 69 675 0129</a></div>
     <p class="grisk">Foreign exchange and CFD trading are leveraged products that carry a high risk of loss. SignalsPro is an educational analysis tool, not financial advice.</p>
   </div>
@@ -250,20 +265,6 @@ h1{font-size:clamp(50px,8.2vw,104px);line-height:.92;letter-spacing:-.05em;text-
     </div>
 
     <div class="side">
-    <div class="free" id="free">
-      <span class="tag"><i></i>FREE ACCESS · FIRST 20 ONLY</span>
-      <h3>Secure your free spot</h3>
-      <p>The first 20 people to claim get SignalsPro access at no cost. One spot per email.</p>
-      <div class="spots" id="spots" hidden><div><span id="sl" style="background:none;height:auto"></span><span id="st" style="background:none;height:auto"></span></div><span><i id="sb"></i></span></div>
-      <form id="free-form">
-        <label for="free-email">Your email</label>
-        <input id="free-email" type="email" autocomplete="email" required placeholder="you@example.com">
-        <label for="free-wa">WhatsApp number (optional)</label>
-        <input id="free-wa" type="tel" autocomplete="tel" placeholder="+27 …">
-        <button class="btn gold" type="submit" id="free-btn">Secure my free spot</button>
-      </form>
-      <p class="fmsg" id="fmsg" role="status"></p>
-    </div>
     <div class="buy" id="buy"><div class="buy-in">
       <div class="btop"><b>SignalsPro Premium</b><span class="once">Once-off · Lifetime</span></div>
       <div class="price">$60 <small>USD, no subscription</small></div>
@@ -371,11 +372,12 @@ size();addEventListener("resize",size);if(!still)requestAnimationFrame(frame);
 /* free spots */
 (function(){
 var FREE_API="https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec",CAP=20; /* paste your Apps Script web app URL here (see apps-script.gs) */
+if(!document.documentElement.classList.contains("pre"))return;
 var form=document.getElementById("free-form"),em=document.getElementById("free-email"),wa=document.getElementById("free-wa"),btn=document.getElementById("free-btn"),msg=document.getElementById("fmsg"),box=document.getElementById("spots");
 if(!form)return;
 function devId(){try{var k=localStorage.getItem("sp_dev");if(!k){k=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem("sp_dev",k)}return k}catch(e){return"none"}}
-function show(left){if(typeof left!=="number")return;box.hidden=false;document.getElementById("sl").textContent=left>0?left+" of "+CAP+" spots left":"All "+CAP+" spots claimed";document.getElementById("st").textContent=(CAP-left)+" claimed";document.getElementById("sb").style.width=((CAP-left)/CAP*100)+"%";
- if(left<=0){form.hidden=true;msg.className="fmsg";msg.innerHTML='All free spots are gone. <a href="#buy" style="color:#8bc3ff;text-decoration:underline">Get lifetime access for $60</a>.'}}
+function show(left,keep){if(typeof left!=="number")return;box.hidden=false;document.getElementById("sl").textContent=left>0?left+" of "+CAP+" spots left":"All "+CAP+" spots claimed";document.getElementById("st").textContent=(CAP-left)+" claimed";document.getElementById("sb").style.width=((CAP-left)/CAP*100)+"%";
+ if(left<=0&&!keep)document.getElementById("free").hidden=true}
 if(FREE_API){fetch(FREE_API+"?action=free_count").then(function(r){return r.json()}).then(function(d){if(d&&d.ok)show(d.left)}).catch(function(){})}
 form.addEventListener("submit",function(e){
  e.preventDefault();if(!em.reportValidity())return;
@@ -385,7 +387,7 @@ form.addEventListener("submit",function(e){
  fetch(FREE_API+"?action=free_claim&email="+encodeURIComponent(email)+"&whatsapp="+encodeURIComponent(phone)+"&dev="+encodeURIComponent(devId()))
  .then(function(r){return r.json()})
  .then(function(d){btn.disabled=false;btn.textContent=old;
-  if(d&&d.status==="claimed"){msg.className="fmsg ok";msg.textContent="Spot secured. We'll activate "+email+" and message you. Create your Twelve Data key while you wait.";form.reset();show(d.left)}
+  if(d&&d.status==="claimed"){msg.className="fmsg ok";msg.textContent="Spot secured for "+email+". Access is activated on launch day, Monday 16 November. Create your free Twelve Data key while you wait.";form.reset();show(d.left,true)}
   else if(d&&d.status==="duplicate"){msg.className="fmsg ok";msg.textContent="This email already holds a spot."}
   else if(d&&d.status==="exists"){msg.className="fmsg";msg.textContent="This email is already registered. Open the web app and sign in."}
   else if(d&&d.status==="full"){show(0)}
