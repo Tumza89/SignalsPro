@@ -181,6 +181,7 @@ h1{font-size:clamp(50px,8.2vw,104px);line-height:.92;letter-spacing:-.05em;text-
 .free input{margin-bottom:10px}
 .gold{background:linear-gradient(100deg,#ffc86b,#ffa94d);color:#1a1100;box-shadow:0 10px 34px rgba(255,170,60,.35);width:100%}
 .gold:hover{box-shadow:0 14px 46px rgba(255,170,60,.55)}
+.free.full{border-color:rgba(255,118,144,.35);background:radial-gradient(ellipse at 50% 0,rgba(255,118,144,.12),transparent 65%),#0e1220;box-shadow:none}.free.full .tag{background:linear-gradient(100deg,#ff7690,#ffb4c2)}.free.full .spots i{background:linear-gradient(90deg,#ff7690,#ff4d6d)}.fmsg a{color:#8bc3ff;text-decoration:underline;text-underline-offset:3px}
 .fmsg{margin:10px 0 0;font-size:13px;text-align:center;color:#f3e3bd}
 .fmsg.ok{color:var(--up)}.fmsg.err{color:var(--dn)}
 </style>
@@ -202,9 +203,9 @@ h1{font-size:clamp(50px,8.2vw,104px);line-height:.92;letter-spacing:-.05em;text-
     </div>
     
     <div style="max-width:520px;margin:28px auto 0;text-align:left"><div class="free" id="free">
-      <span class="tag"><i></i>FREE ACCESS · FIRST 20 ONLY</span>
-      <h3>Secure your free spot</h3>
-      <p>The first 20 people to claim get SignalsPro free. Claim now: access is activated on launch day, Monday 16 November. One spot per email.</p>
+      <span class="tag" id="ft"><i></i>FREE ACCESS · FIRST 20 ONLY</span>
+      <h3 id="fh">Secure your free spot</h3>
+      <p id="fp">The first 20 people to claim get SignalsPro free. Claim now: access is activated on launch day, Monday 16 November. One spot per email.</p>
       <div class="spots" id="spots" hidden><div><span id="sl" style="background:none;height:auto"></span><span id="st" style="background:none;height:auto"></span></div><span><i id="sb"></i></span></div>
       <form id="free-form">
         <label for="free-email">Your email</label>
@@ -371,13 +372,15 @@ size();addEventListener("resize",size);if(!still)requestAnimationFrame(frame);
 
 /* free spots */
 (function(){
-var FREE_API="https://script.google.com/macros/s/AKfycbwb9Rwp3WRm6jMYzH3eEAxLj4u-u8T7ofF485eeHP9AOMg_rCDZpXbWIyqkowcXFpg-4w/exec",CAP=20; /* paste your Apps Script web app URL here (see apps-script.gs) */
+var FREE_API="",CAP=20,FORCE_FULL=true; /* FORCE_FULL=true shows "all spots claimed" without the backend */ /* paste your Apps Script web app URL here (see apps-script.gs) */
 if(!document.documentElement.classList.contains("pre"))return;
 var form=document.getElementById("free-form"),em=document.getElementById("free-email"),wa=document.getElementById("free-wa"),btn=document.getElementById("free-btn"),msg=document.getElementById("fmsg"),box=document.getElementById("spots");
 if(!form)return;
 function devId(){try{var k=localStorage.getItem("sp_dev");if(!k){k=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem("sp_dev",k)}return k}catch(e){return"none"}}
 function show(left,keep){if(typeof left!=="number")return;box.hidden=false;document.getElementById("sl").textContent=left>0?left+" of "+CAP+" spots left":"All "+CAP+" spots claimed";document.getElementById("st").textContent=(CAP-left)+" claimed";document.getElementById("sb").style.width=((CAP-left)/CAP*100)+"%";
- if(left<=0&&!keep)document.getElementById("free").hidden=true}
+ if(left<=0)full(keep)}
+function full(keep){document.getElementById("free").classList.add("full");form.hidden=true;document.getElementById("ft").innerHTML="<i></i>FREE ACCESS · FULL";document.getElementById("fh").textContent="All "+CAP+" free spots are claimed";document.getElementById("fp").textContent="Thank you for the response. Lifetime access opens on launch day, Monday 16 November.";if(!keep){msg.className="fmsg";msg.innerHTML='Want updates? <a href="https://chat.whatsapp.com/DGw0mIQHB93A8pUSowcR8t?s=cl&amp;p=i&amp;mlu=4&amp;ilr=4&amp;iam=2" target="_blank" rel="noopener noreferrer">Join the updates group</a>'}}
+if(FORCE_FULL){show(0);return}
 if(FREE_API){fetch(FREE_API+"?action=free_count").then(function(r){return r.json()}).then(function(d){if(d&&d.ok)show(d.left)}).catch(function(){})}
 form.addEventListener("submit",function(e){
  e.preventDefault();if(!em.reportValidity())return;
