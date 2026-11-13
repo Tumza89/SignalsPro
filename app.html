@@ -240,6 +240,10 @@ body::after{inset:0}
 @keyframes fd{0%{color:var(--sell);text-shadow:0 0 14px var(--sell)}}
 .fu{animation:fu .9s ease-out}.fd{animation:fd .9s ease-out}
 canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
+.pick{margin:-4px 0 12px;padding:12px;border-radius:16px;border:1px solid rgba(var(--w),.1);background:rgba(var(--w),.04)}
+.pick .g{font-size:10px;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);font-weight:800;margin:10px 0 6px}.pick .g:first-child{margin-top:0}
+.pick .row{display:flex;flex-wrap:wrap;gap:6px}.pick .chip{margin:0}
+.pick .chip.on{border-color:var(--accent);color:var(--accent);background:var(--glow)}
 </style></head>
 <body>
 <div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -313,7 +317,8 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <div id="aGate" class="card"><div style="font-size:16px;font-weight:800;margin-bottom:6px">Admin PIN</div><div class="note" style="margin:0 0 12px">Enter the PIN you set in the script properties. It is only kept in memory for 10 minutes.</div><input class="inp" id="aPin" type="password" placeholder="Admin PIN" autocomplete="off"><button class="btn" id="aGo">Unlock admin</button><div id="aErr" style="color:var(--sell);font-size:13px;margin-top:12px;display:none"></div></div>
 <div id="aMain" style="display:none"><div id="aSum"></div><div class="tfs" id="aFlt" style="flex-wrap:wrap"></div><input class="inp" id="aQ" placeholder="Search name or email" autocapitalize="none"><label>Activate for</label><select class="inp" id="aDays"><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option><option value="0">No expiry</option></select><div id="aMsg" class="note" style="display:none;margin:0 0 10px"></div><div id="aList"></div><button class="btn ghost" id="aRef">Refresh</button></div></section>
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
-<label>Watchlist (comma separated)</label><input class="inp" id="scWl" autocapitalize="characters">
+<label>Symbols to scan</label><input class="inp" id="scWl" placeholder="Tap to pick, or type e.g. EUR/USD, BTC/USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
+<div class="pick" id="scPick" style="display:none"></div>
 <label>Entry timeframe</label><select class="inp" id="scTf"><option>M5</option><option>M15</option></select>
 <label>Strategies (tap to pick one or more)</label><div class="tfs" id="scStrat" style="flex-wrap:wrap"></div><div class="note" id="scDesc" style="margin:0 0 10px"></div>
 <button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
@@ -342,9 +347,10 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
 const TFB={M1:'1m',M5:'5m',M15:'15m',M30:'30m',H1:'1h',H4:'4h',D1:'1d'},TFT={M1:'1min',M5:'5min',M15:'15min',M30:'30min',H1:'1h',H4:'4h',D1:'1day'},SN={4:'Proven',3:'Verified',2:'Untested',1:'Turncoat'};
-let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'midnight',wl:'EUR/USD,GBP/USD,USD/JPY,AUD/USD,USD/CAD,NZD/USD,USD/CHF,EUR/JPY',stf:'M15',tz:'Africa/Johannesburg'};
+let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'midnight',wl:'',stf:'M15',tz:'Africa/Johannesburg'};
 try{Object.assign(S,JSON.parse(localStorage.getItem('sp_cfg')||'{}'))}catch(e){}
 if(!['M5','M15'].includes(S.stf))S.stf='M15';
+if(S.wl==='EUR/USD,GBP/USD,USD/JPY,AUD/USD,USD/CAD,NZD/USD,USD/CHF,EUR/JPY')S.wl='';
 let sigs=[];try{sigs=JSON.parse(localStorage.getItem('sp_sig')||'[]')}catch(e){}
 sigs.forEach((x,i)=>{if(!x.id)x.id='old'+i;if(x.out==null)x.out='';if(!x.src)x.src='zone'});
 let D=null,R=null,PLN=null,run=false,timer=null,advice=0,lastB=0,lastS=0;
@@ -838,15 +844,17 @@ function renderScan(list){
   <div class="pr"><span>Stop loss</span><span class="sl">${f(p.sl)}</span></div>
   <div class="pr"><span>Target 1</span><span class="tp">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div>
   <div class="pr"><span>Target 2</span><span class="tp">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div></div>`}).join('')}
-function renderStr(st){
+function renderStr(st,partial){
  const L=Object.entries(st).sort((a,b)=>b[1]-a[1]);
- $('scStr').innerHTML=`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Currency strength</div>${L.map(([c,v])=>`<div class="pr" style="align-items:center"><span style="width:44px;color:var(--text)">${c}</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(var(--w),.07);position:relative;margin:0 10px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${v>=0?'var(--buy)':'var(--sell)'};${v>=0?'left:50%':'right:50%'};width:${Math.abs(v)*50}%"></i></span><span style="width:40px;text-align:right;color:${v>=0?'var(--buy)':'var(--sell)'}">${Math.round(v*100)}</span></div>`).join('')}<div class="note">From the price change of the pairs you scanned. Best trades pair a strong currency with a weak one.</div></div>`}
+ $('scStr').innerHTML=`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Currency strength</div>${L.map(([c,v])=>`<div class="pr" style="align-items:center"><span style="width:44px;color:var(--text)">${c}</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(var(--w),.07);position:relative;margin:0 10px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${v>=0?'var(--buy)':'var(--sell)'};${v>=0?'left:50%':'right:50%'};width:${Math.abs(v)*50}%"></i></span><span style="width:40px;text-align:right;color:${v>=0?'var(--buy)':'var(--sell)'}">${Math.round(v*100)}</span></div>`).join('')}<div class="note">${partial?'Based only on the pair'+(partial>1?'s':'')+' you scanned: the move over the last 48 candles, scaled by how volatile that pair is. Scan 3 or more pairs for a fuller picture. It does not change the scores.':'From the price change of the pairs you scanned. Best trades pair a strong currency with a weak one.'}</div></div>`}
 function finalize(out){
  const ok=out.filter(x=>!x.err),sum={},cnt={},us={},uq=ok.filter(x=>!us[x.sym]&&(us[x.sym]=1));
  uq.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
  const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9);
  if(uq.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);LASTST={st,t:Date.now()};
   ok.forEach(x=>{if(!x.p)return;x.csa=(x.p.side==='BUY'?st[x.base]-st[x.quote]:st[x.quote]-st[x.base])/2;x.score=Math.max(0,Math.min(100,Math.round(x.raw+x.csa*10)))})}
+ else{const sm={},ct={};uq.forEach(x=>{if(!isFinite(x.z)||x.base.length<3||x.quote.length<3)return;const v=clamp(x.z/3,-1,1);[[x.base,v],[x.quote,-v]].forEach(a=>{sm[a[0]]=(sm[a[0]]||0)+a[1];ct[a[0]]=(ct[a[0]]||0)+1})});
+  const st={};Object.keys(sm).forEach(c=>st[c]=sm[c]/ct[c]);if(Object.keys(st).length)renderStr(st,uq.length);else $('scStr').innerHTML=''}
  const seen={};ok.slice().sort((a,b)=>b.score-a.score).forEach(x=>{if(!x.p||x.v==='NO TRADE')return;const sg=x.p.side==='BUY'?1:-1;x.dup=[];
   [[x.base,sg],[x.quote,-sg]].forEach(([c,s])=>{const k=c+s;if(seen[k]&&seen[k]!==x.sym)x.dup.push(`${c} ${s>0?'long':'short'}, same as ${seen[k]}`);else seen[k]=x.sym})});
  renderScan(out)}
@@ -856,14 +864,16 @@ const nn=(m,t)=>window.AndroidBridge?beep():notify(m,t);
 function notify(msg,ttl){beep();navigator.vibrate&&navigator.vibrate([200,100,200]);if(window.AndroidBridge){try{AndroidBridge.notify(ttl||'SignalsPro Scanner',msg)}catch(e){}}else if(window.Notification&&Notification.permission==='granted'&&navigator.serviceWorker)navigator.serviceWorker.ready.then(r=>r.showNotification(ttl||'SignalsPro Scanner',{body:msg,icon:'icon-192.png'})).catch(()=>{})}
 async function scan(auto){
  if(scanning)return;
- let list=S.wl.split(',').map(x=>x.trim()).filter(Boolean),wkNote='';
- if(fxClosed(Date.now())){const cr=list.filter(isCrypto);list=cr.length?cr:CRYPTO_DEFAULT.slice();wkNote='Forex and metals are closed, so only crypto was scanned ('+list.join(', ')+'). '}
+ let list=wlList(),wkNote='';
+ if(!list.length){$('scSt').textContent='Tap the symbol box to pick pairs, or type your own, then scan.';return}
+ if(fxClosed(Date.now())){const cr=list.filter(isCrypto);if(!cr.length){$('scSt').textContent='Forex and metals are closed. Pick a crypto pair (like BTC/USD) to scan.';return}list=cr;wkNote='Forex and metals are closed, so only crypto was scanned ('+list.join(', ')+'). '}
  scanning=true;const out=[];let stop=false;$('scBtn').disabled=true;
  for(let i=0;i<list.length&&!stop;i++){let tries=0;
   while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
    try{const d=await load(list[i],S.stf);addCred();let hd=null;
     if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'?8000:300);const d2=await load(list[i],HT[S.stf]);addCred();hd=htfDir(d2)}catch(_){hd=null}}
     const sel=S.strats.filter(k=>STRATS[k]),rs=sel.map(k=>{try{return Object.assign(STRATS[k].fn(list[i],d,hd),{strat:k})}catch(err){return noTrade(list[i],d,k,'Could not run this strategy')}});
+    {const zz=(d.c[0]-d.c[Math.min(48,d.c.length-1)])/((atr7(d.h,d.l,d.c,d.n)[0]||1e-9)*Math.sqrt(Math.min(48,d.c.length-1)||1));rs.forEach(r=>{r.z=zz})}
     if(rs.length>1){const use=rs.filter(r=>r.v!=='NO TRADE');if(use.length)use.forEach(r=>out.push(r));else out.push(Object.assign(rs[0],{why:'No setup on any picked strategy',strat:'all'}))}else out.push(rs[0]);break}
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
@@ -871,8 +881,21 @@ async function scan(auto){
  finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym+x.strat]||0)>3600).forEach(x=>{notified[x.sym+x.strat]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',strat:STRATS[x.strat]?STRATS[x.strat].n:'',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED${sl(x)} · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent=wkNote+'Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
 function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
-$('scWl').value=S.wl;$('scTf').value=S.stf;showCred();strChips();
-$('scWl').onchange=()=>{S.wl=$('scWl').value;save()};$('scTf').onchange=()=>{S.stf=$('scTf').value;save()};
+$('scWl').value=S.wl?S.wl.split(',').join(', '):'';$('scTf').value=S.stf;showCred();strChips();
+const PICK=[['Forex',['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','NZD/USD','USD/CHF','EUR/JPY','GBP/JPY','EUR/GBP']],['Metals',['XAU/USD','XAG/USD']],['Crypto',['BTC/USD','ETH/USD','SOL/USD','XRP/USD']]];
+// EURUSD / xauusd -> EUR/USD, XAU/USD
+const normSym=v=>{v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return /^[A-Z]{6}$/.test(v)?v.slice(0,3)+'/'+v.slice(3):v};
+function wlList(){const seen={};return String(S.wl||'').split(/[,;]+/).map(normSym).filter(x=>x&&!seen[x]&&(seen[x]=1))}
+function wlSet(l){S.wl=l.join(',');save();$('scWl').value=l.join(', ');pickRender()}
+function pickRender(){const on=new Set(wlList());
+ $('scPick').innerHTML=PICK.map(g=>`<div class="g">${g[0]}</div><div class="row">${g[1].map(x=>`<button type="button" class="chip ${on.has(x)?'on':''}" onclick="pickTog('${x}')">${x}</button>`).join('')}</div>`).join('')+'<div class="row" style="margin-top:12px"><button type="button" class="chip" onclick="wlSet([])">Clear</button><button type="button" class="chip" onclick="pickClose()">Done</button></div>'}
+function pickTog(x){const l=wlList(),i=l.indexOf(x);if(i>=0)l.splice(i,1);else l.push(x);wlSet(l)}
+function pickClose(){$('scPick').style.display='none';wlSet(wlList())}
+$('scWl').onfocus=()=>{pickRender();$('scPick').style.display='block'};
+$('scWl').oninput=()=>{S.wl=$('scWl').value;pickRender()};
+$('scWl').onchange=()=>wlSet(wlList());
+document.addEventListener('click',e=>{if(!e.target.closest('#scWl,#scPick')&&$('scPick').style.display!=='none')pickClose()});
+$('scTf').onchange=()=>{S.stf=$('scTf').value;save()};
 $('scBtn').onclick=()=>scan();
 const htfLbl=()=>$('scHtf').textContent='Higher-timeframe check: '+(S.htf?'On (uses 2x credits)':'Off');
 $('scHtf').onclick=()=>{S.htf=!S.htf;save();htfLbl()};htfLbl();
