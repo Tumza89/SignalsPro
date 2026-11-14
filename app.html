@@ -354,7 +354,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <div class="card" id="scChart" style="display:none"><div class="hl"><div><div style="font-size:17px;font-weight:800" id="scChT"></div><div class="fk" style="margin-top:3px" id="scChS"></div></div><button class="fb" id="scChX" aria-label="Close chart"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <div class="tfs" id="scChTabs" style="flex-wrap:wrap;margin-top:12px"></div>
 <div class="cvw" id="scCvw" style="margin:0 -18px"><canvas id="scCv"></canvas><button class="chip" id="scLatest" style="display:none;position:absolute;top:8px;left:8px">Latest ›</button><div class="ov" style="right:8px"><button class="chip zb" id="scZo" aria-label="Zoom out">−</button><button class="chip zb" id="scZi" aria-label="Zoom in">+</button></div></div>
-<div class="lg" id="scLg"></div><div id="scAn"></div><button class="btn ghost" id="scToInd">Open this symbol in the Indicator</button></div>
+<div class="lg" id="scLg"></div><div id="scAn"></div></div>
 <div id="scStr"></div><div id="scList"></div></section>
 
 <section class="page" id="p-set"><div class="card">
@@ -1057,7 +1057,7 @@ function scDraw(){
  const up=e=>{pts.delete(e.pointerId);if(pts.size===1&&SC){const q=[...pts.values()][0];sx=q.x;sv=SC.VO}ld=0};
  ['pointerup','pointercancel'].forEach(t=>cv.addEventListener(t,up));cv.addEventListener('contextmenu',e=>e.preventDefault());
  $('scLatest').onclick=()=>{if(SC){SC.VO=0;scDraw()}};$('scZi').onclick=()=>{if(SC){SC.VN*=.75;view();scDraw()}};$('scZo').onclick=()=>{if(SC){SC.VN*=1.33;view();scDraw()}};
- $('scChX').onclick=scClose;$('scToInd').onclick=()=>{if(SC)openSym(SC.sym)}})();
+ $('scChX').onclick=scClose;})();
 addEventListener('resize',()=>scDraw());
 const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:(s,d,hd)=>S.stf==='H4'?noTrade(s,d,'po3','Power of 3 is an intraday setup. Use Scalp or Day trade.'):rate(s,d,null,hd)},
  smc:{n:'SMC',d:'Liquidity sweep, break of structure, then entry at the order block.',fn:sSMC},
