@@ -319,7 +319,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Symbols to scan</label><input class="inp" id="scWl" placeholder="Tap to pick, or type e.g. EUR/USD, BTC/USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
 <div class="pick" id="scPick" style="display:none"></div>
-<label>Entry timeframe</label><select class="inp" id="scTf"><option>M5</option><option>M15</option></select>
+<label>Trading style</label><div class="tfs" id="scStyle"></div><div class="note" id="scStyleD" style="margin:0 0 10px"></div>
 <label>Strategies (tap to pick one or more)</label><div class="tfs" id="scStrat" style="flex-wrap:wrap"></div><div class="note" id="scDesc" style="margin:0 0 10px"></div>
 <button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
 <div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit. Picking more strategies costs no extra credits.</div><div class="note" id="scCr"></div></div>
@@ -349,7 +349,9 @@ const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
 const TFB={M1:'1m',M5:'5m',M15:'15m',M30:'30m',H1:'1h',H4:'4h',D1:'1d'},TFT={M1:'1min',M5:'5min',M15:'15min',M30:'30min',H1:'1h',H4:'4h',D1:'1day'},SN={4:'Proven',3:'Verified',2:'Untested',1:'Turncoat'};
 let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'midnight',wl:'',stf:'M15',tz:'Africa/Johannesburg'};
 try{Object.assign(S,JSON.parse(localStorage.getItem('sp_cfg')||'{}'))}catch(e){}
-if(!['M5','M15'].includes(S.stf))S.stf='M15';
+const STYLES={scalp:{n:'Scalp',tf:'M5',htf:'M15',d:'Quick trades held minutes to an hour.'},day:{n:'Day trade',tf:'M15',htf:'H1',d:'Trades opened and closed within the same day.'},swing:{n:'Swing',tf:'H4',htf:'D1',d:'Trades held for days to weeks.'}};
+if(!STYLES[S.style])S.style=S.stf==='M5'?'scalp':S.stf==='H4'?'swing':'day';
+S.stf=STYLES[S.style].tf;
 if(S.wl==='EUR/USD,GBP/USD,USD/JPY,AUD/USD,USD/CAD,NZD/USD,USD/CHF,EUR/JPY')S.wl='';
 let sigs=[];try{sigs=JSON.parse(localStorage.getItem('sp_sig')||'[]')}catch(e){}
 sigs.forEach((x,i)=>{if(!x.id)x.id='old'+i;if(x.out==null)x.out='';if(!x.src)x.src='zone'});
@@ -642,7 +644,7 @@ function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v)
  $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
 $('go').onclick=()=>{setRun(!run);if(run)page('ind')};
 // scanner
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={},scanForce=false;const HT={M5:'H1',M15:'H1',M30:'H4',H1:'H4',H4:'D1'};
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={},scanForce=false;const HT={M5:'M15',M15:'H1',M30:'H4',H1:'H4',H4:'D1'};
 function ema(a,n){const k=2/(n+1);let e=a[a.length-1];for(let i=a.length-2;i>=0;i--)e=a[i]*k+e*(1-k);return e}
 function htfDir(d){const cs=d.c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),a=atr7(d.h,d.l,d.c,d.n)[0];return Math.abs(e20-e50)/a<.3?0:e20>e50?1:-1}
 // Power of 3: accumulation (Asian range) -> manipulation (sweep + reclaim) -> distribution (entry after structure break). UTC hours.
@@ -819,7 +821,7 @@ function sSMC(sym,d,hd){
  const E=evalZone(X.bear?'SELL':'BUY',X.zlo,X.zhi,X.bear?X.ext+.25*atr:X.ext-.25*atr,(X.bear?sw.L:sw.H).map(x=>x.v),d,atr),
   q=Math.max(0,Math.min(25,12+(X.fvg?8:0)+(X.mit?-8:5)+(Math.abs(X.ext-X.liq.v)>=.1*atr?3:0)));
  return fin(sym,d,'smc',E,q,'SMC · '+(X.bear?'bearish':'bullish')+' sweep, structure break, order block',`Liquidity at ${f(X.liq.v)} was swept ${X.i} candles ago and structure broke at ${f(X.piv.v)} ${X.m} candles ago. Order block ${f(X.zlo)} – ${f(X.zhi)}${X.fvg?' with a fair value gap':''}${X.mit?', already tested once':''}.`,hd)}
-const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:(s,d,hd)=>rate(s,d,null,hd)},
+const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:(s,d,hd)=>S.stf==='H4'?noTrade(s,d,'po3','Power of 3 is an intraday setup. Use Scalp or Day trade.'):rate(s,d,null,hd)},
  smc:{n:'SMC',d:'Liquidity sweep, break of structure, then entry at the order block.',fn:sSMC},
  fvg:{n:'FVG',d:'Entry on the first retest of an untested fair value gap.',fn:sFVG},
  ms:{n:'Structure',d:'BOS or CHoCH, then entry on the retest of the broken level.',fn:sMS},
@@ -881,7 +883,7 @@ async function scan(auto){
  finalize(out);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym+x.strat]||0)>3600).forEach(x=>{notified[x.sym+x.strat]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',strat:STRATS[x.strat]?STRATS[x.strat].n:'',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED${sl(x)} · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent=wkNote+'Scan finished at '+new Date().toLocaleTimeString()+'. Tap a result to open its chart.'}
 function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
-$('scWl').value=S.wl?S.wl.split(',').join(', '):'';$('scTf').value=S.stf;showCred();strChips();
+$('scWl').value=S.wl?S.wl.split(',').join(', '):'';styleRender();showCred();strChips();
 const PICK=[['Forex',['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','NZD/USD','USD/CHF','EUR/JPY','GBP/JPY','EUR/GBP']],['Metals',['XAU/USD','XAG/USD']],['Crypto',['BTC/USD','ETH/USD','SOL/USD','XRP/USD']]];
 // EURUSD / xauusd -> EUR/USD, XAU/USD
 const normSym=v=>{v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return /^[A-Z]{6}$/.test(v)?v.slice(0,3)+'/'+v.slice(3):v};
@@ -895,9 +897,12 @@ $('scWl').onfocus=()=>{pickRender();$('scPick').style.display='block'};
 $('scWl').oninput=()=>{S.wl=$('scWl').value;pickRender()};
 $('scWl').onchange=()=>wlSet(wlList());
 document.addEventListener('click',e=>{if(!e.target.closest('#scWl,#scPick')&&$('scPick').style.display!=='none')pickClose()});
-$('scTf').onchange=()=>{S.stf=$('scTf').value;save()};
+function styleRender(){const st=STYLES[S.style];
+ $('scStyle').innerHTML=Object.keys(STYLES).map(k=>`<button class="${S.style===k?'on':''}" onclick="setStyle('${k}')">${STYLES[k].n}</button>`).join('');
+ $('scStyleD').textContent=st.d+' Entries on '+st.tf+', trend check on '+st.htf+'.'}
+function setStyle(k){S.style=k;S.stf=STYLES[k].tf;save();styleRender();if(typeof htfLbl==='function')htfLbl()}
 $('scBtn').onclick=()=>scan();
-const htfLbl=()=>$('scHtf').textContent='Higher-timeframe check: '+(S.htf?'On (uses 2x credits)':'Off');
+const htfLbl=()=>$('scHtf').textContent='Higher-timeframe check ('+HT[S.stf]+'): '+(S.htf?'On (uses 2x credits)':'Off');
 $('scHtf').onclick=()=>{S.htf=!S.htf;save();htfLbl()};htfLbl();
 $('scAuto').onclick=()=>{if(autoT){clearInterval(autoT);autoT=null;$('scAuto').textContent='Auto-scan every 30 min: Off'}else{scan();autoT=setInterval(()=>scan(true),1800000);$('scAuto').textContent='Auto-scan every 30 min: On'}};
 // fundamentals
