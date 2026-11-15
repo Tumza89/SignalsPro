@@ -313,7 +313,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 
 <section class="page" id="p-ind">
 <div class="ibar"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
-<datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>BTC/USD</option><option>ETH/USD</option><option>SOL/USD</option><option>XRP/USD</option><option>SPX</option><option>NDX</option><option>DJI</option></datalist>
+<datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>BTC/USD</option><option>ETH/USD</option><option>SOL/USD</option><option>XRP/USD</option><option>NDX</option><option>DJI</option><option>DAX</option></datalist>
 <div class="ir"><div class="px" id="px">—</div><div class="k" id="sym">Symbol</div></div>
 <div class="ir"><div class="k">Advice</div><div class="adv" id="adv">WAIT</div></div></div>
 <div class="tfs" id="tfs"></div>
@@ -362,7 +362,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <label>Your Twelve Data API key (free at twelvedata.com)</label><input class="inp" id="key" type="password" placeholder="Paste your key"></div>
 <label>Chart time zone</label><select class="inp" id="tz"><option value="Africa/Johannesburg">South Africa time (UTC+2)</option><option value="Etc/GMT-3">UTC+3 (many brokers in summer)</option><option value="UTC">UTC</option></select>
 <label>Refresh</label><select class="inp" id="iv"><option value="60">Every 1 min</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option></select>
-<label>Home ticker</label><select class="inp" id="tkSel"><option value="0">Off</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option><option value="600">Every 10 min</option></select><div class="note" style="margin:-4px 0 10px">Uses 1 data credit per symbol (6) each refresh, only while the Home page is open.</div>
+<label>Home ticker</label><select class="inp" id="tkSel"><option value="0">Off</option><option value="120">Every 2 min</option><option value="300">Every 5 min</option><option value="600">Every 10 min</option></select><div class="note" style="margin:-4px 0 10px">Uses 1 data credit per forex, gold or crypto symbol (6) each refresh, only while the Home page is open. Indices use none.</div>
 <label>Webhook URL (optional)</label><input class="inp" id="hook" placeholder="https://…">
 <button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button><button class="btn red" id="logout">Log out</button>
 <div class="note">Zone and scanner alerts fire only while the app is open and started. In the Android app, news alerts are scheduled on the phone and also arrive when the app is closed. Open the app now and then so they stay up to date.</div></div></section>
@@ -459,9 +459,16 @@ document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
 const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tf));mark();
 $('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO=0;save();tick()};
+// indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
+const IDXS={NDX:{n:'Nasdaq 100',tz:'America/New_York',o:[9,30],c:[16,0]},DJI:{n:'Dow Jones',tz:'America/New_York',o:[9,30],c:[16,0]},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
+const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
 // data
 async function load(sym,tf,size){
  sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
+ if(isIdx(sym)){let j;try{j=await(await fetch(`${API}?action=candles&${qs()}&sym=${idxKey(sym)}&int=${TFT[tf]}`)).json()}catch(e){throw Error('Cannot reach the index data server. Check your internet.')}
+  if(j.ok===false){showLock(j.msg);throw Error(j.msg||'Access denied')}
+  if(j.err||!j.t||j.t.length<20)throw Error(j.err||'Index data is unavailable right now. Try again shortly.');
+  return{o:j.o,h:j.h,l:j.l,c:j.c,t:j.t,v:j.v||j.t.map(()=>0),dec:2,n:j.t.length}}
  if(gated)u=`${API}?action=candles&${qs()}&sym=${encodeURIComponent(sym)}&int=${TFT[tf]}`;
  else if(S.src==='binance')u=`https://api.binance.com/api/v3/klines?symbol=${sym.toUpperCase().replace('/','')}&interval=${TFB[tf]}&limit=1000`;
  else{if(!S.key)throw Error('Add your Twelve Data key in Settings');u=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(sym)}&interval=${TFT[tf]}&outputsize=${size||1500}&apikey=${S.key}`}
@@ -898,7 +905,7 @@ function sORB(sym,d,hd){
  if(!t||n<120)return noTrade(sym,d,'orb','Not enough data');
  if(S.stf==='H4')return noTrade(sym,d,'orb','Opening range breakout is an intraday setup. Use Scalp or Day trade.');
  const now=t[0];let bs=null;
- [{n:'London',tz:'Europe/London',o:[8,0]},{n:'New York',tz:'America/New_York',o:[9,30]}].forEach(se=>{const lp=tzParts(se.tz,now),base=Date.UTC(+lp.year,+lp.month-1,+lp.day);
+ [{n:'London',tz:'Europe/London',o:[8,0]},{n:'New York',tz:'America/New_York',o:[9,30]}].filter(se=>{if(!isIdx(sym))return true;return IDXS[idxKey(sym)].tz==='America/New_York'?se.n==='New York':se.n==='London'}).forEach(se=>{const lp=tzParts(se.tz,now),base=Date.UTC(+lp.year,+lp.month-1,+lp.day);
   for(let k=0;k<=4;k++){const dt=new Date(base-k*864e5),wd=dt.getUTCDay();if(wd<1||wd>5)continue;
    const ms=localToMs(se.tz,dt.getUTCFullYear(),dt.getUTCMonth(),dt.getUTCDate(),se.o[0],se.o[1]);if(ms<=now){if(!bs||ms>bs.ms)bs={ms,n:se.n};break}}});
  if(!bs||now-bs.ms>9*36e5)return noTrade(sym,d,'orb','No London or New York open in the last 9 hours');
@@ -1059,7 +1066,7 @@ function scDraw(){
  $('scLatest').onclick=()=>{if(SC){SC.VO=0;scDraw()}};$('scZi').onclick=()=>{if(SC){SC.VN*=.75;view();scDraw()}};$('scZo').onclick=()=>{if(SC){SC.VN*=1.33;view();scDraw()}};
  $('scChX').onclick=scClose;})();
 addEventListener('resize',()=>scDraw());
-const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:(s,d,hd)=>S.stf==='H4'?noTrade(s,d,'po3','Power of 3 is an intraday setup. Use Scalp or Day trade.'):rate(s,d,null,hd)},
+const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:(s,d,hd)=>isIdx(s)?noTrade(s,d,'po3','Power of 3 needs a 24-hour market, so it is not used on indices.'):S.stf==='H4'?noTrade(s,d,'po3','Power of 3 is an intraday setup. Use Scalp or Day trade.'):rate(s,d,null,hd)},
  smc:{n:'SMC',d:'Liquidity sweep, break of structure, then entry at the order block.',fn:sSMC},
  fvg:{n:'FVG',d:'Entry on the first retest of an untested fair value gap.',fn:sFVG},
  ms:{n:'Structure',d:'BOS or CHoCH, then entry on the retest of the broken level.',fn:sMS},
@@ -1096,14 +1103,14 @@ function renderStr(st,partial){
  const L=Object.entries(st).sort((a,b)=>b[1]-a[1]);
  $('scStr').innerHTML=`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Currency strength</div>${L.map(([c,v])=>`<div class="pr" style="align-items:center"><span style="width:44px;color:var(--text)">${c}</span><span style="flex:1;height:8px;border-radius:6px;background:rgba(var(--w),.07);position:relative;margin:0 10px"><i style="position:absolute;top:0;bottom:0;border-radius:6px;background:${v>=0?'var(--buy)':'var(--sell)'};${v>=0?'left:50%':'right:50%'};width:${Math.abs(v)*50}%"></i></span><span style="width:40px;text-align:right;color:${v>=0?'var(--buy)':'var(--sell)'}">${Math.round(v*100)}</span></div>`).join('')}<div class="note">${partial?'Based only on the pair'+(partial>1?'s':'')+' you scanned: the move over the last 48 candles, scaled by how volatile that pair is. Scan 3 or more pairs for a fuller picture. It does not change the scores.':'From the price change of the pairs you scanned. Best trades pair a strong currency with a weak one.'}</div></div>`}
 function finalize(out){
- const ok=out.filter(x=>!x.err),sum={},cnt={},us={},uq=ok.filter(x=>!us[x.sym]&&(us[x.sym]=1));
+ const ok=out.filter(x=>!x.err),sum={},cnt={},us={},uq=ok.filter(x=>!x.idx&&!us[x.sym]&&(us[x.sym]=1));
  uq.forEach(x=>[[x.base,x.chg],[x.quote,-x.chg]].forEach(([c,v])=>{sum[c]=(sum[c]||0)+v;cnt[c]=(cnt[c]||0)+1}));
  const raw={};Object.keys(sum).forEach(c=>raw[c]=sum[c]/cnt[c]);const mx=Math.max(...Object.values(raw).map(Math.abs),1e-9);
  if(uq.length>=3){const st={};Object.keys(raw).forEach(c=>st[c]=raw[c]/mx);renderStr(st);LASTST={st,t:Date.now()};
-  ok.forEach(x=>{if(!x.p)return;x.csa=(x.p.side==='BUY'?st[x.base]-st[x.quote]:st[x.quote]-st[x.base])/2;x.score=Math.max(0,Math.min(100,Math.round(x.raw+x.csa*10)))})}
+  ok.forEach(x=>{if(!x.p||x.idx)return;x.csa=(x.p.side==='BUY'?st[x.base]-st[x.quote]:st[x.quote]-st[x.base])/2;x.score=Math.max(0,Math.min(100,Math.round(x.raw+x.csa*10)))})}
  else{const sm={},ct={};uq.forEach(x=>{if(!isFinite(x.z)||x.base.length<3||x.quote.length<3)return;const v=clamp(x.z/3,-1,1);[[x.base,v],[x.quote,-v]].forEach(a=>{sm[a[0]]=(sm[a[0]]||0)+a[1];ct[a[0]]=(ct[a[0]]||0)+1})});
   const st={};Object.keys(sm).forEach(c=>st[c]=sm[c]/ct[c]);if(Object.keys(st).length)renderStr(st,uq.length);else $('scStr').innerHTML=''}
- const seen={};ok.slice().sort((a,b)=>b.score-a.score).forEach(x=>{if(!x.p||x.v==='NO TRADE')return;const sg=x.p.side==='BUY'?1:-1;x.dup=[];
+ const seen={};ok.slice().sort((a,b)=>b.score-a.score).forEach(x=>{if(!x.p||x.idx||x.v==='NO TRADE')return;const sg=x.p.side==='BUY'?1:-1;x.dup=[];
   [[x.base,sg],[x.quote,-sg]].forEach(([c,s])=>{const k=c+s;if(seen[k]&&seen[k]!==x.sym)x.dup.push(`${c} ${s>0?'long':'short'}, same as ${seen[k]}`);else seen[k]=x.sym})});
  renderScan(out)}
 function addCred(){const t=new Date().toDateString();let c={};try{c=JSON.parse(localStorage.getItem('sp_cr')||'{}')}catch(e){}if(c.d!==t)c={d:t,n:0};c.n++;try{localStorage.setItem('sp_cr',JSON.stringify(c))}catch(e){}showCred()}
@@ -1114,23 +1121,23 @@ async function scan(auto){
  if(scanning)return;
  let list=wlList(),wkNote='';
  if(!list.length){$('scSt').textContent='Tap the symbol box to pick pairs, or type your own, then scan.';return}
- if(fxClosed(Date.now())){const cr=list.filter(isCrypto);if(!cr.length){$('scSt').textContent='Forex and metals are closed. Pick a crypto pair (like BTC/USD) to scan.';return}list=cr;wkNote='Forex and metals are closed, so only crypto was scanned ('+list.join(', ')+'). '}
+ {const op=list.filter(x=>!symClosed(x));if(!op.length){$('scSt').textContent='Every market you picked is closed right now. Crypto trades all day, every day.';return}if(op.length<list.length){wkNote='Closed markets were skipped ('+list.filter(x=>symClosed(x)).join(', ')+'). ';list=op}}
  RS.clear();scanning=true;const out=[];let stop=false;$('scBtn').disabled=true;
  for(let i=0;i<list.length&&!stop;i++){let tries=0;
   while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
-   try{const d=await load(list[i],S.stf);addCred();let hd=null;
-    if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'?8000:300);const d2=await load(list[i],HT[S.stf]);addCred();hd=htfDir(d2)}catch(_){hd=null}}
+   try{const d=await load(list[i],S.stf);if(!isIdx(list[i]))addCred();let hd=null;
+    if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'&&!isIdx(list[i])?8000:300);const d2=await load(list[i],HT[S.stf]);if(!isIdx(list[i]))addCred();hd=htfDir(d2)}catch(_){hd=null}}
     const sel=S.strats.filter(k=>STRATS[k]),rs=sel.map(k=>{OVX=null;try{const r=Object.assign(STRATS[k].fn(list[i],d,hd),{strat:k});if(!r.ov&&OVX)r.ov=OVX;return r}catch(err){return noTrade(list[i],d,k,'Could not run this strategy')}});
-    {const zz=(d.c[0]-d.c[Math.min(48,d.c.length-1)])/((atr7(d.h,d.l,d.c,d.n)[0]||1e-9)*Math.sqrt(Math.min(48,d.c.length-1)||1));rs.forEach(r=>{r.z=zz})}SCS[list[i]]={d,rs,tf:S.stf,sty:(STYLES[S.style]||{}).n||'',t:Date.now()};
+    {const zz=(d.c[0]-d.c[Math.min(48,d.c.length-1)])/((atr7(d.h,d.l,d.c,d.n)[0]||1e-9)*Math.sqrt(Math.min(48,d.c.length-1)||1));rs.forEach(r=>{r.z=zz;if(isIdx(list[i]))r.idx=true})}SCS[list[i]]={d,rs,tf:S.stf,sty:(STYLES[S.style]||{}).n||'',t:Date.now()};
     if(rs.length>1){const use=rs.filter(r=>r.v!=='NO TRADE');if(use.length)use.forEach(r=>out.push(r));else out.push(Object.assign({},rs[0],{why:'No setup on any picked strategy',strat:'all'}))}else out.push(rs[0]);break}
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
-  renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'?8000:300)}
+  renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'&&!isIdx(list[i])&&!isIdx(list[i+1])?8000:300)}
  finalize(out);scAuto(out,auto);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym+x.strat]||0)>3600).forEach(x=>{notified[x.sym+x.strat]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',strat:STRATS[x.strat]?STRATS[x.strat].n:'',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED${sl(x)} · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent=wkNote+'Scan finished at '+new Date().toLocaleTimeString()+'. The chart below shows the best setup. Tap any result to switch it.'}
 function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
 $('scWl').value=S.wl?S.wl.split(',').join(', '):'';styleRender();showCred();strChips();
-const PICK=[['Forex',['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','NZD/USD','USD/CHF','EUR/JPY','GBP/JPY','EUR/GBP']],['Metals',['XAU/USD','XAG/USD']],['Crypto',['BTC/USD','ETH/USD','SOL/USD','XRP/USD']]];
+const PICK=[['Forex',['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','NZD/USD','USD/CHF','EUR/JPY','GBP/JPY','EUR/GBP']],['Metals',['XAU/USD','XAG/USD']],['Crypto',['BTC/USD','ETH/USD','SOL/USD','XRP/USD']],['Indices',['NDX','DJI','DAX']]];
 // EURUSD / xauusd -> EUR/USD, XAU/USD
 const normSym=v=>{v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return /^[A-Z]{6}$/.test(v)?v.slice(0,3)+'/'+v.slice(3):v};
 function wlList(){const seen={};return String(S.wl||'').split(/[,;]+/).map(normSym).filter(x=>x&&!seen[x]&&(seen[x]=1))}
@@ -1511,7 +1518,9 @@ function tzParts(tz,t){const f=_tzf[tz]||(_tzf[tz]=new Intl.DateTimeFormat('en-U
 function localToMs(tz,y,m,d,h,mi){const g=Date.UTC(y,m,d,h,mi),off=t=>{const o=tzParts(tz,t);return Date.UTC(+o.year,+o.month-1,+o.day,+o.hour,+o.minute,+o.second)-t};let t=g-off(g);t=g-off(t);return t}
 // forex, metals and indices trade from Sunday 17:00 to Friday 17:00 New York time (follows US daylight saving)
 function fxClosed(ms){const o=tzParts('America/New_York',ms),h=+o.hour;return o.weekday==='Sat'||(o.weekday==='Fri'&&h>=17)||(o.weekday==='Sun'&&h<17)}
-const marketClosed=sym=>!isCrypto(sym)&&fxClosed(Date.now());
+function idxClosed(sym,ms){const c=IDXS[idxKey(sym)],o=tzParts(c.tz,ms||Date.now());if(o.weekday==='Sat'||o.weekday==='Sun')return true;const m=+o.hour*60+ +o.minute;return m<c.o[0]*60+c.o[1]||m>=c.c[0]*60+c.c[1]}
+const symClosed=(sym,ms)=>isCrypto(sym)?false:isIdx(sym)?idxClosed(sym,ms):fxClosed(ms==null?Date.now():ms);
+const marketClosed=sym=>symClosed(sym);
 function nextFxOpen(ms){let t=ms;for(let i=0;i<400&&fxClosed(t);i++)t+=9e5;return t}
 const fmtSast=ms=>new Date(ms).toLocaleString('en-ZA',{weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
 const SESS=[{n:'Asia',tz:'Asia/Tokyo',o:[9,0],c:[18,0]},{n:'London',tz:'Europe/London',o:[8,0],c:[17,0]},{n:'New York',tz:'America/New_York',o:[8,0],c:[17,0]}];
@@ -1549,7 +1558,7 @@ addEventListener('scroll',()=>{if(scrollX)scrollTo(0,scrollY)},{passive:true});
   if(dx>dy&&dx>8&&!e.target.closest('#cv,#scCv,input,select,textarea,.shb'))e.preventDefault()},{passive:false})})();
 calDay();setInterval(calDay,60000);
 // live ticker strip (Home)
-const TKS=['XAU/USD','EUR/USD','GBP/USD','USD/JPY','BTC/USD','ETH/USD'],TKIV=()=>S.tkIv==null?300:S.tkIv;
+const TKS=['XAU/USD','EUR/USD','NDX','DJI','DAX','GBP/USD','USD/JPY','BTC/USD','ETH/USD'],TKIV=()=>S.tkIv==null?300:S.tkIv;
 let TKD={},TKT=0,TKB=false;
 try{const c=JSON.parse(localStorage.getItem('sp_tk')||'{}');if(c.d){TKD=c.d;TKT=c.t||0}}catch(e){}
 const tkFmt=p=>p.toFixed(p>=1000?2:p>=20?3:5);
@@ -1558,17 +1567,21 @@ function tkBuild(){const el=$('tkr');if(!el)return;if(!TKIV()){el.style.display=
  el.innerHTML=`<div class="tkt">${h}${h}</div>`}
 function tkPaint(FL){const fx=fxClosed(Date.now());
  document.querySelectorAll('.tki').forEach(b=>{const s=b.dataset.s,d=TKD[s],p=b.querySelector('.tkp'),c=b.querySelector('.tkc');
-  b.classList.toggle('cl',fx&&!isCrypto(s));if(!d)return;
+  b.classList.toggle('cl',symClosed(s));if(!d)return;
   p.textContent=tkFmt(d.p);c.textContent=(d.c>=0?'▲ ':'▼ ')+Math.abs(d.c).toFixed(2)+'%';c.style.color=d.c>=0?'var(--up)':'var(--dn)';
   if(FL&&FL[s]){p.classList.remove('fu','fd');void p.offsetWidth;p.classList.add(FL[s]>0?'fu':'fd')}})}
 async function tickerLoad(force){
- const iv=TKIV();if(!iv||TKB||scanning||document.hidden||!S.key||!$('lock').classList.contains('hidden')||curPage()!=='home')return;
+ const iv=TKIV();if(!iv||TKB||scanning||document.hidden||!$('lock').classList.contains('hidden')||curPage()!=='home')return;
  if(!force&&Date.now()-TKT<iv*1000-1500)return;
- const syms=TKS.filter(s=>isCrypto(s)||!fxClosed(Date.now()));if(!syms.length)return;
- TKB=true;
- try{const j=await(await fetch('https://api.twelvedata.com/quote?symbol='+syms.map(encodeURIComponent).join(',')+'&apikey='+encodeURIComponent(S.key))).json(),FL={};
-  syms.forEach(s=>{const q=syms.length===1?j:j[s];if(!q||q.status==='error'||q.close==null)return;const p=+q.close,c=+q.percent_change;if(!isFinite(p))return;const o=TKD[s];if(o&&o.p!==p)FL[s]=p>o.p?1:-1;TKD[s]={p,c:isFinite(c)?c:0}});
-  for(let i=0;i<syms.length;i++)addCred();
+ const syms=S.key?TKS.filter(x=>!isIdx(x)&&(isCrypto(x)||!fxClosed(Date.now()))):[],ix=TKS.filter(isIdx);
+ if(!syms.length&&!ix.length)return;
+ TKB=true;const FL={},put=(x,p,c)=>{if(!isFinite(p))return;const o=TKD[x];if(o&&o.p!==p)FL[x]=p>o.p?1:-1;TKD[x]={p,c:isFinite(c)?c:0}};
+ try{
+  if(syms.length){try{const j=await(await fetch('https://api.twelvedata.com/quote?symbol='+syms.map(encodeURIComponent).join(',')+'&apikey='+encodeURIComponent(S.key))).json();
+   syms.forEach(x=>{const q=syms.length===1?j:j[x];if(!q||q.status==='error'||q.close==null)return;put(x,+q.close,+q.percent_change)});
+   for(let k=0;k<syms.length;k++)addCred()}catch(e){}}
+  if(ix.length){try{const j=await(await fetch(`${API}?action=quote&${qs()}&syms=${ix.map(idxKey).join(',')}`)).json();
+   if(j.ok&&j.q)ix.forEach(x=>{const q=j.q[idxKey(x)];if(q)put(x,+q.p,+q.c)})}catch(e){}}
   TKT=Date.now();try{localStorage.setItem('sp_tk',JSON.stringify({t:TKT,d:TKD}))}catch(e){}
   tkPaint(FL)}
  catch(e){TKT=Date.now()-iv*1000+6e4}
