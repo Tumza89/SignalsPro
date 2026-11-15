@@ -460,7 +460,7 @@ Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textCont
 const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tf));mark();
 $('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO=0;save();tick()};
 // indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
-const IDXS={NDX:{n:'Nasdaq 100',tz:'America/New_York',o:[9,30],c:[16,0]},DJI:{n:'Dow Jones',tz:'America/New_York',o:[9,30],c:[16,0]},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
+const IDXS={NDX:{n:'Nasdaq 100 futures',tz:'America/New_York',fut:1},DJI:{n:'Dow Jones futures',tz:'America/New_York',fut:1},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
 const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
 // data
 async function load(sym,tf,size){
@@ -905,7 +905,7 @@ function sORB(sym,d,hd){
  if(!t||n<120)return noTrade(sym,d,'orb','Not enough data');
  if(S.stf==='H4')return noTrade(sym,d,'orb','Opening range breakout is an intraday setup. Use Scalp or Day trade.');
  const now=t[0];let bs=null;
- [{n:'London',tz:'Europe/London',o:[8,0]},{n:'New York',tz:'America/New_York',o:[9,30]}].filter(se=>{if(!isIdx(sym))return true;return IDXS[idxKey(sym)].tz==='America/New_York'?se.n==='New York':se.n==='London'}).forEach(se=>{const lp=tzParts(se.tz,now),base=Date.UTC(+lp.year,+lp.month-1,+lp.day);
+ [{n:'London',tz:'Europe/London',o:[8,0]},{n:'New York',tz:'America/New_York',o:[9,30]}].filter(se=>{if(!isIdx(sym)||IDXS[idxKey(sym)].fut)return true;return se.n==='London'}).forEach(se=>{const lp=tzParts(se.tz,now),base=Date.UTC(+lp.year,+lp.month-1,+lp.day);
   for(let k=0;k<=4;k++){const dt=new Date(base-k*864e5),wd=dt.getUTCDay();if(wd<1||wd>5)continue;
    const ms=localToMs(se.tz,dt.getUTCFullYear(),dt.getUTCMonth(),dt.getUTCDate(),se.o[0],se.o[1]);if(ms<=now){if(!bs||ms>bs.ms)bs={ms,n:se.n};break}}});
  if(!bs||now-bs.ms>9*36e5)return noTrade(sym,d,'orb','No London or New York open in the last 9 hours');
@@ -1518,7 +1518,9 @@ function tzParts(tz,t){const f=_tzf[tz]||(_tzf[tz]=new Intl.DateTimeFormat('en-U
 function localToMs(tz,y,m,d,h,mi){const g=Date.UTC(y,m,d,h,mi),off=t=>{const o=tzParts(tz,t);return Date.UTC(+o.year,+o.month-1,+o.day,+o.hour,+o.minute,+o.second)-t};let t=g-off(g);t=g-off(t);return t}
 // forex, metals and indices trade from Sunday 17:00 to Friday 17:00 New York time (follows US daylight saving)
 function fxClosed(ms){const o=tzParts('America/New_York',ms),h=+o.hour;return o.weekday==='Sat'||(o.weekday==='Fri'&&h>=17)||(o.weekday==='Sun'&&h<17)}
-function idxClosed(sym,ms){const c=IDXS[idxKey(sym)],o=tzParts(c.tz,ms||Date.now());if(o.weekday==='Sat'||o.weekday==='Sun')return true;const m=+o.hour*60+ +o.minute;return m<c.o[0]*60+c.o[1]||m>=c.c[0]*60+c.c[1]}
+function idxClosed(sym,ms){const c=IDXS[idxKey(sym)],o=tzParts(c.tz,ms||Date.now()),m=+o.hour*60+ +o.minute;
+ if(c.fut){if(o.weekday==='Sat')return true;if(o.weekday==='Fri'&&m>=1020)return true;if(o.weekday==='Sun'&&m<1080)return true;return m>=1020&&m<1080}
+ if(o.weekday==='Sat'||o.weekday==='Sun')return true;return m<c.o[0]*60+c.o[1]||m>=c.c[0]*60+c.c[1]}
 const symClosed=(sym,ms)=>isCrypto(sym)?false:isIdx(sym)?idxClosed(sym,ms):fxClosed(ms==null?Date.now():ms);
 const marketClosed=sym=>symClosed(sym);
 function nextFxOpen(ms){let t=ms;for(let i=0;i<400&&fxClosed(t);i++)t+=9e5;return t}
