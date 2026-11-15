@@ -984,6 +984,31 @@ function sMR(sym,d,hd){
  const r1=Math.abs(t1-px)/risk,r2=Math.abs(t2-px)/risk;if(r1<1)return NT('The middle band is too close to the stop');
  const p={side:bull?'BUY':'SELL',e:px,sl,t1,t2,r1,r2,on:true,dist:0,z:{s:0}},q=10+(Math.abs(rs[k]-50)>=25?8:4)+(ax==null?0:ax<20?8:ax<25?4:0)+(k===1?4:0);
  return withOv(fin(sym,d,'mr',{v:'CONFIRMED',p,cmsg:''},q,'Mean reversion · '+(bull?'oversold bounce':'overbought fade'),`Price pierced the ${bull?'lower':'upper'} Bollinger band ${k} candle${k>1?'s':''} ago with RSI at ${rs[k].toFixed(0)}, then closed back inside. ADX is ${ax==null?'n/a':ax.toFixed(0)}${ax!=null&&ax<20?' (ranging market)':''}. Target 1 is the middle band at ${f(t1)}.`,hd),ov)}
+const fmtN=v=>Math.abs(v)>=1e6?(v/1e6).toFixed(1)+'M':Math.abs(v)>=1e3?(v/1e3).toFixed(1)+'K':v.toFixed(1);
+// Order flow (estimated): high-volume absorption at a swing level, plus a cumulative delta estimate built from candle volume
+function sOF(sym,d,hd){
+ const{o,h,l,c,v,n}=d,atr=atr7(h,l,c,n)[0]||1e-9,f=x=>x.toFixed(d.dec);
+ if(n<120)return noTrade(sym,d,'of','Not enough data');
+ if(!hasVol(d))return noTrade(sym,d,'of','This symbol has no volume data, so order flow cannot be estimated. Use NDX, DJI or crypto.');
+ const va=smaA(v,20),dl=new Array(n),cv=new Array(n);let s=0;
+ for(let i=n-1;i>=0;i--){const rg=h[i]-l[i]||1e-9;dl[i]=v[i]*((c[i]-l[i])-(h[i]-c[i]))/rg;s+=dl[i];cv[i]=s}
+ let lo=Infinity,hi=-Infinity;for(let i=0;i<300&&i<n;i++){if(cv[i]<lo)lo=cv[i];if(cv[i]>hi)hi=cv[i]}const pd=(hi-lo)*.08||1;
+ const ov={pane:{n:'Est. cumulative delta',lines:[{n:'CVD',a:cv,c:'#22d3ee'}],lv:[],min:lo-pd,max:hi+pd}},NT=m=>withOv(noTrade(sym,d,'of',m),ov),sw=swings(d,3);
+ const arg=(a,i,j,mx)=>{let b=i;for(let q=i;q<j&&q<n;q++)if(mx?a[q]>a[b]:a[q]<a[b])b=q;return b};
+ const a1=arg(l,0,15,false),a2=arg(l,15,45,false),b1=arg(h,0,15,true),b2=arg(h,15,45,true),bullDiv=l[a1]<l[a2]&&cv[a1]>cv[a2],bearDiv=h[b1]>h[b2]&&cv[b1]<cv[b2];
+ const near=(arr,val,k)=>arr.find(x=>x.i>k+2&&x.i<=100&&Math.abs(val-x.v)<=.6*atr);
+ let sg=null;
+ for(let k=1;k<=3&&!sg;k++){if(va[k+1]==null)break;const ratio=v[k]/(va[k+1]||1e-9),rg=h[k]-l[k]||1e-9,lw=Math.min(o[k],c[k])-l[k],uw=h[k]-Math.max(o[k],c[k]);if(ratio<1.5)continue;
+  const lowLv=lw>=.45*rg&&c[k]>=l[k]+.5*rg?near(sw.L,l[k],k):null,highLv=uw>=.45*rg&&c[k]<=h[k]-.5*rg?near(sw.H,h[k],k):null;
+  if(lowLv)sg={bull:true,k,ratio,lvl:lowLv};else if(highLv)sg={bull:false,k,ratio,lvl:highLv}}
+ if(!sg){
+  if(bullDiv||bearDiv){const bl=bullDiv&&(!bearDiv||a1<b1);return withOv(fin(sym,d,'of',{v:'WATCH',cmsg:'Price made a new '+(bl?'low':'high')+' but the estimated cumulative delta did not follow, so '+(bl?'selling':'buying')+' pressure is fading. Waiting for a high-volume rejection at a swing level.'},8,'Order flow · '+(bl?'bullish':'bearish')+' delta divergence','',hd),ov)}
+  return NT('No high-volume absorption at a swing level and no delta divergence')}
+ const bull=sg.bull,k=sg.k,[zlo,zhi]=zw(bull?l[k]:Math.max(o[k],c[k]),bull?Math.min(o[k],c[k]):h[k],atr);
+ ov.boxes=[{n:'Absorption zone',i0:k+4,i1:0,lo:zlo,hi:zhi,c:bull?GRN:RED}];ov.mk=[{i:k,side:bull?'up':'dn',n:'Absorbed'}];ov.lv=[{n:'Swing '+(bull?'low':'high'),v:sg.lvl.v,c:'#94a3b8'}];
+ const slr=bull?l[k]-.25*atr:h[k]+.25*atr,ext=bull?Math.max(...h.slice(0,40)):Math.min(...l.slice(0,40));
+ const E=evalZone(bull?'BUY':'SELL',zlo,zhi,slr,[ext].concat((bull?sw.H:sw.L).map(x=>x.v)),d,atr,k),dv=bull?bullDiv:bearDiv,q=10+(sg.ratio>=2.5?8:sg.ratio>=2?6:4)+(dv?8:0)+((bull?dl[k]>0:dl[k]<0)?4:0);
+ return withOv(fin(sym,d,'of',E,q,'Order flow · '+(bull?'bullish':'bearish')+' absorption at a swing '+(bull?'low':'high'),`Volume on the signal candle was ${sg.ratio.toFixed(1)}x the recent average with a long ${bull?'lower':'upper'} wick at ${f(sg.lvl.v)}, so ${bull?'sellers':'buyers'} look absorbed.${dv?' The estimated cumulative delta also diverges from price.':''} This is estimated from candle volume, not true order flow.`,hd),ov)}
 // ---- scanner chart (its own canvas on the Scanner page, separate from the Indicator) ----
 function scOpen(sym,strat){
  const E=SCS[sym];if(!E)return;
@@ -1051,7 +1076,7 @@ function scDraw(){
   pn.lines.forEach(ln=>{g.strokeStyle=ln.c;g.lineWidth=1.5*r;g.beginPath();let on=false;for(let i=i1;i>=i0;i--){const v=ln.a[i];if(v==null){on=false;continue}const x=X(i),y=PY(Math.max(pmin,Math.min(pmax,v)));if(on)g.lineTo(x,y);else{g.moveTo(x,y);on=true}}g.stroke()});
   g.restore();
   g.fillStyle=`rgba(${WR},.45)`;g.font=`${9*r}px sans-serif`;(pn.lv||[]).forEach(v=>g.fillText(String(v),W-gut+4*r,PY(v)+3*r));
-  lab(pn.n+'  '+pn.lines.map(x=>x.n+' '+(x.a[0]==null?'—':x.a[0].toFixed(1))).join('  '),6*r,py0+12*r,`rgba(${WR},.7)`)}
+  lab(pn.n+'  '+pn.lines.map(x=>x.n+' '+(x.a[0]==null?'—':fmtN(x.a[0]))).join('  '),6*r,py0+12*r,`rgba(${WR},.7)`)}
  if(T){g.textAlign='center';g.strokeStyle=`rgba(${WR},.18)`;g.lineWidth=r;
   for(let k=0;k<4;k++){const i=Math.min(n-1,Math.round(i0+(k+.5)*N/4)),x=X(i);if(x<22*r||x>W-gut-22*r||!T[i])continue;const dt=new Date(T[i]);
    g.beginPath();g.moveTo(x,H-bm);g.lineTo(x,H-bm+5*r);g.stroke();g.fillStyle=`rgba(${WR},.7)`;g.font=`700 ${10*r}px sans-serif`;g.fillText(fT.format(dt),x,H-bm+17*r);g.fillStyle=`rgba(${WR},.45)`;g.font=`${9*r}px sans-serif`;g.fillText(fD.format(dt),x,H-bm+29*r)}
@@ -1075,7 +1100,8 @@ const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:
  orb:{n:'ORB',d:'London or New York opening range breakout, entry on the retest.',fn:sORB},
  ichi:{n:'Ichimoku',d:'Trade with the cloud, entry on a pullback to Tenkan and Kijun.',fn:sICHI},
  vol:{n:'Volatility',d:'ATR expansion with rising ADX, entry on the retest of the breakout.',fn:sVOL},
- mr:{n:'Mean reversion',d:'Bollinger band pierce with an extreme RSI, targeting the middle band.',fn:sMR}};
+ mr:{n:'Mean reversion',d:'Bollinger band pierce with an extreme RSI, targeting the middle band.',fn:sMR},
+ of:{n:'Order flow',d:'Estimated volume pressure: high-volume absorption at swing levels plus a delta estimate. Needs volume (NDX, DJI, crypto).',fn:sOF}};
 const sl=r=>r.strat&&STRATS[r.strat]?' · '+STRATS[r.strat].n:'';
 if(!Array.isArray(S.strats)||!S.strats.length||S.strats.some(k=>!STRATS[k]))S.strats=['po3'];
 function strChips(){$('scStrat').innerHTML=Object.keys(STRATS).map(k=>`<button class="${S.strats.includes(k)?'on':''}" onclick="togStrat('${k}')">${STRATS[k].n}</button>`).join('')+`<button class="${S.strats.length===Object.keys(STRATS).length?'on':''}" onclick="allStrat()">All</button>`;
