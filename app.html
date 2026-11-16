@@ -285,6 +285,12 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .l3d .ly1{transform:translateZ(calc(var(--s,46px)*-.14))}.l3d .ly2{transform:translateZ(calc(var(--s,46px)*-.03))}
 .l3d .ly3{transform:translateZ(calc(var(--s,46px)*.07))}.l3d .ly4{transform:translateZ(calc(var(--s,46px)*.16))}
 .l3d .gl{inset:6%;border-radius:50%;pointer-events:none;background:radial-gradient(circle at var(--gx,35%) var(--gy,30%),rgba(255,255,255,.28),transparent 55%);transform:translateZ(calc(var(--s,46px)*.2))}
+.hlh{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.hlf{display:flex;gap:6px;margin:8px 0 4px}.hlf button{padding:6px 12px;border-radius:20px;border:1px solid var(--bd);background:rgba(var(--w),.03);color:var(--t2);font-size:11px;font-weight:700;cursor:pointer}.hlf button.on{border-color:var(--accent);color:var(--accent);background:rgba(var(--w),.08)}
+.hli{display:block;padding:11px 0;border-bottom:1px solid rgba(var(--w),.06);text-decoration:none;color:var(--text)}.hli:last-of-type{border:0}
+.hli b{display:block;font-size:14px;line-height:1.35;font-weight:600}
+.hli span{display:flex;gap:8px;align-items:center;margin-top:5px;font-size:11px;color:var(--t2)}
+.hlt{font-size:10px;font-weight:800;letter-spacing:.5px;padding:2px 8px;border-radius:20px;background:rgba(var(--w),.07)}.hlt.u{color:var(--up)}.hlt.d{color:var(--dn)}
 </style></head>
 <body>
 <div id="lock"><div class="l3d big" data-l3d style="--s:150px"></div>
@@ -322,7 +328,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <div class="wm">Signals<span>Pro</span></div><div class="sub" id="who">Premium zone indicator</div>
 <div class="chips"><b>Live zones</b><b>Trade plans</b><b>Market scanner</b></div>
 <button class="go" id="go" aria-label="Start or stop"><i></i></button>
-<div class="hint" id="hint">Tap to start live signals</div></div><div id="ck"></div><div id="news"></div></section>
+<div class="hint" id="hint">Tap to start live signals</div></div><div id="ck"></div><div id="hl"></div><div id="news" style="display:none"></div></section>
 
 <section class="page" id="p-ind">
 <div class="ibar"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
@@ -466,7 +472,7 @@ function page(n){
   window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');moveInd(n);if(n==='ind')fit()};
  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
- if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad()}}
+ if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad();hlLoad()}}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
@@ -1660,6 +1666,29 @@ async function tickerLoad(force){
  catch(e){TKT=Date.now()-iv*1000+6e4}
  TKB=false}
 tkBuild();tkPaint();setInterval(()=>{tkPaint();tickerLoad()},30000);
+
+// index headlines (Home) - served by the Apps Script action=headlines
+let HLD=[],HLT=0,HLB=false,HLF='ALL';
+try{const c=JSON.parse(localStorage.getItem('sp_hl')||'{}');if(c.d){HLD=c.d;HLT=c.t||0}}catch(e){}
+const HLUP=/\b(rise|rises|rising|rally|rallies|jump|jumps|surge|surges|climb|climbs|gain|gains|tick up|ticks up|higher|rebound|rebounds|advance|advances|record high|edge up|edges up|steady)\b/i,
+ HLDN=/\b(slip|slips|slide|slides|fall|falls|drop|drops|sink|sinks|tumble|tumbles|slump|slumps|lower|decline|declines|sell-off|selloff|retreat|retreats|tick down|ticks down|edge down|edges down|plunge|plunges)\b/i;
+const hlMood=t=>{const u=HLUP.test(t),d=HLDN.test(t);return u&&!d?'u':d&&!u?'d':''};
+const hlAgo=ms=>{const m=Math.max(1,Math.round((Date.now()-ms)/6e4));return m<60?m+'m ago':m<1440?Math.floor(m/60)+'h ago':Math.floor(m/1440)+'d ago'};
+function hlPaint(){const el=$('hl');if(!el)return;
+ const L=HLD.filter(x=>HLF==='ALL'||x.k===HLF).slice(0,6);
+ const chips=['ALL','NDX','DJI','DAX'].map(k=>`<button class="${HLF===k?'on':''}" onclick="HLF='${k}';hlPaint()">${k==='ALL'?'All':k}</button>`).join('');
+ const rows=L.length?L.map(x=>{const m=hlMood(x.t);return `<a class="hli" href="${esc(x.u||'#')}" target="_blank" rel="noopener noreferrer"><b>${esc(x.t)}</b><span>${m?`<i class="hlt ${m}">${m==='u'?'▲ UP':'▼ DOWN'}</i>`:''}<i class="hlt">${esc(x.k)}</i>${esc(x.s||'')} · ${x.d?hlAgo(x.d):''}</span></a>`}).join(''):`<div class="note" style="margin:10px 0 4px">${HLB?'Loading headlines…':HLT?'No headlines for this index right now.':'Headlines are unavailable right now.'}</div>`;
+ el.innerHTML=`<div class="fcard" style="text-align:left"><div class="hlh"><div><div class="fk">Index headlines</div><div style="font-size:16px;font-weight:800;margin-top:3px">Futures &amp; markets</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="hlLoad(true);return false">Refresh</a></div><div class="hlf">${chips}</div>${rows}</div>`}
+async function hlLoad(force){
+ if(HLB||document.hidden||!$('lock').classList.contains('hidden')||curPage()!=='home')return;
+ if(!force&&Date.now()-HLT<3e5)return;
+ HLB=true;if(force)hlPaint();
+ try{const j=await(await fetch(`${API}?action=headlines&${qs()}`)).json();
+  if(j.ok===false){showLock(j.msg);throw Error(j.msg)}
+  if(j.ok&&Array.isArray(j.items)){HLD=j.items.filter(x=>x&&x.t).sort((a,b)=>(b.d||0)-(a.d||0));HLT=Date.now();try{localStorage.setItem('sp_hl',JSON.stringify({t:HLT,d:HLD}))}catch(e){}}}
+ catch(e){}
+ HLB=false;hlPaint()}
+hlPaint();hlLoad();setInterval(()=>hlLoad(),30000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('tkSel').value=String(S.tkIv==null?300:S.tkIv);$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.tkIv=+$('tkSel').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();tkBuild();tkPaint();tickerLoad(true);if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
