@@ -268,6 +268,22 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 .prog{position:fixed;top:0;left:0;height:3px;width:0;z-index:70;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--up));box-shadow:0 0 14px var(--cyan)}
 .tl{transition:transform .12s,opacity .7s,border-color .25s!important;will-change:transform}
 html.pre .prog,html.pre .glow{display:none}
+/* 3D logo + one-word wordmark */
+.word,.wordmark{background:linear-gradient(90deg,#ffffff 0%,#a9d4ff 55%,var(--cyan) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+.wordmark{font-family:var(--hd);font-weight:800;letter-spacing:-.04em;font-size:clamp(30px,5.4vw,50px);line-height:1;margin-top:6px}
+.hlogo{display:flex;flex-direction:column;align-items:center;margin:0 auto 26px}
+.l3d{--accent:var(--cyan);--buy:var(--up);--sell:var(--dn);--glow:rgba(59,140,255,.42);position:relative;display:block;width:var(--s,44px);height:var(--s,44px);flex:none;perspective:calc(var(--s,44px)*6);touch-action:none;cursor:grab;color:var(--ink);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;filter:hue-rotate(var(--hs,0deg))}
+.l3d:active{cursor:grabbing}
+.l3d.big{animation:l3fl 5s ease-in-out infinite}
+@keyframes l3fl{50%{transform:translateY(-10px)}}@keyframes l3spin{to{transform:rotate(360deg)}}
+.l3s{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));will-change:transform}
+.l3y,.l3disc,.l3g{position:absolute;inset:0}
+.l3d svg{display:block;width:100%;height:100%;max-width:none;overflow:visible;fill:none}
+.l3a{stroke:var(--accent)}.l3b{fill:var(--buy)}.l3sell{fill:var(--sell)}
+.l3rg{transform-origin:60px 60px;animation:l3spin 16s linear infinite}
+.l3disc{inset:4%;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 68%);box-shadow:0 0 calc(var(--s,44px)*.5) var(--glow);transform:translateZ(calc(var(--s,44px)*-.22))}
+.l3y1{transform:translateZ(calc(var(--s,44px)*-.14))}.l3y2{transform:translateZ(calc(var(--s,44px)*-.03))}.l3y3{transform:translateZ(calc(var(--s,44px)*.07))}.l3y4{transform:translateZ(calc(var(--s,44px)*.16))}
+.l3g{inset:6%;border-radius:50%;pointer-events:none;background:radial-gradient(circle at var(--gx,35%) var(--gy,30%),rgba(255,255,255,.28),transparent 55%);transform:translateZ(calc(var(--s,44px)*.2))}
 </style>
 <script>(function(){var L=new Date("2026-11-16T00:00:00+02:00").getTime();if(Date.now()<L&&!/[?&]preview/.test(location.search)){document.documentElement.classList.add("pre")}})()</script>
 </head>
@@ -275,7 +291,7 @@ html.pre .prog,html.pre .glow{display:none}
 <div id="gate" role="dialog" aria-label="SignalsPro launch countdown">
   <i class="orb o1"></i><i class="orb o2"></i><i class="orb o3"></i>
   <div class="gin">
-    <div class="brand"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></div>
+    <div class="brand"><span class="l3d" data-l3d style="--s:64px"></span><span class="word">SignalsPro</span></div>
     <div class="pill" style="margin-top:28px"><i class="dot"></i> Launching 16 November 2026</div>
     <h2><span class="grad">Something premium</span><br>is almost here.</h2>
     <p>Market zones, manual buy and sell plans and a symbol scanner, all in one workspace. Opens the moment the clock hits zero.</p>
@@ -295,7 +311,7 @@ html.pre .prog,html.pre .glow{display:none}
 <header>
   <div class="risk"><b>Risk warning:</b> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for everyone.</div>
   <div class="wrap bar">
-    <a class="brand" href="./" aria-label="SignalsPro home"><span class="brand-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/><path d="M4 26H28" stroke="#8cecff" stroke-width="2" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
+    <a class="brand" href="./" aria-label="SignalsPro home"><span class="l3d" data-l3d style="--s:44px"></span><span class="word">SignalsPro</span></a>
     <nav aria-label="Main navigation">
       <a href="#features">Features</a><a href="#strategy">Strategy</a><a href="#security">Security</a><a href="#install">Install</a><a href="#setup">Setup</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
       <a class="btn ghost sm" href="./app.html">Launch web app ↗</a>
@@ -305,6 +321,7 @@ html.pre .prog,html.pre .glow{display:none}
 
 <main>
 <section class="hero wrap">
+  <div class="hlogo"><div class="l3d big" data-l3d style="--s:168px"></div><div class="wordmark">SignalsPro</div></div>
   <div class="pill"><i class="dot"></i> Manual buy and sell setups</div>
   <h1>See the setup.<br><span class="grad">Plan your next move.</span></h1>
   <p class="lead">Market zones, trade plans and a symbol scanner in one focused workspace for forex and CFD traders.</p>
@@ -461,7 +478,7 @@ html.pre .prog,html.pre .glow{display:none}
 <footer>
   <div class="wrap">
     <div class="frow">
-      <a class="brand" href="./" style="font-size:16px"><span class="brand-icon" style="width:28px;height:28px;border-radius:9px"><svg viewBox="0 0 32 32" fill="none"><path d="M5 24V8M12 24V15M19 24V5M26 24V11" stroke="white" stroke-width="3" stroke-linecap="round"/></svg></span>Signals<i>Pro</i></a>
+      <a class="brand" href="./" style="font-size:16px"><span class="l3d" data-l3d style="--s:32px"></span><span class="word">SignalsPro</span></a>
       <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>
       <nav><a href="#install">Install</a><a href="#pricing">Pricing</a><a href="#setup">Setup</a><a href="./app.html">Launch web app ↗</a></nav>
     </div>
@@ -646,6 +663,45 @@ if(!still&&matchMedia("(hover:hover)").matches)document.querySelectorAll(".tile,
  t.addEventListener("pointermove",function(e){var r=t.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
   t.classList.add("tl");t.style.transform="perspective(800px) rotateX("+(-y*7).toFixed(2)+"deg) rotateY("+(x*9).toFixed(2)+"deg) translateY(-3px)"});
  t.addEventListener("pointerleave",function(){t.style.transform="";setTimeout(function(){t.classList.remove("tl")},150)})});
+})();
+
+
+
+</script>
+<script>
+/* 3D logo: drag to spin and tilt, tap to flip, hover tilts it, eases back to face front */
+(function(){
+var HTML='<div class="l3s"><i class="l3disc"></i>'+
+'<div class="l3y l3y1"><svg viewBox="0 0 120 120"><circle class="l3a l3rg" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="l3a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/></svg></div>'+
+'<div class="l3y l3y2"><svg viewBox="0 0 120 120"><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/></svg></div>'+
+'<div class="l3y l3y3"><svg viewBox="0 0 120 120"><rect class="l3sell" x="37" y="52" width="10" height="20" rx="2"/><rect class="l3b" x="55" y="40" width="10" height="28" rx="2"/><rect class="l3b" x="73" y="50" width="10" height="18" rx="2"/></svg></div>'+
+'<div class="l3y l3y4"><svg viewBox="0 0 120 120"><path class="l3a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><i class="l3g"></i></div>';
+var LG=[],raf=0,calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function make(el){
+ el.innerHTML=HTML;var o={el:el,rx:0,ry:0,vx:0,vy:0,hx:null,hy:null,drag:false,t0:0,lx:0,ly:0,mv:0,idle:0};LG.push(o);
+ el.addEventListener("pointerdown",function(e){try{el.setPointerCapture(e.pointerId)}catch(_){}o.drag=true;o.lx=e.clientX;o.ly=e.clientY;o.mv=0;o.t0=Date.now();o.vx=o.vy=0;o.hx=o.hy=null});
+ el.addEventListener("pointermove",function(e){
+  if(o.drag){var dx=e.clientX-o.lx,dy=e.clientY-o.ly;o.lx=e.clientX;o.ly=e.clientY;o.mv+=Math.abs(dx)+Math.abs(dy);o.ry+=dx*1.1;o.rx=Math.max(-70,Math.min(70,o.rx-dy*1.1));o.vy=dx*1.1;o.vx=-dy*1.1;o.idle=Date.now()}
+  else if(e.pointerType==="mouse"){var r=el.getBoundingClientRect();o.hy=((e.clientX-r.left)/r.width-.5)*50;o.hx=-((e.clientY-r.top)/r.height-.5)*50}});
+ function end(){if(!o.drag)return;o.drag=false;o.idle=Date.now();if(o.mv<6&&Date.now()-o.t0<350)o.vy=30}
+ el.addEventListener("pointerup",end);el.addEventListener("pointercancel",end);
+ el.addEventListener("pointerleave",function(){o.hx=o.hy=null});
+ el.addEventListener("click",function(e){e.preventDefault();e.stopPropagation()});
+ el.addEventListener("contextmenu",function(e){e.preventDefault()})}
+function tick(o,now){
+ if(!o.drag){
+  o.ry+=o.vy;o.rx+=o.vx;o.vy*=.94;o.vx*=.94;
+  var quiet=now-o.idle>2200&&Math.abs(o.vy)<.3&&Math.abs(o.vx)<.3,face=Math.round(o.ry/360)*360,ty=null,tx=0;
+  if(o.hy!=null){ty=face+o.hy;tx=o.hx}else if(quiet){ty=face+(calm?0:Math.sin(now/1700)*10);tx=calm?0:Math.cos(now/2100)*5}
+  if(ty!=null){o.ry+=(ty-o.ry)*.08;o.rx+=(tx-o.rx)*.08}}
+ var n=((o.ry%360)+540)%360-180,st=o.el.style;
+ st.setProperty("--rx",o.rx.toFixed(1)+"deg");st.setProperty("--ry",o.ry.toFixed(1)+"deg");
+ st.setProperty("--gx",(50+n/180*45).toFixed(0)+"%");st.setProperty("--gy",(40-o.rx/70*30).toFixed(0)+"%")}
+function loop(){raf=requestAnimationFrame(loop);if(document.hidden)return;var now=Date.now();
+ LG.forEach(function(o){if(o.el.getClientRects().length)tick(o,now)})}
+Array.prototype.forEach.call(document.querySelectorAll("[data-l3d]"),make);
+if(LG.length)raf=requestAnimationFrame(loop);
+window.__l3={LG:LG,tick:tick};
 })();
 </script>
 </body>
