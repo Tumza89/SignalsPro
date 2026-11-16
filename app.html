@@ -272,9 +272,22 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 #scCv{height:clamp(340px,56svh,540px)}#scChart{scroll-margin-top:130px}
 .lg{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11px;color:var(--t2);margin-top:10px}
 .lg span::before{content:'';display:inline-block;width:14px;height:3px;border-radius:2px;background:var(--c);margin-right:6px;vertical-align:3px}
+/* 3D logo */
+.l3d{position:relative;width:var(--s,46px);height:var(--s,46px);flex:none;perspective:calc(var(--s,46px)*6);touch-action:none;cursor:grab;color:var(--text);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.l3d:active{cursor:grabbing}
+.l3d.big{margin-bottom:16px;animation:fl 5s ease-in-out infinite}
+.l3d .st{position:absolute;inset:0;transform-style:preserve-3d;transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));will-change:transform}
+.l3d .ly,.l3d .disc,.l3d .gl{position:absolute;inset:0}
+.l3d svg{display:block;width:100%;height:100%;overflow:visible;fill:none}
+.l3d .a{stroke:var(--accent)}.l3d .b{fill:var(--buy)}.l3d .s{fill:var(--sell)}
+.l3d .rg{transform-origin:60px 60px;animation:spin 16s linear infinite}
+.l3d .disc{inset:4%;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 68%);box-shadow:0 0 calc(var(--s,46px)*.5) var(--glow);transform:translateZ(calc(var(--s,46px)*-.22))}
+.l3d .ly1{transform:translateZ(calc(var(--s,46px)*-.14))}.l3d .ly2{transform:translateZ(calc(var(--s,46px)*-.03))}
+.l3d .ly3{transform:translateZ(calc(var(--s,46px)*.07))}.l3d .ly4{transform:translateZ(calc(var(--s,46px)*.16))}
+.l3d .gl{inset:6%;border-radius:50%;pointer-events:none;background:radial-gradient(circle at var(--gx,35%) var(--gy,30%),rgba(255,255,255,.28),transparent 55%);transform:translateZ(calc(var(--s,46px)*.2))}
 </style></head>
 <body>
-<div id="lock"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div id="lock"><div class="l3d big" data-l3d style="--s:150px"></div>
 <div class="wm">Signals<span>Pro</span></div><div class="sub" style="margin:6px 0 26px">Premium market zones. Live.</div>
 <div id="loginBox" class="lbox"><input type="email" class="inp" id="emailIn" placeholder="Your subscriber email" autocapitalize="none" autocomplete="email" style="max-width:300px;text-align:center">
 <button class="btn" style="max-width:300px" id="btnU">Unlock</button>
@@ -297,15 +310,15 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <div class="note sup" style="text-align:center">Need help? <a href="tel:+27696750129">Call +27 69 675 0129</a> · <a href="https://wa.me/27696750129" target="_blank" rel="noopener">WhatsApp</a></div></div>
 <div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
 
-<div id="welcome"><svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div id="welcome"><div class="l3d big" data-l3d style="--s:150px"></div>
 <div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">Your desk is ready.</div>
 <button class="btn" id="wgo" style="max-width:300px">Enter terminal</button></div>
 
-<header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><i class="nbadge" id="menuDot"></i></button><div class="brand"><div class="logo">SP</div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div><div class="sess" id="sess"><i></i><span id="sessTx">…</span><b>›</b></div></header><div id="sessPanel"></div>
+<header><div style="display:flex;align-items:center;gap:12px"><button id="menuBtn" aria-label="Menu"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></svg><i class="nbadge" id="menuDot"></i></button><div class="brand"><div class="l3d" data-l3d style="--s:46px"></div>SignalsPro</div></div><div class="pill" id="pill">Stopped</div><div class="sess" id="sess"><i></i><span id="sessTx">…</span><b>›</b></div></header><div id="sessPanel"></div>
 <div id="newsBar" style="display:none"></div>
 
 <section class="page on" id="p-home"><div class="tkr" id="tkr"></div><div class="hero">
-<svg class="emb" viewBox="0 0 120 120" fill="none"><circle class="ring a" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+<div class="l3d big" data-l3d style="--s:150px"></div>
 <div class="wm">Signals<span>Pro</span></div><div class="sub" id="who">Premium zone indicator</div>
 <div class="chips"><b>Live zones</b><b>Trade plans</b><b>Market scanner</b></div>
 <button class="go" id="go" aria-label="Start or stop"><i></i></button>
@@ -1531,7 +1544,7 @@ const ptr=document.createElement('div');ptr.id='ptr';ptr.innerHTML='<svg viewBox
 function refreshNow(){const on=document.querySelector('.page.on'),id=on?on.id:'';let pr=null;if(id==='p-ind')pr=tick();else if(id==='p-home'||id==='p-fund'){pr=loadFund(true);if(id==='p-home')tickerLoad(true)}else return;
  ptr.classList.add('busy');Promise.resolve(pr).catch(()=>{}).then(()=>setTimeout(()=>ptr.classList.remove('busy'),400))}
 (function(){let y0=0,pull=0,act=false;
- const ok=t=>!t.closest('#cv,#sheet,input,select,textarea,#thPanel,#lock,#welcome')&&window.scrollY<=0&&!document.body.classList.contains('fsm');
+ const ok=t=>!t.closest('#cv,#sheet,.l3d,input,select,textarea,#thPanel,#lock,#welcome')&&window.scrollY<=0&&!document.body.classList.contains('fsm');
  addEventListener('touchstart',e=>{if(e.touches.length===1&&ok(e.target)){y0=e.touches[0].clientY;act=true;pull=0}else act=false},{passive:true});
  addEventListener('touchmove',e=>{if(!act)return;pull=Math.max(0,e.touches[0].clientY-y0);if(window.scrollY>0){act=false;ptr.style.opacity=0;return}ptr.style.opacity=Math.min(1,pull/90);ptr.style.transform=`translate(-50%,${Math.min(pull*.4,44)}px)`},{passive:true});
  addEventListener('touchend',()=>{if(!act)return;act=false;const go=pull>110;ptr.style.opacity='';ptr.style.transform='';if(go){navigator.vibrate&&navigator.vibrate(15);refreshNow()}},{passive:true})})();
@@ -1583,8 +1596,40 @@ addEventListener('scroll',()=>{if(scrollX)scrollTo(0,scrollY)},{passive:true});
 (function(){let x0=0,y0=0;
  addEventListener('touchstart',e=>{if(e.touches.length===1){x0=e.touches[0].clientX;y0=e.touches[0].clientY}},{passive:true});
  addEventListener('touchmove',e=>{if(e.touches.length!==1)return;const dx=Math.abs(e.touches[0].clientX-x0),dy=Math.abs(e.touches[0].clientY-y0);
-  if(dx>dy&&dx>8&&!e.target.closest('#cv,#scCv,input,select,textarea,.shb'))e.preventDefault()},{passive:false})})();
+  if(dx>dy&&dx>8&&!e.target.closest('#cv,#scCv,.l3d,input,select,textarea,.shb'))e.preventDefault()},{passive:false})})();
 calDay();setInterval(calDay,60000);
+// ---- 3D logo: drag to spin and tilt, tap to flip, mouse hover tilts it, it eases back to face front ----
+const L3D='<div class="st"><i class="disc"></i>'+
+ '<div class="ly ly1"><svg viewBox="0 0 120 120"><circle class="a rg" cx="60" cy="60" r="54" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/><circle class="a" cx="60" cy="60" r="42" stroke-width="2" opacity=".35"/></svg></div>'+
+ '<div class="ly ly2"><svg viewBox="0 0 120 120"><path d="M42 40v40M60 30v52M78 44v34" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".55"/></svg></div>'+
+ '<div class="ly ly3"><svg viewBox="0 0 120 120"><rect class="s" x="37" y="52" width="10" height="20" rx="2"/><rect class="b" x="55" y="40" width="10" height="28" rx="2"/><rect class="b" x="73" y="50" width="10" height="18" rx="2"/></svg></div>'+
+ '<div class="ly ly4"><svg viewBox="0 0 120 120"><path class="a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><i class="gl"></i></div>';
+const LG=[];let LGraf=0;
+function mk3d(el){
+ el.innerHTML=L3D;const o={el,rx:0,ry:0,vx:0,vy:0,hx:null,hy:null,drag:false,t0:0,lx:0,ly:0,mv:0,idle:0};LG.push(o);
+ el.addEventListener('pointerdown',e=>{try{el.setPointerCapture(e.pointerId)}catch(_){}o.drag=true;o.lx=e.clientX;o.ly=e.clientY;o.mv=0;o.t0=Date.now();o.vx=o.vy=0;o.hx=o.hy=null});
+ el.addEventListener('pointermove',e=>{
+  if(o.drag){const dx=e.clientX-o.lx,dy=e.clientY-o.ly;o.lx=e.clientX;o.ly=e.clientY;o.mv+=Math.abs(dx)+Math.abs(dy);o.ry+=dx*1.1;o.rx=Math.max(-70,Math.min(70,o.rx-dy*1.1));o.vy=dx*1.1;o.vx=-dy*1.1;o.idle=Date.now()}
+  else if(e.pointerType==='mouse'){const r=el.getBoundingClientRect();o.hy=((e.clientX-r.left)/r.width-.5)*50;o.hx=-((e.clientY-r.top)/r.height-.5)*50}});
+ const end=()=>{if(!o.drag)return;o.drag=false;o.idle=Date.now();if(o.mv<6&&Date.now()-o.t0<350)o.vy=30};
+ ['pointerup','pointercancel'].forEach(t=>el.addEventListener(t,end));
+ el.addEventListener('pointerleave',()=>{o.hx=o.hy=null});
+ el.addEventListener('contextmenu',e=>e.preventDefault());
+ if(!LGraf)LGraf=requestAnimationFrame(l3dLoop)}
+function l3dTick(o,now,calm){
+ if(!o.drag){
+  o.ry+=o.vy;o.rx+=o.vx;o.vy*=.94;o.vx*=.94;
+  const quiet=now-o.idle>2200&&Math.abs(o.vy)<.3&&Math.abs(o.vx)<.3,face=Math.round(o.ry/360)*360;let ty=null,tx=0;
+  if(o.hy!=null){ty=face+o.hy;tx=o.hx}else if(quiet){ty=face+(calm?0:Math.sin(now/1700)*10);tx=calm?0:Math.cos(now/2100)*5}
+  if(ty!=null){o.ry+=(ty-o.ry)*.08;o.rx+=(tx-o.rx)*.08}}
+ const nry=((o.ry%360)+540)%360-180;
+ o.el.style.setProperty('--rx',o.rx.toFixed(1)+'deg');o.el.style.setProperty('--ry',o.ry.toFixed(1)+'deg');
+ o.el.style.setProperty('--gx',(50+nry/180*45).toFixed(0)+'%');o.el.style.setProperty('--gy',(40-o.rx/70*30).toFixed(0)+'%')}
+function l3dLoop(){
+ LGraf=requestAnimationFrame(l3dLoop);if(document.hidden)return;
+ const now=Date.now(),calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ LG.forEach(o=>{if(o.el.getClientRects().length)l3dTick(o,now,calm)})}
+document.querySelectorAll('[data-l3d]').forEach(mk3d);
 // live ticker strip (Home)
 const TKS=['XAU/USD','EUR/USD','NDX','DJI','DAX','GBP/USD','USD/JPY','BTC/USD','ETH/USD'],TKIV=()=>S.tkIv==null?300:S.tkIv;
 let TKD={},TKT=0,TKB=false;
