@@ -546,7 +546,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';admSyms(ROLE==='admin');$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -596,7 +596,9 @@ const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.t
 $('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO=0;save();tick()};
 // indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
 const IDXS={NDX:{n:'Nasdaq 100 futures',tz:'America/New_York',fut:1},DJI:{n:'Dow Jones futures',tz:'America/New_York',fut:1},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
-const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
+const IDXA={NQ:'NDX',MNQ:'NDX'},isAdm=()=>{try{return ROLE==='admin'}catch(e){return false}};
+const idxKey=sym=>{let u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(IDXA[u]&&isAdm())u=IDXA[u];return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
+function admSyms(on){const dl=$('syms');if(!dl)return;dl.querySelectorAll('[data-adm]').forEach(o=>o.remove());if(on)['NQ','MNQ'].forEach(v=>{const o=document.createElement('option');o.value=v;o.dataset.adm=1;dl.appendChild(o)})}
 // data
 async function load(sym,tf,size){
  sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
@@ -1863,7 +1865,7 @@ hlPaint();hlLoad();setInterval(()=>hlLoad(),30000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('tkSel').value=String(S.tkIv==null?300:S.tkIv);$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.tkIv=+$('tkSel').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();tkBuild();tkPaint();tickerLoad(true);if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
-$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
+$('logout').onclick=()=>{ROLE='user';admSyms(false);ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{
  if(window.AndroidBridge){try{
   if(!AndroidBridge.hasPermission()){AndroidBridge.requestPermission();setTimeout(()=>{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Alerts blocked';renderCk()},2500);return}
