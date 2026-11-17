@@ -1881,7 +1881,7 @@ $('notif').onclick=()=>{
  let raf=0;
  function close(k,key){cancelAnimationFrame(raf);const f=$('fest');f.classList.remove('on');if(!q)try{localStorage.setItem('sp_fest',key)}catch(e){}}
  function show(k,key){
-  const d=FD[k],yr=new Date().getFullYear(),f=$('fest')||document.body.appendChild(Object.assign(document.createElement('div'),{id:'fest'}));
+  const d=FD[k],nd=new Date(),yr=nd.getFullYear()+(nd.getMonth()>=6?1:0),f=$('fest')||document.body.appendChild(Object.assign(document.createElement('div'),{id:'fest'}));
   const t=k==='nye'?d.t:k==='ny'?d.t+' '+yr:d.t;
   f.innerHTML=`<canvas id="festCv"></canvas><div class="fc"><div class="fe">${d.e}</div><div class="fh1">${t}</div><div class="fm">${d.m}</div><button class="btn" id="festGo">Continue</button><div class="fs">SignalsPro</div></div>`;
   f.classList.add('on');$('festGo').onclick=()=>close(k,key);
