@@ -291,6 +291,16 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 .hli b{display:block;font-size:14px;line-height:1.35;font-weight:600}
 .hli span{display:flex;gap:8px;align-items:center;margin-top:5px;font-size:11px;color:var(--t2)}
 .hlt{font-size:10px;font-weight:800;letter-spacing:.5px;padding:2px 8px;border-radius:20px;background:rgba(var(--w),.07)}.hlt.u{color:var(--up)}.hlt.d{color:var(--dn)}
+.gd{border:1px solid rgba(var(--w),.09);background:rgba(var(--w),.04);border-radius:18px;margin:0 0 10px;overflow:hidden}
+.gd summary{list-style:none;cursor:pointer;display:flex;align-items:center;gap:12px;padding:14px 16px;font-size:15px;font-weight:800}.gd summary::-webkit-details-marker{display:none}
+.gd summary::after{content:'';margin-left:auto;width:8px;height:8px;border-right:2px solid var(--t2);border-bottom:2px solid var(--t2);transform:rotate(45deg);transition:transform .2s}.gd[open] summary::after{transform:rotate(-135deg)}
+.gd .gn{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:900;background:rgba(var(--w),.08);color:var(--accent)}
+.gd .gb{padding:0 16px 14px;font-size:14px;line-height:1.55;color:var(--t2)}.gd .gb p{margin:0 0 10px}.gd .gb b{color:var(--text)}
+.gd .gb ul{margin:0 0 10px;padding-left:18px}.gd .gb li{margin:4px 0}
+.tav{display:inline-block;padding:5px 12px;border-radius:20px;font-size:12px;font-weight:900;letter-spacing:.4px;background:rgba(var(--w),.07);white-space:nowrap}.tav.u{color:var(--buy)}.tav.d{color:var(--sell)}
+.tah{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}.tah b{font-size:17px;font-weight:800}
+.tag{position:relative;height:8px;border-radius:8px;margin:2px 0 12px;background:linear-gradient(90deg,var(--sell),rgba(var(--w),.18) 50%,var(--buy))}.tag i{position:absolute;top:-4px;width:6px;height:16px;border-radius:4px;background:var(--text);transform:translateX(-50%);box-shadow:0 0 0 2px var(--card)}
+.tar{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13.5px;border-bottom:1px solid rgba(var(--w),.05)}.tar:last-of-type{border:0}.tar span:first-child{color:var(--t2);flex:none}.tar span:last-child{text-align:right;font-weight:700}.tar .u{color:var(--buy)}.tar .d{color:var(--sell)}
 </style></head>
 <body>
 <div id="lock"><div class="l3d big" data-l3d style="--s:150px"></div>
@@ -348,6 +358,65 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></div>
 </section>
 
+<section class="page" id="p-how">
+<div class="fh"><button class="fb" id="hBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></div><div><div class="ft">How to use</div><div class="fk" style="margin-top:2px">A quick guide to SignalsPro</div></div></div>
+
+<details class="gd" open><summary><span class="gn">1</span>Getting started</summary><div class="gb">
+<p>Open <b>Settings</b> and add your data key. Without it the charts and the scanner stay empty.</p>
+<p>Go to the <b>Indicator</b> page, pick a symbol and a timeframe, then tap the round <b>start</b> button at the top. The pill changes from <b>Stopped</b> to <b>Live</b> and the chart refreshes by itself.</p>
+<p>Tap the menu button (top left) to open <b>Fundamentals</b>, the <b>Signal journal</b>, this guide and your <b>theme</b>.</p></div></details>
+
+<details class="gd"><summary><span class="gn">2</span>Reading the chart</summary><div class="gb">
+<p>The circles on the chart mark <b>zones</b>, which are areas where price has turned before.</p>
+<ul><li><b>Red</b> circles are resistance (sell) zones.</li><li><b>Green</b> circles are support (buy) zones.</li></ul>
+<p>A zone is a place to watch, not an instruction. Price can touch a zone, react, or break straight through it.</p>
+<p>Use the <b>+</b> and <b>−</b> buttons to zoom, and the full-screen button for a bigger view. <b>Chart layers</b> lets you switch the market sessions and news markers on or off.</p></div></details>
+
+<details class="gd"><summary><span class="gn">3</span>The advice label (BUY / SELL / WAIT)</summary><div class="gb">
+<p>The big label on the Indicator page changes when price touches a zone: a resistance zone gives <b>SELL</b> and a support zone gives <b>BUY</b>.</p>
+<p>It stays that way until price touches a zone on the other side. It does <b>not</b> expire on its own, so a signal from early morning may still be showing hours later.</p>
+<p>Treat it as "price just reached a zone", not as "hold this direction all day". Use the trade plan below the chart to decide what to do.</p></div></details>
+
+<details class="gd"><summary><span class="gn">4</span>The trade plan</summary><div class="gb">
+<p>Pull up the panel at the bottom of the Indicator page. Each plan shows an <b>entry</b>, a <b>stop loss</b> and <b>targets</b>, and one of these statuses:</p>
+<ul><li><b>ENTER NOW:</b> a reaction candle has closed at the zone. The entry is at the market price.</li>
+<li><b>IN ZONE:</b> price is at the zone. Wait for a candle to close with a reaction.</li>
+<li><b>NEAR ENTRY / WAIT FOR PRICE:</b> price is not there yet. The entry is a limit order waiting for price to come back.</li>
+<li><b>TOO FAR · WATCH:</b> the entry is more than 2 ATR away. Don't chase it.</li></ul>
+<p>Targets are shown as multiples of your risk (for example 1.4R means a profit of 1.4 times what you risk).</p></div></details>
+
+<details class="gd"><summary><span class="gn">5</span>Scanner</summary><div class="gb">
+<p>The <b>Scanner</b> checks a list of symbols for you. Choose the symbols, your <b>trading style</b> (scalp, day trade or swing) and one or more <b>strategies</b>, then run it. It lists the setups it finds with their entry, stop loss and targets.</p>
+<p>Tap a result to open that symbol on the Indicator page.</p></div></details>
+
+<details class="gd"><summary><span class="gn">6</span>Fundamentals (news)</summary><div class="gb">
+<p>Fundamentals lists high-impact US news such as CPI and NFP, with times. Prices can move sharply around these releases, so it is usually safer to avoid opening new trades just before them.</p>
+<p>The <b>Home</b> page also shows headlines for the indices (NDX, DJI and DAX). Use the chips to filter by index.</p></div></details>
+
+<details class="gd"><summary><span class="gn">7</span>Signal journal</summary><div class="gb">
+<p>Every alert is saved in the journal. Open a signal and mark how it ended so you can see what works for you over time.</p>
+<p>The journal is stored on this device only. Clearing the app's data or reinstalling deletes it, so use <b>Copy journal (CSV)</b> now and then to keep a backup.</p></div></details>
+
+<details class="gd"><summary><span class="gn">8</span>Alerts and themes</summary><div class="gb">
+<p>Turn on alerts in <b>Settings</b> to get a chime or notification for signals and news.</p>
+<p>Pick a look in the <b>Theme</b> section of the menu.</p></div></details>
+
+<details class="gd"><summary><span class="gn">9</span>Technical analysis</summary><div class="gb">
+<p>Open <b>Technical analysis</b> from the menu, type a pair or index and tap <b>Analyse</b>. It reads the <b>hourly, daily and weekly</b> charts and tells you whether each one leans bullish, bearish or neutral, with an overall summary on top.</p>
+<p>Each timeframe shows its trend (moving averages), RSI, MACD, trend strength, structure, nearest support and resistance, and volatility.</p>
+<p>When the bigger timeframes agree, the picture is stronger. When the hourly goes against the daily and weekly, it is usually a pullback. It is a guide only, not a trade signal.</p></div></details>
+<details class="gd"><summary><span class="gn">10</span>Indices: prices and the broker</summary><div class="gb">
+<p>NDX and DJI prices come from <b>futures</b> contracts, and DAX from the cash index. Your broker may quote a different price because of spread, rollover or feed timing, so levels can be a few points off.</p>
+<p>Always check your broker's price before you trade, and set your entry, stop loss and targets from it.</p></div></details>
+
+<div class="note" style="text-align:center;padding:4px 6px 14px">SignalsPro is a tool to help you see the market. It is not financial advice, and you are responsible for your own trades.</div>
+</section>
+
+<section class="page" id="p-ta">
+<div class="fh"><button class="fb" id="taBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></div><div><div class="ft">Technical analysis</div><div class="fk" style="margin-top:2px">Hourly · Daily · Weekly</div></div></div>
+<div class="card"><label>Pair or index</label><input class="inp" id="taSym" list="syms" placeholder="e.g. EUR/USD, XAU/USD, NDX" autocapitalize="characters" autocomplete="off" spellcheck="false" style="margin-bottom:6px"><button class="btn" id="taGo">Analyse</button><div class="note" id="taNote" style="margin:10px 0 0"></div></div>
+<div id="taOut"></div></section>
+
 <section class="page" id="p-fund">
 <div class="fh"><button class="fb" id="fBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></div><div><div class="ft">Fundamentals</div><div class="fk" style="margin-top:2px">US high-impact news</div></div></div>
 <div id="fHero"></div><div id="fEvents"></div><div id="fCS"></div>
@@ -394,7 +463,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div>
-<aside id="thPanel"><div class="pt">Menu</div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><div class="pt" style="margin-top:24px">Theme</div><div class="sw" id="sw"></div></aside>
+<aside id="thPanel"><div class="pt">Menu</div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="taBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></span><span class="tt"><b>Technical analysis</b><i>Hourly, daily, weekly</i></span></button><button class="tile" id="howBtn"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></span><span class="tt"><b>How to use</b><i>A quick guide</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><div class="pt" style="margin-top:24px">Theme</div><div class="sw" id="sw"></div></aside>
 <script>
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
@@ -472,7 +541,7 @@ function page(n){
   window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');moveInd(n);if(n==='ind')fit()};
  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
- if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad();hlLoad()}}
+ if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='ta'){if(!$('taSym').value)$('taSym').value=S.sym;taNote()}if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad();hlLoad()}}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
@@ -1476,7 +1545,51 @@ function jCopy(){const t=jCsv(),done=()=>{$('jCopy').textContent='Copied';setTim
  fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()};
  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(done).catch(fb);else fb()}
 function jClear(){if(!jClr){jClr=1;$('jClr').textContent='Tap again to delete everything';setTimeout(()=>{jClr=0;$('jClr').textContent='Clear journal'},3000)}else{sigs=[];saveSigs();jClr=0;$('jClr').textContent='Clear journal';renderJournal()}}
-$('jrnBtn').onclick=()=>{thOpen(false);page('hist')};$('jBack').onclick=()=>page('home');
+
+// technical analysis: reads the market on the hourly, daily and weekly charts
+TFT.W1='1week';TFB.W1='1w';
+const TAF=[{tf:'H1',n:'Hourly',w:1},{tf:'D1',n:'Daily',w:2},{tf:'W1',n:'Weekly',w:2}];let TAC={};
+function taMacd(c){const a=c.slice().reverse(),k12=2/13,k26=2/27,k9=.2;let e12=a[0],e26=a[0],sg=0,m=0,hp=0,h=0;
+ for(let i=0;i<a.length;i++){e12=a[i]*k12+e12*(1-k12);e26=a[i]*k26+e26*(1-k26);m=e12-e26;sg=i?m*k9+sg*(1-k9):m;hp=h;h=m-sg}return{h,rising:h>hp}}
+function taPiv(h,l,n){const H=[],L=[];for(let i=3;i<Math.min(n-3,200);i++){let ph=true,pl=true;for(let k=1;k<=3;k++){if(h[i]<h[i-k]||h[i]<h[i+k])ph=false;if(l[i]>l[i-k]||l[i]>l[i+k])pl=false}if(ph)H.push(h[i]);if(pl)L.push(l[i])}return{H,L}}
+function taVerdict(s){return s>=.6?['Strong bullish','u']:s>=.2?['Bullish','u']:s<=-.6?['Strong bearish','d']:s<=-.2?['Bearish','d']:['Neutral','']}
+function taOne(d){const{h,l,c,n}=d;if(n<60)throw Error('Not enough history');
+ const f=v=>v.toFixed(d.dec),px=c[0],e20=ema(c,20),e50=ema(c,50),e200=n>=210?ema(c,200):null,
+ rsi=rsiA(c,14)[0],mc=taMacd(c),ax=adxA(h,l,c,14),adx=ax.adx[0],pdi=ax.pdi[0],mdi=ax.mdi[0],atr=atr7(h,l,c,n)[0],pv=taPiv(h,l,n),V=[],R=[];
+ V.push(px>e20?1:-1,e20>e50?1:-1);if(e200!=null)V.push(px>e200?1:-1);
+ R.push({k:'Trend (EMAs)',t:`Price ${px>e20?'above':'below'} EMA 20 · EMA 20 ${e20>e50?'above':'below'} EMA 50${e200!=null?` · price ${px>e200?'above':'below'} EMA 200`:''}`,v:V.reduce((x,y)=>x+y,0)});
+ if(rsi!=null){const v=rsi>55?1:rsi<45?-1:0;V.push(v);R.push({k:'Momentum (RSI 14)',t:`${rsi.toFixed(0)}${rsi>70?' · overbought, may be stretched':rsi<30?' · oversold, may be stretched':v>0?' · bullish':v<0?' · bearish':' · neutral'}`,v})}
+ {const v=mc.h>0?1:-1;V.push(v);R.push({k:'MACD',t:`${v>0?'Bullish':'Bearish'} · ${mc.rising?'strengthening':'fading'}`,v})}
+ if(adx!=null){const v=pdi>mdi?1:-1;V.push(v);R.push({k:'Trend strength (ADX)',t:`${adx.toFixed(0)} · ${adx>=25?'strong trend':adx>=18?'moderate trend':'weak or ranging'}`,v:adx>=18?v:0})}
+ if(pv.H.length>=2&&pv.L.length>=2){const hh=pv.H[0]>pv.H[1],hl=pv.L[0]>pv.L[1],v=hh&&hl?1:!hh&&!hl?-1:0;V.push(v);R.push({k:'Structure',t:v>0?'Higher highs and higher lows':v<0?'Lower highs and lower lows':'Mixed highs and lows',v})}
+ const res=pv.H.filter(x=>x>px).sort((a,b)=>a-b)[0],sup=pv.L.filter(x=>x<px).sort((a,b)=>b-a)[0];
+ R.push({k:'Nearest levels',t:`Support ${sup!=null?f(sup):'—'} · Resistance ${res!=null?f(res):'—'}`,v:0});
+ R.push({k:'Volatility (ATR)',t:`${(atr/px*100).toFixed(2)}% of price`,v:0});
+ return{s:V.reduce((x,y)=>x+y,0)/V.length,R}}
+function taSummary(r){const ok=r.filter(x=>x.ok);if(!ok.length)return'';
+ const W=ok.reduce((a,x)=>a+x.w,0),s=ok.reduce((a,x)=>a+x.s*x.w,0)/W,dir=x=>x>=.2?1:x<=-.2?-1:0,by=t=>{const x=r.find(z=>z.tf===t);return x&&x.ok?dir(x.s):null},
+ h=by('H1'),d=by('D1'),w=by('W1'),nm=x=>x>0?'bullish':'bearish';let m;
+ if(ok.length===3&&h&&h===d&&d===w)m=`All three timeframes lean ${nm(h)}, so the trend is well aligned.`;
+ else if(d&&d===w&&h===-d)m=`The bigger trend (daily and weekly) is ${nm(d)}, but the hourly chart is moving against it. That usually means a pullback inside the bigger trend, so be careful about chasing the short-term move.`;
+ else if(d&&w&&d===-w)m=`Daily and weekly disagree, which often means a turning point or a deep pullback. Direction is unclear.`;
+ else if(!h&&!d&&!w)m='No clear direction on any timeframe. The market looks undecided or ranging.';
+ else m='The picture is mixed, with no strong agreement between the timeframes.';
+ return{s,m,v:taVerdict(s)}}
+function taPaint(sym,r){const sm=taSummary(r);if(!sm){$('taOut').innerHTML='<div class="card"><div class="note">Could not load data for '+esc(sym)+'. '+esc((r[0]&&r[0].err)||'')+'</div></div>';return}
+ const gauge=s=>`<div class="tag"><i style="left:${Math.round((s+1)/2*100)}%"></i></div>`,
+ head=`<div class="card"><div class="fk">${esc(sym)} · overall</div><div class="tah" style="margin-top:8px"><b style="font-size:22px">${sm.v[0]}</b><span class="tav ${sm.v[1]}">${sm.s>0?'+':''}${sm.s.toFixed(2)}</span></div>${gauge(sm.s)}<div class="note" style="margin:0">${sm.m} Based on indicators only, not financial advice.</div></div>`,
+ cards=r.map(x=>{if(!x.ok)return`<div class="card"><div class="tah"><b>${x.n}</b></div><div class="note" style="margin:0">Not available: ${esc(x.err)}</div></div>`;
+  const v=taVerdict(x.s);return`<div class="card"><div class="tah"><b>${x.n}</b><span class="tav ${v[1]}">${v[0]}</span></div>${gauge(x.s)}${x.R.map(q=>`<div class="tar"><span>${q.k}</span><span class="${q.v>0?'u':q.v<0?'d':''}">${esc(q.t)}</span></div>`).join('')}</div>`}).join('');
+ $('taOut').innerHTML=head+cards}
+function taNote(){const sy=($('taSym').value||'').trim();$('taNote').textContent=S.src==='twelve'&&sy&&!isIdx(sy)?'This uses 3 data credits (one for each timeframe). Results are kept for 2 minutes.':''}
+async function taRun(){const sym=($('taSym').value||'').trim().toUpperCase();if(!sym)return;const b=$('taGo');
+ const hit=TAC[sym];if(hit&&Date.now()-hit.t<12e4){taPaint(sym,hit.r);return}
+ b.disabled=true;b.textContent='Analysing…';$('taOut').innerHTML='<div class="card"><div class="note" style="margin:0">Reading the hourly, daily and weekly charts…</div></div>';
+ const r=await Promise.all(TAF.map(async x=>{try{const d=await load(sym,x.tf,300);return Object.assign({},x,taOne(d),{ok:true})}catch(e){return Object.assign({},x,{ok:false,err:e.message||'Failed'})}}));
+ if(r.some(x=>x.ok))TAC[sym]={t:Date.now(),r};taPaint(sym,r);b.disabled=false;b.textContent='Analyse'}
+$('taGo').onclick=taRun;$('taSym').oninput=taNote;$('taSym').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('taSym').blur();taRun()}};
+$('taBtn').onclick=()=>{thOpen(false);page('ta')};$('taBack').onclick=()=>page('home');
+$('jrnBtn').onclick=()=>{thOpen(false);page('hist')};$('howBtn').onclick=()=>{thOpen(false);page('how')};$('hBack').onclick=()=>page('home');$('jBack').onclick=()=>page('home');
 // ---- registration and admin ----
 let ROLE='user',ADMPIN='',ADMT=0,ADMU=[],ADMF='pending',ADMQ='',ADMCF='',ADMBUSY=false;
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
