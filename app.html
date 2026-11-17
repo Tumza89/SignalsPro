@@ -417,6 +417,15 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <div class="card"><label>Pair or index</label><input class="inp" id="taSym" list="syms" placeholder="e.g. EUR/USD, XAU/USD, NDX" autocapitalize="characters" autocomplete="off" spellcheck="false" style="margin-bottom:6px"><button class="btn" id="taGo">Analyse</button><div class="note" id="taNote" style="margin:10px 0 0"></div></div>
 <div id="taOut"></div></section>
 
+<section class="page" id="p-ls">
+<div class="fh"><button class="fb" id="lsBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 17h16M8 7v10M16 7v10"/></svg></div><div><div class="ft">Limit setups</div><div class="fk" style="margin-top:2px">Admin only</div></div></div>
+<div class="card"><label>Pair or index</label><input class="inp" id="lsSym" list="syms" placeholder="e.g. NDX" autocapitalize="characters" autocomplete="off" spellcheck="false" style="margin-bottom:4px">
+<div class="hlf" id="lsQ"><button data-s="NDX">NDX</button><button data-s="DJI">DJI</button><button data-s="DAX">DAX</button></div>
+<div class="hlf" id="lsT"><button data-t="H1">H1</button><button data-t="H4" class="on">H4</button><button data-t="D1">D1</button></div>
+<label style="display:flex;align-items:center;gap:10px;margin:10px 0 0"><input type="checkbox" id="lsStrong" checked style="width:18px;height:18px">Strong zones only (Proven and Verified)</label>
+<button class="btn" id="lsGo">Find setups</button></div>
+<div id="lsOut"></div></section>
+
 <section class="page" id="p-fund">
 <div class="fh"><button class="fb" id="fBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></div><div><div class="ft">Fundamentals</div><div class="fk" style="margin-top:2px">US high-impact news</div></div></div>
 <div id="fHero"></div><div id="fEvents"></div><div id="fCS"></div>
@@ -463,7 +472,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div>
-<aside id="thPanel"><div class="pt">Menu</div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="taBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></span><span class="tt"><b>Technical analysis</b><i>Hourly, daily, weekly</i></span></button><button class="tile" id="howBtn"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></span><span class="tt"><b>How to use</b><i>A quick guide</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><div class="pt" style="margin-top:24px">Theme</div><div class="sw" id="sw"></div></aside>
+<aside id="thPanel"><div class="pt">Menu</div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="taBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></span><span class="tt"><b>Technical analysis</b><i>Hourly, daily, weekly</i></span></button><button class="tile" id="howBtn"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></span><span class="tt"><b>How to use</b><i>A quick guide</i></span></button><button class="tile" id="lsBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><path d="M4 7h16M4 17h16M8 7v10M16 7v10"/></svg></span><span class="tt"><b>Limit setups</b><i>Admin only</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><div class="pt" style="margin-top:24px">Theme</div><div class="sw" id="sw"></div></aside>
 <script>
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
@@ -499,7 +508,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('lsBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -541,7 +550,7 @@ function page(n){
   window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');moveInd(n);if(n==='ind')fit()};
  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
- if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='ta'){if(!$('taSym').value)$('taSym').value=S.sym;taNote()}if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad();hlLoad()}}
+ if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='ta'){if(!$('taSym').value)$('taSym').value=S.sym;taNote()}if(n==='ls')lsOpen();if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad();hlLoad()}}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
@@ -1589,6 +1598,38 @@ async function taRun(){const sym=($('taSym').value||'').trim().toUpperCase();if(
  if(r.some(x=>x.ok))TAC[sym]={t:Date.now(),r};taPaint(sym,r);b.disabled=false;b.textContent='Analyse'}
 $('taGo').onclick=taRun;$('taSym').oninput=taNote;$('taSym').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('taSym').blur();taRun()}};
 $('taBtn').onclick=()=>{thOpen(false);page('ta')};$('taBack').onclick=()=>page('home');
+
+// admin: pending limit-order setups (buy limit below / sell limit above, at the zones)
+let LSY='NDX',LST='H4',LSP=[],LSC={};
+function lsChart(d,p){const n=Math.min(d.n,110),W=340,H=200,G=60,pd=8,hi=d.h.slice(0,n).reverse(),lo=d.l.slice(0,n).reverse(),op=d.o.slice(0,n).reverse(),cl=d.c.slice(0,n).reverse();
+ let mx=Math.max(...hi,p.e,p.sl,p.t1),mn=Math.min(...lo,p.e,p.sl,p.t1);const sp=(mx-mn)||1;mx+=sp*.04;mn-=sp*.04;
+ const y=v=>pd+(mx-v)/(mx-mn)*(H-2*pd),bw=(W-G)/n,f=v=>v.toFixed(d.dec);let o='';
+ o+=`<rect x="0" y="${y(p.z.hi).toFixed(1)}" width="${W-G}" height="${Math.max(2,y(p.z.lo)-y(p.z.hi)).toFixed(1)}" style="fill:var(--accent);opacity:.14"/>`;
+ for(let i=0;i<n;i++){const x=i*bw+bw/2,up=cl[i]>=op[i],c=up?'var(--buy)':'var(--sell)';
+  o+=`<line x1="${x.toFixed(1)}" x2="${x.toFixed(1)}" y1="${y(hi[i]).toFixed(1)}" y2="${y(lo[i]).toFixed(1)}" style="stroke:${c}" stroke-width="1"/><rect x="${(x-bw*.32).toFixed(1)}" y="${y(Math.max(op[i],cl[i])).toFixed(1)}" width="${(bw*.64).toFixed(1)}" height="${Math.max(1,Math.abs(y(op[i])-y(cl[i]))).toFixed(1)}" style="fill:${c}"/>`}
+ const ln=(v,c,t,dash)=>`<line x1="0" x2="${W-G}" y1="${y(v).toFixed(1)}" y2="${y(v).toFixed(1)}" style="stroke:${c}" stroke-width="1.2" ${dash?'stroke-dasharray="5 4"':''}/><text x="${W-G+4}" y="${(y(v)+3).toFixed(1)}" style="fill:${c}" font-size="9" font-weight="700">${t} ${f(v)}</text>`;
+ o+=ln(p.t1,'var(--buy)','TP1')+ln(p.e,'var(--text)','ENTRY',1)+ln(p.sl,'var(--sell)','SL')+`<line x1="0" x2="${W-G}" y1="${y(d.c[0]).toFixed(1)}" y2="${y(d.c[0]).toFixed(1)}" style="stroke:var(--t2)" stroke-width="1" stroke-dasharray="1 3"/>`;
+ return `<svg viewBox="0 0 ${W} ${H}" style="width:100%;height:auto;display:block;margin:4px 0 10px" role="img" aria-label="Setup chart">${o}</svg>`}
+function lsCard(d,p,i){const f=v=>v.toFixed(d.dec),buy=p.side==='BUY';
+ return `<div class="card"><div class="tah"><b>${p.side} LIMIT</b><span class="tav ${buy?'u':'d'}">${SN[p.z.s]} zone</span></div>${lsChart(d,p)}
+ <div class="tar"><span>Entry (limit)</span><span>${f(p.e)}</span></div><div class="tar"><span>Stop loss</span><span class="d">${f(p.sl)}</span></div>
+ <div class="tar"><span>Target 1</span><span class="u">${f(p.t1)} · ${p.r1.toFixed(1)}R</span></div><div class="tar"><span>Target 2</span><span class="u">${f(p.t2)} · ${p.r2.toFixed(1)}R</span></div>
+ <div class="tar"><span>Risk</span><span>${f(Math.abs(p.e-p.sl))} points</span></div><div class="tar"><span>Distance to entry</span><span>${p.on?'Price is in the zone':p.dist.toFixed(1)+' ATR'}</span></div>
+ <div class="note">${p.on?'Price is at the zone now. Wait for a candle to close with a reaction before entering.':p.dist>3?'Far from price, so it may take a while to fill. Treat it as a level to watch.':'Pending: place it as a limit order and cancel it if a candle closes beyond the stop level before it fills.'}</div>
+ <button class="btn ghost" onclick="lsCopy(${i},this)">Copy setup</button></div>`}
+function lsCopy(i,b){const x=LSP[i];if(!x)return;const f=v=>v.toFixed(x.dec),p=x.p,t=`${LSY} ${LST} · ${p.side} LIMIT\nEntry: ${f(p.e)}\nSL: ${f(p.sl)}\nTP1: ${f(p.t1)} (${p.r1.toFixed(1)}R)\nTP2: ${f(p.t2)} (${p.r2.toFixed(1)}R)`;
+ try{navigator.clipboard.writeText(t)}catch(e){}if(b){const o=b.textContent;b.textContent='Copied';setTimeout(()=>b.textContent=o,1200)}}
+async function lsRun(){if(ROLE!=='admin')return;const sym=($('lsSym').value||'').trim().toUpperCase();if(!sym)return;LSY=sym;const st=$('lsStrong').checked,key=sym+'|'+LST+'|'+st,b=$('lsGo');
+ let r=LSC[key];if(!r||Date.now()-r.t>6e4){b.disabled=true;b.textContent='Searching…';$('lsOut').innerHTML='<div class="card"><div class="note" style="margin:0">Reading the zones on the '+LST+' chart…</div></div>';
+  try{const d=await load(sym,LST),Rr=compute(d),Z=Object.assign({},Rr,{zones:st?Rr.zones.filter(z=>z.s>=3):Rr.zones}),P2=plans(d.c[0],Z);r=LSC[key]={t:Date.now(),d,P2}}
+  catch(e){$('lsOut').innerHTML='<div class="card"><div class="note" style="margin:0">'+esc(e.message||'Could not load data.')+'</div></div>';b.disabled=false;b.textContent='Find setups';return}b.disabled=false;b.textContent='Find setups'}
+ const L=[r.P2.sell,r.P2.buy].filter(Boolean).sort((a,c)=>a.dist-c.dist);LSP=L.map(p=>({p,dec:r.d.dec}));
+ $('lsOut').innerHTML=L.length?L.map((p,i)=>lsCard(r.d,p,i)).join(''):'<div class="card"><div class="note" style="margin:0">No '+(st?'strong ':'')+'zones near price on '+esc(sym)+' '+LST+'. Try another timeframe, or switch off "Strong zones only".</div></div>'}
+$('lsGo').onclick=lsRun;$('lsSym').onkeydown=e=>{if(e.key==='Enter'){e.preventDefault();$('lsSym').blur();lsRun()}};$('lsStrong').onchange=lsRun;
+$('lsQ').onclick=e=>{const t=e.target.dataset&&e.target.dataset.s;if(t){$('lsSym').value=t;lsRun()}};
+$('lsT').onclick=e=>{const t=e.target.dataset&&e.target.dataset.t;if(t){LST=t;[...$('lsT').children].forEach(x=>x.classList.toggle('on',x.dataset.t===t));lsRun()}};
+$('lsBtn').onclick=()=>{thOpen(false);page('ls')};$('lsBack').onclick=()=>page('home');
+function lsOpen(){if(ROLE!=='admin'){page('home');return}if(!$('lsSym').value)$('lsSym').value=isIdx(S.sym)?S.sym:'NDX';lsRun()}
 $('jrnBtn').onclick=()=>{thOpen(false);page('hist')};$('howBtn').onclick=()=>{thOpen(false);page('how')};$('hBack').onclick=()=>page('home');$('jBack').onclick=()=>page('home');
 // ---- registration and admin ----
 let ROLE='user',ADMPIN='',ADMT=0,ADMU=[],ADMF='pending',ADMQ='',ADMCF='',ADMBUSY=false;
@@ -1805,7 +1846,7 @@ hlPaint();hlLoad();setInterval(()=>hlLoad(),30000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('tkSel').value=String(S.tkIv==null?300:S.tkIv);$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.tkIv=+$('tkSel').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();tkBuild();tkPaint();tickerLoad(true);if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
-$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
+$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';$('lsBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{
  if(window.AndroidBridge){try{
   if(!AndroidBridge.hasPermission()){AndroidBridge.requestPermission();setTimeout(()=>{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Alerts blocked';renderCk()},2500);return}
