@@ -1675,9 +1675,9 @@ const HLUP=/\b(rise|rises|rising|rally|rallies|jump|jumps|surge|surges|climb|cli
 const hlMood=t=>{const u=HLUP.test(t),d=HLDN.test(t);return u&&!d?'u':d&&!u?'d':''};
 const hlAgo=ms=>{const m=Math.max(1,Math.round((Date.now()-ms)/6e4));return m<60?m+'m ago':m<1440?Math.floor(m/60)+'h ago':Math.floor(m/1440)+'d ago'};
 function hlPaint(){const el=$('hl');if(!el)return;
- const L=HLD.filter(x=>HLF==='ALL'||x.k===HLF).slice(0,6);
+ const L=HLD.filter(x=>HLF==='ALL'||x.k==='ALL'||(x.ks||[x.k]).includes(HLF)).slice(0,6);
  const chips=['ALL','NDX','DJI','DAX'].map(k=>`<button class="${HLF===k?'on':''}" onclick="HLF='${k}';hlPaint()">${k==='ALL'?'All':k}</button>`).join('');
- const rows=L.length?L.map(x=>{const m=hlMood(x.t);return `<a class="hli" href="${esc(x.u||'#')}" target="_blank" rel="noopener noreferrer"><b>${esc(x.t)}</b><span>${m?`<i class="hlt ${m}">${m==='u'?'▲ UP':'▼ DOWN'}</i>`:''}<i class="hlt">${esc(x.k)}</i>${esc(x.s||'')} · ${x.d?hlAgo(x.d):''}</span></a>`}).join(''):`<div class="note" style="margin:10px 0 4px">${HLB?'Loading headlines…':HLT?'No headlines for this index right now.':'Headlines are unavailable right now.'}</div>`;
+ const rows=L.length?L.map(x=>{const m=hlMood(x.t);return `<a class="hli" href="${esc(x.u||'#')}" target="_blank" rel="noopener noreferrer"><b>${esc(x.t)}</b><span>${m?`<i class="hlt ${m}">${m==='u'?'▲ UP':'▼ DOWN'}</i>`:''}<i class="hlt">${(x.ks&&x.ks.length?x.ks:[x.k]).map(k=>k==='ALL'?'MARKETS':esc(k)).join(' · ')}</i>${esc(x.s||'')} · ${x.d?hlAgo(x.d):''}</span></a>`}).join(''):`<div class="note" style="margin:10px 0 4px">${HLB?'Loading headlines…':HLT?'No headlines for this index right now.':'Headlines are unavailable right now.'}</div>`;
  el.innerHTML=`<div class="fcard" style="text-align:left"><div class="hlh"><div><div class="fk">Index headlines</div><div style="font-size:16px;font-weight:800;margin-top:3px">Futures &amp; markets</div></div><a href="#" style="color:var(--accent);font-size:12px;font-weight:700;text-decoration:none" onclick="hlLoad(true);return false">Refresh</a></div><div class="hlf">${chips}</div>${rows}</div>`}
 async function hlLoad(force){
  if(HLB||document.hidden||!$('lock').classList.contains('hidden')||curPage()!=='home')return;
