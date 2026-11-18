@@ -1966,7 +1966,7 @@ function kzTick(){const pg=$('p-ta'),el=$('kz');if(!pg||!el||!pg.classList.conta
   else rows=`<div class="note" style="margin:6px 0 0">Analysis for ${def.syms.join(' and ')} starts 30 minutes before the open.</div>`;
   if(F.hol)rows=`<div class="note" style="margin:8px 0 0;color:var(--wait)">${def.hol==='US'?'The US cash market':'The German cash market'} is closed today for a holiday. Showing the next open.</div>`+rows;
   html+=`<div class="card kz"><div class="kzh"><span style="font:800 15px Manrope,sans-serif;color:var(--text)">${def.n} · ${def.syms.join(' & ')}</span><span>${day} ${hm} SAST</span></div><div class="kzc" style="color:${dt<=3e5&&dt>0?'var(--wait)':'var(--text)'}">${cd}</div>${rows}</div>`});
- el.innerHTML=html+'<div class="note" style="margin:-4px 4px 12px">Prices are the futures you trade. The cash index can open differently from futures, so wait for the confirmation after the open. Holidays are hard coded to the end of 2027.</div>'}
+ el.innerHTML=html}
 setInterval(kzTick,1000);
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 addEventListener('resize',draw);
