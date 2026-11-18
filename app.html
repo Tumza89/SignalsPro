@@ -346,6 +346,12 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 #fest .fh1{font-size:28px;font-weight:800;letter-spacing:-.03em;background:linear-gradient(90deg,var(--text),var(--wait),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 #fest .fm{font-size:15px;line-height:1.6;color:var(--t2);margin:14px 0 22px}
 #fest .fs{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-top:14px;font-weight:700}
+
+.kz{margin-bottom:12px}.kzh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-weight:800;font-size:15px}.kzh span{font:700 11px var(--mono);color:var(--t2)}
+.kzc{font:800 22px var(--mono);letter-spacing:-.02em;margin:6px 0 2px}.kzr{margin-top:12px;padding-top:12px;border-top:1px solid rgba(var(--w),.08)}
+.kzb{display:inline-block;font-size:10.5px;font-weight:800;letter-spacing:1px;padding:4px 9px;border-radius:8px;margin-left:8px;vertical-align:middle}
+.kzl{display:inline-flex;gap:5px;font:700 11px var(--mono);padding:4px 8px;border-radius:8px;background:rgba(var(--w),.06);margin:6px 6px 0 0}.kzl i{font-style:normal;color:var(--t2)}
+.kzw{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:12.5px;font-weight:700;background:rgba(var(--w),.07);border:1px solid var(--wait);color:var(--wait)}
 </style></head>
 <body>
 <div id="lock"><div class="l3d big" data-l3d style="--s:150px"></div>
@@ -459,7 +465,7 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 
 <section class="page" id="p-ta">
 <div class="fh"><button class="fb" id="taBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></div><div><div class="ft">Technical analysis</div><div class="fk" style="margin-top:2px">Hourly · Daily · Weekly</div></div></div>
-<div class="card"><label>Pair or index</label><input class="inp" id="taSym" list="syms" placeholder="e.g. EUR/USD, XAU/USD, NDX" autocapitalize="characters" autocomplete="off" spellcheck="false" style="margin-bottom:6px"><button class="btn" id="taGo">Analyse</button><div class="note" id="taNote" style="margin:10px 0 0"></div></div>
+<div id="kz"></div><div class="card"><label>Pair or index</label><input class="inp" id="taSym" list="syms" placeholder="e.g. EUR/USD, XAU/USD, NDX" autocapitalize="characters" autocomplete="off" spellcheck="false" style="margin-bottom:6px"><button class="btn" id="taGo">Analyse</button><div class="note" id="taNote" style="margin:10px 0 0"></div></div>
 <div id="taOut"></div></section>
 
 
@@ -1900,6 +1906,68 @@ $('notif').onclick=()=>{
   if(!q){let seen='';try{seen=localStorage.getItem('sp_fest')||''}catch(e){}if(seen===key)return}
   show(k,key)}
  setInterval(tick,1500);setTimeout(tick,800)})();
+
+// ===== Session open watch: London open (DAX) and New York open (NDX, DJI) =====
+// Cash-session holidays (hard coded to the end of 2027; extend yearly). Weekends are handled separately.
+const HOL={DE:['2026-12-24','2026-12-25','2026-12-31','2027-01-01','2027-03-26','2027-03-29','2027-12-24','2027-12-31'],
+ US:['2026-11-26','2026-12-25','2027-01-01','2027-01-18','2027-02-15','2027-03-26','2027-05-31','2027-06-18','2027-07-05','2027-09-06','2027-11-25','2027-12-24']};
+const KZD=[{id:'ldn',n:'London open',tz:'Europe/London',o:[8,0],hol:'DE',htz:'Europe/Berlin',pcT:[17,30],pdo:[9,0],syms:['DAX']},
+ {id:'ny',n:'New York open',tz:'America/New_York',o:[9,30],hol:'US',htz:'America/New_York',pcT:[16,0],pdo:[9,30],syms:['NDX','DJI']}];
+const KZR={},KZW=[30,45]; // window: 30 min before to 45 min after the open
+function kzFocus(def,now){
+ const lp=tzParts(def.tz,now),base=Date.UTC(+lp.year,+lp.month-1,+lp.day),days=[];let hol=false;
+ for(let k=-8;k<=8;k++){const dt=new Date(base+k*864e5),y=dt.getUTCFullYear(),m=dt.getUTCMonth(),dd=dt.getUTCDate(),wd=dt.getUTCDay(),key=y+'-'+String(m+1).padStart(2,'0')+'-'+String(dd).padStart(2,'0');
+  if(k===0&&wd>=1&&wd<=5&&HOL[def.hol].includes(key))hol=true;
+  if(wd<1||wd>5||HOL[def.hol].includes(key))continue;days.push({y,m,dd})}
+ for(let i=1;i<days.length;i++){const D=days[i],ms=localToMs(def.tz,D.y,D.m,D.dd,def.o[0],def.o[1]);
+  if(ms+KZW[1]*6e4>now){const P=days[i-1];return{ms,hol,pcMs:localToMs(def.htz,P.y,P.m,P.dd,def.pcT[0],def.pcT[1]),pdoMs:localToMs(def.htz,P.y,P.m,P.dd,def.pdo[0],def.pdo[1])}}}
+ return null}
+function kzCalc(d,F,now){
+ const{o,h,l,c,t,n}=d,M5=3e5,ms=F.ms,R={};let pi=-1;
+ for(let i=0;i<n;i++)if(t[i]<=F.pcMs-M5){pi=i;break}
+ if(pi<0||F.pcMs-t[pi]>36e5)return{err:'Not enough history for the previous close yet.'};
+ let pdh=-1e18,pdl=1e18,onh=-1e18,onl=1e18;
+ for(let i=0;i<n;i++){const x=t[i];if(x>=F.pdoMs&&x<F.pcMs){if(h[i]>pdh)pdh=h[i];if(l[i]<pdl)pdl=l[i]}if(x>=F.pcMs&&x<ms){if(h[i]>onh)onh=h[i];if(l[i]<onl)onl=l[i]}}
+ Object.assign(R,{pc:c[pi],pdh:pdh>-1e17?pdh:null,pdl:pdl<1e17?pdl:null,onh:onh>-1e17?onh:null,onl:onl<1e17?onl:null,last:c[0],stale:now-t[0]>15*6e4});
+ if(now<ms){const k=t.findIndex(x=>x<=now-36e5),m60=k>=0?c[k]:null,p=c[0],pos=R.onh!=null&&R.onh>R.onl?(p-R.onl)/(R.onh-R.onl):.5,
+   sc=(p>R.pc?1:-1)+(pos>.6?1:pos<.4?-1:0)+(m60==null?0:p>m60?1:-1);
+  R.str=pos>.88||pos<.12;R.lean=sc>=2?'up':sc<=-2?'down':'mixed';R.conf=Math.abs(sc)===3&&!R.str?'Medium':'Low';R.gap=(p-R.pc)/R.pc*100;R.phase='pre';return R}
+ let oi=-1;for(let i=n-1;i>=0;i--)if(t[i]>=ms){oi=i;break}
+ if(oi<0||t[oi]-ms>M5){R.phase='wait';return R}
+ R.open=o[oi];R.drive=c[0]>R.open?'up':c[0]<R.open?'down':null;const rEnd=ms+15*6e4;let rh=-1e18,rl=1e18,j=oi;
+ for(;j>=0&&t[j]<rEnd;j--){if(h[j]>rh)rh=h[j];if(l[j]<rl)rl=l[j]}
+ R.orh=rh;R.orl=rl;R.W=rh-rl;if(now<rEnd){R.phase='range';return R}
+ const last=t[0]+M5<=now?0:1;let br=null;
+ for(let i=j;i>=last;i--){if(c[i]>rh){br=br||'up'}else if(c[i]<rl){br=br||'down'}}
+ const cur=j>=last?c[last]:null;R.sig=cur==null?null:cur>rh?'up':cur<rl?'down':null;
+ R.phase=R.sig?'signal':br?'failed':'inside';return R}
+async function kzFetch(def,F){await Promise.all(def.syms.map(async sym=>{const key=def.id+sym;try{const d=await load(sym,'M5');KZR[key]=Object.assign({ms:F.ms},kzCalc(d,F,Date.now()))}catch(e){KZR[key]={ms:F.ms,err:e.message||'Data unavailable'}}}))}
+const kzF=v=>v.toFixed(2),kzCd=s=>{s=Math.max(0,Math.round(s/1e3));const h=s/3600|0,m=(s%3600)/60|0,x=s%60,p=v=>String(v).padStart(2,'0');return h?h+'h '+p(m)+'m':p(m)+':'+p(x)};
+function kzRow(sym,r){
+ const B=(t,c)=>`<span class="kzb" style="color:var(--${c});background:rgba(var(--${c}r),.14)">${t}</span>`,L=(k,v)=>v==null?'':`<span class="kzl"><i>${k}</i>${kzF(v)}</span>`,H=`<div class="kzr"><b>${sym}</b>`;
+ if(!r||r.err)return H+'</div><div class="note" style="margin:6px 0 0">'+(r?r.err:'Loading…')+'</div></div>';
+ let bd,tx,dir=null;const lv=L('Prev close',r.pc)+L('Prev high',r.pdh)+L('Prev low',r.pdl)+L('O/N high',r.onh)+L('O/N low',r.onl),st=r.stale?'<div class="note" style="margin:6px 0 0;color:var(--wait)">Data looks delayed. Do not rely on this until it refreshes.</div>':'';
+ if(r.phase==='pre'){dir=r.lean==='mixed'?null:r.lean;bd=B(r.lean==='up'?'▲ LEAN UP':r.lean==='down'?'▼ LEAN DOWN':'MIXED',r.lean==='up'?'buy':r.lean==='down'?'sell':'wait');
+  tx=`Price ${kzF(r.last)} is ${r.gap>=0?'+':''}${r.gap.toFixed(2)}% from the previous close. Confidence: ${r.conf}. This is a lean, not a signal. The signal comes after the open.`+(r.str?' Price is stretched at the edge of the overnight range, so a sweep and reversal at the open is possible.':'')}
+ else if(r.phase==='wait'){bd=B('WAITING','wait');tx='Waiting for the first candles of the session.'}
+ else if(r.phase==='range'){dir=r.drive;bd=B('OPEN RANGE FORMING','wait');tx=`Open ${kzF(r.open)}, range so far ${kzF(r.orl)} – ${kzF(r.orh)}. Early read: ${r.drive||'flat'}. It is confirmed once a 5-minute candle closes outside the 15-minute range.`}
+ else if(r.phase==='signal'){dir=r.sig;const up=r.sig==='up',e=up?r.orh:r.orl;bd=B(up?'▲ BUY CONFIRMED':'▼ SELL CONFIRMED',up?'buy':'sell');
+  tx=`A 5-minute candle closed ${up?'above':'below'} the opening range ${kzF(r.orl)} – ${kzF(r.orh)}. Invalid if price closes back inside. Targets ${kzF(up?e+r.W:e-r.W)} and ${kzF(up?e+2*r.W:e-2*r.W)}.`}
+ else if(r.phase==='failed'){bd=B('FAILED BREAK','sell');tx='Price broke the opening range, then closed back inside. Do not chase it.'}
+ else{bd=B('NO SIGNAL YET','wait');tx=`Inside the opening range ${kzF(r.orl)} – ${kzF(r.orh)}. Wait for a 5-minute close outside it.`}
+ r._dir=dir;return H+bd+`</div><div class="note" style="margin:6px 0 0">${tx}</div><div>${lv}</div>${st}</div>`}
+function kzTick(){const pg=$('p-ta'),el=$('kz');if(!pg||!el||!pg.classList.contains('on'))return;const now=Date.now();let html='';
+ KZD.forEach(def=>{const F=kzFocus(def,now);if(!F)return;const dt=F.ms-now,w=now>=F.ms-KZW[0]*6e4&&now<F.ms+KZW[1]*6e4,hm=new Date(F.ms).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
+  if(w&&!def.busy&&now-(def.last||0)>30e3){def.busy=1;def.last=now;kzFetch(def,F).then(()=>{def.busy=0;kzTick()},()=>{def.busy=0})}
+  const day=new Date(F.ms).toLocaleDateString('en-ZA',{weekday:'short',day:'numeric',month:'short',timeZone:'Africa/Johannesburg'});
+  let rows='',cd=dt>0?'Opens in '+kzCd(dt):'Open · +'+kzCd(-dt);
+  if(w){const rs=def.syms.map(s=>{const r=KZR[def.id+s];return r&&r.ms===F.ms?r:null});rows=def.syms.map((s,i)=>kzRow(s,rs[i])).join('');
+   const dr=rs.map(r=>r&&r._dir);if(dr.length===2&&dr[0]&&dr[1]&&dr[0]!==dr[1])rows='<div class="kzw">'+def.syms.join(' and ')+' are pointing in opposite directions. They do not always open the same way, so trade each on its own levels.</div>'+rows}
+  else rows=`<div class="note" style="margin:6px 0 0">Analysis for ${def.syms.join(' and ')} starts 30 minutes before the open.</div>`;
+  if(F.hol)rows=`<div class="note" style="margin:8px 0 0;color:var(--wait)">${def.hol==='US'?'The US cash market':'The German cash market'} is closed today for a holiday. Showing the next open.</div>`+rows;
+  html+=`<div class="card kz"><div class="kzh"><span style="font:800 15px Manrope,sans-serif;color:var(--text)">${def.n} · ${def.syms.join(' & ')}</span><span>${day} ${hm} SAST</span></div><div class="kzc" style="color:${dt<=3e5&&dt>0?'var(--wait)':'var(--text)'}">${cd}</div>${rows}</div>`});
+ el.innerHTML=html+'<div class="note" style="margin:-4px 4px 12px">Prices are the futures you trade. The cash index can open differently from futures, so wait for the confirmation after the open. Holidays are hard coded to the end of 2027.</div>'}
+setInterval(kzTick,1000);
 if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
 addEventListener('resize',draw);
 </script></body></html>
