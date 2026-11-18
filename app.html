@@ -546,7 +546,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';admSyms(ROLE==='admin');$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -596,9 +596,7 @@ const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.t
 $('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO=0;save();tick()};
 // indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
 const IDXS={NDX:{n:'Nasdaq 100 futures',tz:'America/New_York',fut:1},DJI:{n:'Dow Jones futures',tz:'America/New_York',fut:1},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
-const IDXA={NQ:'NDX',MNQ:'NDX'},isAdm=()=>{try{return ROLE==='admin'}catch(e){return false}};
-const idxKey=sym=>{let u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(IDXA[u]&&isAdm())u=IDXA[u];return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
-function admSyms(on){const dl=$('syms');if(!dl)return;dl.querySelectorAll('[data-adm]').forEach(o=>o.remove());if(on)['NQ','MNQ'].forEach(v=>{const o=document.createElement('option');o.value=v;o.dataset.adm=1;dl.appendChild(o)})}
+const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
 // data
 async function load(sym,tf,size){
  sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
@@ -965,7 +963,8 @@ function sMS(sym,d,hd){
  const E=evalZone(bull?'BUY':'SELL',ev.lvl-.2*atr,ev.lvl+.2*atr,bull?ev.ref-.25*atr:ev.ref+.25*atr,[ext].concat((bull?sw.H:sw.L).map(x=>x.v)),d,atr),
   q=Math.min(25,8+(ev.type==='CHoCH'?6:8)+(ev.i<=20?6:0)+(Math.abs(c[ev.i]-ev.lvl)>=.3*atr?5:0));
  OVX={boxes:[{n:'Retest zone',i0:ev.i,i1:0,lo:ev.lvl-.2*atr,hi:ev.lvl+.2*atr,c:bull?GRN:RED}],lv:[{n:ev.type+' level',v:ev.lvl,c:'#3b82f6'}],mk:[{i:ev.i,side:bull?'up':'dn',n:ev.type}]};return fin(sym,d,'ms',E,q,'Structure · '+ev.type+' '+(bull?'bullish':'bearish'),`Price closed ${bull?'above':'below'} ${f(ev.lvl)} ${ev.i} candles ago${ev.type==='CHoCH'?' and the trend flipped':''}. The entry is the retest of that level.`,hd)}
-// Fibonacci: pullback into the 61.8% to 78.6% zone of the last swing
+// Fibonacci: pullback into the 61.8% to 78.6% zone of the last swing. Levels drawn: 23.6, 38.2, 50, 61.8, 78.6
+const FIBL=[.236,.382,.5,.618,.786];
 function sFib(sym,d,hd){
  const{h,l,c,n}=d,atr=atr7(h,l,c,n)[0]||1e-9,P=5,F=fractals(h,l,n,P),px=c[0],f=v=>v.toFixed(d.dec);
  if(n<100)return noTrade(sym,d,'fib','Not enough data');
@@ -981,7 +980,7 @@ function sFib(sym,d,hd){
  const z1=bull?top-.618*leg:bot+.618*leg,z2=bull?top-.786*leg:bot+.786*leg,zlo=Math.min(z1,z2),zhi=Math.max(z1,z2),
   E=evalZone(bull?'BUY':'SELL',zlo,zhi,null,bull?[top,top+.272*leg,top+.618*leg]:[bot,bot-.272*leg,bot-.618*leg],d,atr),
   ret=bull?(top-px)/leg:(px-bot)/leg,q=10+(leg>=4*atr?6:0)+(ret>=.5&&ret<=.9?6:0)+(B.i<=60?3:0);
- OVX={boxes:[{n:'Golden zone 61.8–78.6%',i0:Math.max(A,B.i),i1:0,lo:zlo,hi:zhi,c:'245,158,11'}],lv:[{n:'Swing high',v:top,c:'#94a3b8'},{n:'Swing low',v:bot,c:'#94a3b8'}]};return fin(sym,d,'fib',E,q,'Fibonacci · '+(bull?'bullish':'bearish')+' swing',`Swing ${f(bot)} to ${f(top)}. Golden zone ${f(zlo)} – ${f(zhi)} (61.8% to 78.6%), now ${Math.round(ret*100)}% retraced.`,hd)}
+ OVX={boxes:[{n:'Golden zone 61.8–78.6%',i0:Math.max(A,B.i),i1:0,lo:zlo,hi:zhi,c:'245,158,11'}],lv:[{n:'Swing high',v:top,c:'#94a3b8'},{n:'Swing low',v:bot,c:'#94a3b8'},...FIBL.map(r=>({n:'Fib '+(r*100).toFixed(1)+'%',v:bull?top-r*leg:bot+r*leg,c:r===.5?'#f59e0b':'#fbbf24aa'}))]};return fin(sym,d,'fib',E,q,'Fibonacci · '+(bull?'bullish':'bearish')+' swing',`Swing ${f(bot)} to ${f(top)}. Golden zone ${f(zlo)} – ${f(zhi)} (61.8% to 78.6%), now ${Math.round(ret*100)}% retraced.`,hd)}
 // Smart money concepts: liquidity sweep, break of structure, then entry at the order block
 function sSMC(sym,d,hd){
  const{o,h,l,c,n}=d,atr=atr7(h,l,c,n)[0]||1e-9,P=3,f=v=>v.toFixed(d.dec);
@@ -1865,7 +1864,7 @@ hlPaint();hlLoad();setInterval(()=>hlLoad(),30000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('tkSel').value=String(S.tkIv==null?300:S.tkIv);$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.tkIv=+$('tkSel').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();tkBuild();tkPaint();tickerLoad(true);if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
-$('logout').onclick=()=>{ROLE='user';admSyms(false);ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
+$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{
  if(window.AndroidBridge){try{
   if(!AndroidBridge.hasPermission()){AndroidBridge.requestPermission();setTimeout(()=>{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Alerts blocked';renderCk()},2500);return}
