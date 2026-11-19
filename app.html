@@ -1922,13 +1922,14 @@ function kzFocus(def,now){
  for(let i=1;i<days.length;i++){const D=days[i],ms=localToMs(def.tz,D.y,D.m,D.dd,def.o[0],def.o[1]);
   if(ms+KZW[1]*6e4>now){const P=days[i-1];return{ms,hol,pcMs:localToMs(def.htz,P.y,P.m,P.dd,def.pcT[0],def.pcT[1]),pdoMs:localToMs(def.htz,P.y,P.m,P.dd,def.pdo[0],def.pdo[1])}}}
  return null}
-function kzCalc(d,F,now){
+function kzCalc(d,F,now,fut){
  const{o,h,l,c,t,n}=d,M5=3e5,ms=F.ms,R={};let pi=-1;
  for(let i=0;i<n;i++)if(t[i]<=F.pcMs-M5){pi=i;break}
  if(pi<0||F.pcMs-t[pi]>36e5)return{err:'Not enough history for the previous close yet.'};
  let pdh=-1e18,pdl=1e18,onh=-1e18,onl=1e18;
  for(let i=0;i<n;i++){const x=t[i];if(x>=F.pdoMs&&x<F.pcMs){if(h[i]>pdh)pdh=h[i];if(l[i]<pdl)pdl=l[i]}if(x>=F.pcMs&&x<ms){if(h[i]>onh)onh=h[i];if(l[i]<onl)onl=l[i]}}
  Object.assign(R,{pc:c[pi],pdh:pdh>-1e17?pdh:null,pdl:pdl<1e17?pdl:null,onh:onh>-1e17?onh:null,onl:onl<1e17?onl:null,last:c[0],stale:now-t[0]>15*6e4});
+ if(now<ms&&!fut){R.stale=false;R.phase='nopre';return R}
  if(now<ms){const k=t.findIndex(x=>x<=now-36e5),m60=k>=0?c[k]:null,p=c[0],pos=R.onh!=null&&R.onh>R.onl?(p-R.onl)/(R.onh-R.onl):.5,
    sc=(p>R.pc?1:-1)+(pos>.6?1:pos<.4?-1:0)+(m60==null?0:p>m60?1:-1);
   R.str=pos>.88||pos<.12;R.lean=sc>=2?'up':sc<=-2?'down':'mixed';R.conf=Math.abs(sc)===3&&!R.str?'Medium':'Low';R.gap=(p-R.pc)/R.pc*100;R.phase='pre';return R}
@@ -1941,7 +1942,7 @@ function kzCalc(d,F,now){
  for(let i=j;i>=last;i--){if(c[i]>rh){br=br||'up'}else if(c[i]<rl){br=br||'down'}}
  const cur=j>=last?c[last]:null;R.sig=cur==null?null:cur>rh?'up':cur<rl?'down':null;
  R.phase=R.sig?'signal':br?'failed':'inside';return R}
-async function kzFetch(def,F){await Promise.all(def.syms.map(async sym=>{const key=def.id+sym;try{const d=await load(sym,'M5');KZR[key]=Object.assign({ms:F.ms},kzCalc(d,F,Date.now()))}catch(e){KZR[key]={ms:F.ms,err:e.message||'Data unavailable'}}}))}
+async function kzFetch(def,F){await Promise.all(def.syms.map(async sym=>{const key=def.id+sym;try{const d=await load(sym,'M5');KZR[key]=Object.assign({ms:F.ms},kzCalc(d,F,Date.now(),!!IDXS[sym].fut))}catch(e){KZR[key]={ms:F.ms,err:e.message||'Data unavailable'}}}))}
 const kzF=v=>v.toFixed(2),kzCd=s=>{s=Math.max(0,Math.round(s/1e3));const h=s/3600|0,m=(s%3600)/60|0,x=s%60,p=v=>String(v).padStart(2,'0');return h?h+'h '+p(m)+'m':p(m)+':'+p(x)};
 function kzRow(sym,r){
  const B=(t,c)=>`<span class="kzb" style="color:var(--${c});background:rgba(var(--${c}r),.14)">${t}</span>`,L=(k,v)=>v==null?'':`<span class="kzl"><i>${k}</i>${kzF(v)}</span>`,H=`<div class="kzr"><b>${sym}</b>`;
@@ -1949,6 +1950,7 @@ function kzRow(sym,r){
  let bd,tx,dir=null;const lv=L('Prev close',r.pc)+L('Prev high',r.pdh)+L('Prev low',r.pdl)+L('O/N high',r.onh)+L('O/N low',r.onl),st=r.stale?'<div class="note" style="margin:6px 0 0;color:var(--wait)">Data looks delayed. Do not rely on this until it refreshes.</div>':'';
  if(r.phase==='pre'){dir=r.lean==='mixed'?null:r.lean;bd=B(r.lean==='up'?'▲ LEAN UP':r.lean==='down'?'▼ LEAN DOWN':'MIXED',r.lean==='up'?'buy':r.lean==='down'?'sell':'wait');
   tx=`Price ${kzF(r.last)} is ${r.gap>=0?'+':''}${r.gap.toFixed(2)}% from the previous close. Confidence: ${r.conf}. This is a lean, not a signal. The signal comes after the open.`+(r.str?' Price is stretched at the edge of the overnight range, so a sweep and reversal at the open is possible.':'')}
+ else if(r.phase==='nopre'){bd=B('NO PRE-MARKET DATA','wait');tx='The DAX is a cash index and does not trade before the open, so there is no pre-open price to read and no lean is given. The signal starts after the open, from the first 15 minutes. Previous levels are below.'}
  else if(r.phase==='wait'){bd=B('WAITING','wait');tx='Waiting for the first candles of the session.'}
  else if(r.phase==='range'){dir=r.drive;bd=B('OPEN RANGE FORMING','wait');tx=`Open ${kzF(r.open)}, range so far ${kzF(r.orl)} – ${kzF(r.orh)}. Early read: ${r.drive||'flat'}. It is confirmed once a 5-minute candle closes outside the 15-minute range.`}
  else if(r.phase==='signal'){dir=r.sig;const up=r.sig==='up',e=up?r.orh:r.orl;bd=B(up?'▲ BUY CONFIRMED':'▼ SELL CONFIRMED',up?'buy':'sell');
