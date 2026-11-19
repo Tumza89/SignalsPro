@@ -1944,6 +1944,8 @@ function kzCalc(d,F,now,fut,px){
    const r=it.reduce((a,x)=>a+x.r,0)/it.length,m=it.reduce((a,x)=>a+x.m,0)/it.length,sg=it.length>1&&it.every(x=>x.r>0)?1:it.length>1&&it.every(x=>x.r<0)?-1:0,sf=v=>(v>=0?'+':'')+v.toFixed(2)+'%';
    R.score=(r>.2?2:r>.08?1:r<-.2?-2:r<-.08?-1:0)+(m>.05?1:m<-.05?-1:0)+sg;R.mx=4;
    R.why=[(r>=0?'▲ ':'▼ ')+'US futures '+sf(r)+' since the DAX close',(m>=0?'▲ ':'▼ ')+'last hour '+sf(m),sg?(sg>0?'▲ ':'▼ ')+'NDX and DJI agree':'NDX and DJI do not agree'];
+   let tr=0;const tw=[],T=(q,x)=>{if(q){tr++;tw.push(x)}};T(Math.abs(r)>.4,'big move in US futures, so the DAX may gap and fade');T(!sg,'NDX and DJI do not agree');T(m*r<0&&Math.abs(m)>.03,'US futures reversing in the last hour');
+   R.trap=tr>=3?'High':tr===2?'Medium':'Low';R.tw=tw;
   }else{
    const k=t.findIndex(x=>x<=now-36e5),m60=k>=0?c[k]:null,ema=kzEma(c,20),dz=R.pc*.0005,pos=R.onh!=null&&R.onh>R.onl?(p-R.onl)/(R.onh-R.onl):.5,w=[];let sc=0;
    const add=(v,tx)=>{sc+=v;if(v)w.push((v>0?'▲ ':'▼ ')+tx)};
@@ -1953,11 +1955,22 @@ function kzCalc(d,F,now,fut,px){
    add(p>ema?1:-1,p>ema?'above 20-period average':'below 20-period average');
    add(R.pdh!=null&&p>R.pdh?1:R.pdl!=null&&p<R.pdl?-1:0,R.pdh!=null&&p>R.pdh?'above previous high':'below previous low');
    R.str=pos>.88||pos<.12;if((pos>.88&&sc>0)||(pos<.12&&sc<0)){sc+=sc>0?-1:1;w.push('⚠ stretched at the edge of the overnight range')}
-   R.score=sc;R.mx=5;R.why=w}
+   R.score=sc;R.mx=5;R.why=w;
+   let tr=0;const tw=[],T=(q,x)=>{if(q){tr++;tw.push(x)}},nr=v=>v!=null&&Math.abs(p-v)<R.rk*.5;
+   T(R.str,'stretched at the edge of the overnight range');T(nr(R.onh)||nr(R.onl),'sitting right at the overnight high or low');T(nr(R.pdh)||nr(R.pdl),'sitting right at the previous day high or low');
+   T(Math.abs(p-R.pc)>pdR*.35,'large gap, and gaps often get faded');T(m60!=null&&Math.abs(p-m60)>pdR*.15,'sharp one-way run in the last hour');T(w.some(x=>x[0]==='▲')&&w.some(x=>x[0]==='▼'),'signals conflict');
+   R.trap=tr>=3?'High':tr===2?'Medium':'Low';R.tw=tw}
   R.dir=R.score>=3?'up':R.score<=-3?'down':null;return R}
  let oi=-1;for(let i=n-1;i>=0;i--)if(t[i]>=ms){oi=i;break}
  if(oi<0||t[oi]-ms>M5){R.phase='wait';return R}
- R.open=o[oi];R.drive=c[0]>R.open?'up':c[0]<R.open?'down':null;const rEnd=ms+15*6e4;let rh=-1e18,rl=1e18,j=oi;
+ R.open=o[oi];R.drive=c[0]>R.open?'up':c[0]<R.open?'down':null;
+ R.rk=(R.pdh!=null&&R.pdl!=null?R.pdh-R.pdl:c[0]*.01)*.2;
+ {let tp=null;for(const[nm,v,hi]of[['O/N high',R.onh,1],['Prev high',R.pdh,1],['O/N low',R.onl,0],['Prev low',R.pdl,0]]){if(v==null)continue;let ex=0;
+   for(let i=oi;i>=0;i--){const e=hi?h[i]-v:v-l[i];if(e>ex)ex=e}
+   if(ex>R.rk*.05&&(hi?c[0]<v:c[0]>v)&&(!tp||ex>tp.ex))tp={nm,v,ex,dir:hi?'down':'up'}}
+  if(tp)R.trapNow=tp;
+  const fd=c[oi]>o[oi]?'up':c[oi]<o[oi]?'down':null;if(fd&&R.drive&&fd!==R.drive&&Math.abs(c[0]-R.open)>R.rk*.25)R.rev={first:fd,now:R.drive}}
+const rEnd=ms+15*6e4;let rh=-1e18,rl=1e18,j=oi;
  for(;j>=0&&t[j]<rEnd;j--){if(h[j]>rh)rh=h[j];if(l[j]<rl)rl=l[j]}
  R.orh=rh;R.orl=rl;R.W=rh-rl;if(now<rEnd){R.phase='range';return R}
  const last=t[0]+M5<=now?0:1;let br=null;
@@ -1968,9 +1981,11 @@ async function kzFetch(def,F){await Promise.all(def.syms.map(async sym=>{const k
   const d=await load(sym,'M5');let px=null;
   if(!fut&&def.proxy)px=(await Promise.all(def.proxy.map(s=>load(s,'M5').catch(()=>null)))).filter(Boolean);
   const now=Date.now(),R=Object.assign({ms:F.ms},kzCalc(d,F,now,fut,px)),keep=old&&old.ms===F.ms?old.lock:null;
-  if(keep)R.lock=keep;else if(R.phase==='pre'&&now>=F.ms-3e5)R.lock={dir:R.dir,score:R.score,why:R.why,rk:R.rk,last:R.last,mx:R.mx};
+  if(keep)R.lock=keep;else if(R.phase==='pre'&&now>=F.ms-3e5)R.lock={dir:R.dir,score:R.score,why:R.why,rk:R.rk,last:R.last,mx:R.mx,trap:R.trap,tw:R.tw};
   KZR[key]=R}catch(e){KZR[key]={ms:F.ms,err:e.message||'Data unavailable'}}}))}
 const kzF=v=>v.toFixed(2),kzCd=s=>{s=Math.max(0,Math.round(s/1e3));const h=s/3600|0,m=(s%3600)/60|0,x=s%60,p=v=>String(v).padStart(2,'0');return h?h+'h '+p(m)+'m':p(m)+':'+p(x)};
+function kzTrapTx(S){if(!S.trap)return'';const c=S.trap==='High'?'sell':S.trap==='Medium'?'wait':'buy',adv=S.trap==='Low'?'Trap risk looks low, but it is never zero.':'Do not chase the first minutes. A spike through the overnight or previous day high or low that closes back inside is a trap. Wait for a 5-minute close beyond the level that holds.';
+ return `<div style="margin-top:8px"><b style="color:var(--${c})">Trap risk: ${S.trap}</b>${S.tw&&S.tw.length?' · <span style="color:var(--t2)">'+S.tw.join(' · ')+'</span>':''}<br>${adv}</div>`}
 function kzRow(sym,r){
  const B=(t,c)=>`<span class="kzb" style="color:var(--${c});background:rgba(var(--${c}r),.14)">${t}</span>`,L=(k,v)=>v==null?'':`<span class="kzl"><i>${k}</i>${kzF(v)}</span>`,H=`<div class="kzr"><b>${sym}</b>`;
  if(!r||r.err)return H+'</div><div class="note" style="margin:6px 0 0">'+(r?r.err:'Loading…')+'</div></div>';
@@ -1978,8 +1993,7 @@ function kzRow(sym,r){
  if(r.phase==='pre'){const S=r.lock||r,dr=S.dir,sc=Math.abs(S.score),mx=S.mx||5,up=dr==='up',en=S.last,rk=S.rk;dir=dr;
   bd=B(dr?(up?'▲ BUY':'▼ SELL'):'NO TRADE',dr?(up?'buy':'sell'):'wait');
   const pl=!dr?'':r.proxy?`<span class="kzl"><i>Stop</i>${Math.round(rk)} pts</span><span class="kzl"><i>TP1</i>${Math.round(rk)} pts</span><span class="kzl"><i>TP2</i>${Math.round(rk*2)} pts</span>`:L('Entry',en)+L('Stop',up?en-rk:en+rk)+L('TP1',up?en+rk:en-rk)+L('TP2',up?en+2*rk:en-2*rk);
-  tx=(dr?`Signal for the open. Strength ${sc}/${mx}. `:'No clear edge before the open, so stand aside. ')+(r.lock?'Final.':'Still forming: it locks 5 minutes before the open.')+(dr?(r.proxy?' Enter at the open. Stop and targets are distances from your entry.':' Enter at the open. Entry is the current price, so adjust if the open gaps.'):'')+'<br><span style="color:var(--t2)">'+(S.why||[]).join(' · ')+'</span><div>'+pl+'</div>';
-  if(r.lock&&r.lock.dir){const mine=r.lock.dir,cur=r.sig||r.drive;tx='Pre-open signal was '+(mine==='up'?'BUY':'SELL')+(cur?(cur===mine?': price is moving with it. ':': price is moving against it, respect your stop. '):'. ')+tx}
+  tx=(dr?`Signal for the open. Strength ${sc}/${mx}. `:'No clear edge before the open, so stand aside. ')+(r.lock?'Final.':'Still forming: it locks 5 minutes before the open.')+(dr?(r.proxy?' Enter at the open. Stop and targets are distances from your entry.':' Enter at the open. Entry is the current price, so adjust if the open gaps.'):'')+'<br><span style="color:var(--t2)">'+(S.why||[]).join(' · ')+'</span><div>'+pl+'</div>'+kzTrapTx(S);
  r._dir=dir;return H+bd+`</div><div class="note" style="margin:6px 0 0">${tx}</div><div>${lv}</div>${st}</div>`}
  else if(r.phase==='nopre'){bd=B('NO PRE-MARKET DATA','wait');tx='Could not read the US futures needed for a DAX pre-open signal. The signal will start after the open, from the first 15 minutes.'}
  else if(r.phase==='wait'){bd=B('WAITING','wait');tx='Waiting for the first candles of the session.'}
@@ -1988,7 +2002,11 @@ function kzRow(sym,r){
   tx=`A 5-minute candle closed ${up?'above':'below'} the opening range ${kzF(r.orl)} – ${kzF(r.orh)}. Invalid if price closes back inside. Targets ${kzF(up?e+r.W:e-r.W)} and ${kzF(up?e+2*r.W:e-2*r.W)}.`}
  else if(r.phase==='failed'){bd=B('FAILED BREAK','sell');tx='Price broke the opening range, then closed back inside. Do not chase it.'}
  else{bd=B('NO SIGNAL YET','wait');tx=`Inside the opening range ${kzF(r.orl)} – ${kzF(r.orh)}. Wait for a 5-minute close outside it.`}
- r._dir=dir;return H+bd+`</div><div class="note" style="margin:6px 0 0">${tx}</div><div>${lv}</div>${st}</div>`}
+ if(r.lock&&r.lock.dir){const mine=r.lock.dir,cur=r.sig||r.drive;tx='Pre-open signal was '+(mine==='up'?'BUY':'SELL')+(cur?(cur===mine?': price is moving with it. ':': price is moving against it, respect your stop. '):'. ')+tx}
+let wr='';
+ if(r.trapNow){const T=r.trapNow,d=T.dir==='down';wr=`<div class="kzw">⚠ Possible ${d?'bull':'bear'} trap: price went ${d?'above':'below'} ${T.nm} ${kzF(T.v)} and came back ${d?'below':'above'} it. The real move is more likely ${T.dir}.${r.lock&&r.lock.dir&&r.lock.dir!==T.dir?' This goes against your pre-open '+(r.lock.dir==='up'?'BUY':'SELL')+'.':''}</div>`}
+ else if(r.rev)wr=`<div class="kzw">⚠ The open reversed: the first 5 minutes went ${r.rev.first} and price is now ${r.rev.now} from the open price.</div>`;
+ r._dir=dir;return H+bd+`</div><div class="note" style="margin:6px 0 0">${tx}</div>${wr}<div>${lv}</div>${st}</div>`}
 function kzTick(){const pg=$('p-ta'),el=$('kz');if(!pg||!el||!pg.classList.contains('on'))return;const now=Date.now();let html='';
  KZD.forEach(def=>{const F=kzFocus(def,now);if(!F)return;const dt=F.ms-now,w=now>=F.ms-KZW[0]*6e4&&now<F.ms+KZW[1]*6e4,hm=new Date(F.ms).toLocaleTimeString('en-ZA',{hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
   if(w&&!def.busy&&now-(def.last||0)>30e3){def.busy=1;def.last=now;kzFetch(def,F).then(()=>{def.busy=0;kzTick()},()=>{def.busy=0})}
