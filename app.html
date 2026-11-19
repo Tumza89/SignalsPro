@@ -342,7 +342,9 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 #fest.on{display:flex;animation:pi .5s cubic-bezier(.22,1,.36,1)}
 #festCv{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;background:none;border-radius:0;cursor:default}
 #fest .fc{position:relative;max-width:360px;width:100%;text-align:center;padding:34px 26px 26px;border-radius:30px;background:var(--panel);border:1px solid rgba(var(--w),.14);box-shadow:0 0 60px var(--glow),inset 0 1px 0 rgba(var(--w),.14)}
-#fest .fe{font-size:62px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 0 22px var(--glow))}
+#fest .fbr{font:800 11px/1 var(--mono);letter-spacing:4px;color:var(--wait);margin-bottom:14px}
+#fest.on .fc>*{animation:pi .7s cubic-bezier(.22,1,.36,1) both}#fest.on .fc>:nth-child(2){animation-delay:.08s}#fest.on .fc>:nth-child(3){animation-delay:.16s}#fest.on .fc>:nth-child(4){animation-delay:.24s}#fest.on .fc>:nth-child(5){animation-delay:.32s}#fest.on .fc>:nth-child(6){animation-delay:.4s}#fest.on .fc>:nth-child(7){animation-delay:.48s}
+#fest .fe{font-size:50px;line-height:1;margin-bottom:10px;filter:drop-shadow(0 0 22px var(--glow))}
 #fest .fh1{font-size:28px;font-weight:800;letter-spacing:-.03em;background:linear-gradient(90deg,var(--text),var(--wait),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
 #fest .fm{font-size:15px;line-height:1.6;color:var(--t2);margin:14px 0 22px}
 #fest .fs{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--t2);margin-top:14px;font-weight:700}
@@ -1890,7 +1892,9 @@ $('notif').onclick=()=>{
  function show(k,key){
   const d=FD[k],nd=new Date(),yr=nd.getFullYear()+(nd.getMonth()>=6?1:0),f=$('fest')||document.body.appendChild(Object.assign(document.createElement('div'),{id:'fest'}));
   const t=k==='nye'?d.t:k==='ny'?d.t+' '+yr:d.t;
-  f.innerHTML=`<canvas id="festCv"></canvas><div class="fc"><div class="fe">${d.e}</div><div class="fh1">${t}</div><div class="fm">${d.m}</div><button class="btn" id="festGo">Continue</button><div class="fs">SignalsPro</div></div>`;
+  f.innerHTML=`<canvas id="festCv"></canvas><div class="fc"><div class="l3d" data-l3d style="--s:84px;margin:0 auto 4px"></div><div class="fbr">SIGNALSPRO</div><div class="fe">${d.e}</div><div class="fh1">${t}</div><div class="fm">${d.m}</div><button class="btn" id="festGo">Continue</button><div class="fs">The SignalsPro team</div></div>`;
+  for(let i=LG.length-1;i>=0;i--)if(!LG[i].el.isConnected)LG.splice(i,1);
+  const lg=f.querySelector('[data-l3d]');if(lg)mk3d(lg);
   f.classList.add('on');$('festGo').onclick=()=>close(k,key);
   const cv=$('festCv'),g=cv.getContext('2d'),r=Math.min(devicePixelRatio||1,2);cv.width=innerWidth*r;cv.height=innerHeight*r;
   if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
