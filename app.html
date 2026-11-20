@@ -321,6 +321,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 #thPanel .dv{height:1px;margin:14px 8px;background:rgba(var(--w),.1)}
 
 /* ===== v2: type, depth, plan ladder, festive ===== */
+.idxn{display:block;font:600 10.5px/1.3 'Manrope',sans-serif;letter-spacing:0;text-transform:none;color:var(--t2);margin-top:2px;font-style:normal}.idxn.in{display:inline-block;margin:0 0 0 8px}
 *{scrollbar-width:none;-ms-overflow-style:none}*::-webkit-scrollbar{display:none;width:0;height:0}
 .px,.tkp,.tkc,.nt,.pr span:last-child,.tar span:last-child,.fgrid b,.g div:last-child,.ring .rc .cd,.ibar .px{font-family:var(--mono);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
 .wm,.name,.ft,.hn,.vd,.adv{letter-spacing:-.03em}
@@ -606,6 +607,8 @@ $('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO
 // indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
 const IDXS={NDX:{n:'Nasdaq 100 futures',tz:'America/New_York',fut:1},DJI:{n:'Dow Jones futures',tz:'America/New_York',fut:1},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
 const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
+const IDXN={NDX:{l:'Nasdaq 100 · US Tech 100',s:'US Tech 100'},DJI:{l:'Dow Jones 30 · US 30',s:'US 30'},DAX:{l:'Germany 40 Index',s:'Germany 40'}};
+const idxSub=(sym,inl)=>{const k=idxKey(sym);return k?`<small class="idxn${inl?' in':''}">${IDXN[k].l}</small>`:''};
 // data
 async function load(sym,tf,size){
  sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
@@ -1987,7 +1990,7 @@ const kzF=v=>v.toFixed(2),kzCd=s=>{s=Math.max(0,Math.round(s/1e3));const h=s/360
 function kzTrapTx(S){if(!S.trap)return'';const c=S.trap==='High'?'sell':S.trap==='Medium'?'wait':'buy',adv=S.trap==='Low'?'Trap risk looks low, but it is never zero.':'Do not chase the first minutes. A spike through the overnight or previous day high or low that closes back inside is a trap. Wait for a 5-minute close beyond the level that holds.';
  return `<div style="margin-top:8px"><b style="color:var(--${c})">Trap risk: ${S.trap}</b>${S.tw&&S.tw.length?' · <span style="color:var(--t2)">'+S.tw.join(' · ')+'</span>':''}<br>${adv}</div>`}
 function kzRow(sym,r){
- const B=(t,c)=>`<span class="kzb" style="color:var(--${c});background:rgba(var(--${c}r),.14)">${t}</span>`,L=(k,v)=>v==null?'':`<span class="kzl"><i>${k}</i>${kzF(v)}</span>`,H=`<div class="kzr"><b>${sym}</b>`;
+ const B=(t,c)=>`<span class="kzb" style="color:var(--${c});background:rgba(var(--${c}r),.14)">${t}</span>`,L=(k,v)=>v==null?'':`<span class="kzl"><i>${k}</i>${kzF(v)}</span>`,H=`<div class="kzr"><b>${sym}</b>${idxSub(sym,1)}`;
  if(!r||r.err)return H+'</div><div class="note" style="margin:6px 0 0">'+(r?r.err:'Loading…')+'</div></div>';
  let bd,tx,dir=null;const lv=L('Prev close',r.pc)+L('Prev high',r.pdh)+L('Prev low',r.pdl)+L('O/N high',r.onh)+L('O/N low',r.onl),st=r.stale?'<div class="note" style="margin:6px 0 0;color:var(--wait)">Data looks delayed. Do not rely on this until it refreshes.</div>':'';
  if(r.phase==='pre'){const S=r.lock||r,dr=S.dir,sc=Math.abs(S.score),mx=S.mx||5,up=dr==='up',en=S.last,rk=S.rk;dir=dr;
