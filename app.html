@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="SignalsPro">
 <meta name="theme-color" content="#050508"><title>SignalsPro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Manrope:wght@500;600;700;800&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Manrope:wght@500;600;700;800&family=Playfair+Display:wght@600;800&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap">
 <style>
 :root{--mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--bg:#050508;--bgA:#050508;--bgB:#0a0a12;--bgC:#080812;--w:255,255,255;--btn:#000;--accent2:#06b6d4;--buyr:0,255,85;--sellr:255,59,48;--waitr:255,204,0;--up:#4fd18b;--dn:#e0605e;--mid:#4a4a64;--warnt:#ffe28a;--dgrt:#ffb3ad;--cvbg:rgba(0,0,0,.25);--sh:rgba(0,0,0,.28);--card:rgba(255,255,255,.045);--hdr:rgba(7,7,12,.75);--nav:rgba(18,18,28,.92);--panel:rgba(14,14,22,.93);--accent:#3b82f6;--glow:rgba(59,130,246,.35);--pg:rgba(59,130,246,.45);--text:#fff;--t2:#a0a0b0;--bd:rgba(var(--w),.09);--buy:#00ff55;--sell:#ff3b30;--wait:#ffcc00}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -403,6 +403,107 @@ body.hud #scBtn:disabled~.radar{display:block;position:relative;width:120px;heig
  background:linear-gradient(var(--hl),var(--hl)) 50% 0/1px 100% no-repeat,linear-gradient(var(--hl),var(--hl)) 0 50%/100% 1px no-repeat,repeating-radial-gradient(circle,transparent 0 19px,var(--hl) 19px 20px)}
 body.hud #scBtn:disabled~.radar::after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 270deg,color-mix(in srgb,var(--accent) 60%,transparent) 360deg);animation:radarSpin 1.8s linear infinite}
 @media (prefers-reduced-motion:reduce){body.hud #hudFx::after,body.hud #scBtn:disabled~.radar::after{animation:none}}
+
+/* ===== Per-theme skins: every theme has its own layout, motion and loader ===== */
+@keyframes cup{from{opacity:0;transform:translateY(16px)}}
+@keyframes cslide{from{opacity:0;transform:translateX(-28px)}}
+@keyframes cgrow{from{opacity:0;transform:scale(.93) translateY(12px)}}
+@keyframes cpop{from{opacity:0;transform:scale(.88)}}
+@keyframes cfloat{from{opacity:0;transform:translateY(22px) rotate(-1.2deg)}}
+@keyframes ctype{from{opacity:.3;clip-path:inset(0 100% 0 0)}}
+@keyframes cflick{0%{opacity:0}20%{opacity:.9}30%{opacity:.2}45%{opacity:1}60%{opacity:.5}100%{opacity:1}}
+@keyframes cboot{0%{opacity:0;transform:scaleY(.04)}40%{opacity:.85;transform:scaleY(1.04)}60%{opacity:.5}100%{opacity:1;transform:none}}
+@keyframes stripe{to{background-position:28px 0}}
+@keyframes ripple{from{transform:scale(.3);opacity:1}to{transform:scale(1.5);opacity:0}}
+@keyframes shim{to{background-position:200% 0}}
+@keyframes swell{to{transform:translateX(-4%) scaleY(1.3)}}
+@keyframes streak{to{background-position:0 -124px,0 0}}
+@keyframes diag{to{background-position:60px 60px,0 0}}
+@keyframes sheen{0%{background-position:150% 0}60%,100%{background-position:-50% 0}}
+@keyframes blink{50%{opacity:0}}
+@keyframes pulseg{50%{box-shadow:0 0 16px currentColor}}
+@keyframes crt{50%{opacity:.93}}
+.page.on>:is(.card,.fcard,.hero){animation:var(--cin,cup) .55s cubic-bezier(.22,1,.36,1) backwards}
+.page.on>:nth-child(2){animation-delay:.06s}.page.on>:nth-child(3){animation-delay:.12s}.page.on>:nth-child(4){animation-delay:.18s}.page.on>:nth-child(n+5){animation-delay:.24s}
+/* scan loader: stripes by default, ripple on soft themes */
+#scBtn:disabled~.radar{display:block;height:6px;margin:14px 0 4px;border-radius:3px;background:repeating-linear-gradient(135deg,var(--accent) 0 10px,transparent 10px 20px);background-size:28px 100%;animation:stripe .8s linear infinite;opacity:.85}
+body:is(.sk-midnight,.sk-ocean,.sk-lavender,.sk-mint) #scBtn:disabled~.radar{width:64px;height:64px;margin:16px auto 4px;border-radius:50%;border:2px solid var(--accent);background:none;animation:ripple 1.4s ease-out infinite}
+body.hud{--cin:cboot}
+body.sk-midnight{--cin:cup}
+body.sk-midnight::after{opacity:1;filter:blur(42px)}
+body.sk-midnight :is(.card,.fcard){border-radius:28px;background:linear-gradient(135deg,rgba(var(--w),.09),rgba(var(--w),.025));border:1px solid rgba(var(--w),.14);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);box-shadow:inset 0 1px 0 rgba(var(--w),.22),0 24px 50px -24px rgba(0,0,0,.6)}
+body.sk-midnight :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:999px}
+body.sk-midnight :is(.card,.fcard)::after{border-radius:28px}
+body.sk-graphite{--cin:ctype}
+body.sk-graphite::before{background:radial-gradient(rgba(var(--w),.08) 1px,transparent 1px) 0 0/18px 18px,var(--bgA);animation:none}
+body.sk-graphite::after{display:none}
+body.sk-graphite :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:2px}
+body.sk-graphite :is(.ft,.fk,.brand,.name,label,.pillx,.btn,.tfs button,#thPanel .tile .tt b,.px,.adv){font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+body.sk-graphite :is(.card,.fcard){border-radius:2px;border:1px solid rgba(var(--w),.2);border-left:3px solid var(--accent);background:rgba(var(--w),.03);backdrop-filter:none;box-shadow:none}
+body.sk-graphite :is(.card,.fcard)::after{display:none}
+body.sk-graphite :is(.btn:not(.ghost):not(.red)){background:var(--text);color:var(--bg);box-shadow:none}
+body.sk-graphite .brand::after{content:"_";margin-left:2px;animation:blink 1s steps(2) infinite}
+body.sk-ocean{--cin:cfloat}
+body.sk-ocean::after{inset:auto -10% -12% -10%;height:46%;background:radial-gradient(ellipse at 30% 100%,var(--accent),transparent 62%),radial-gradient(ellipse at 75% 100%,var(--accent2),transparent 62%);opacity:.35;filter:blur(12px);animation:swell 7s ease-in-out infinite alternate}
+body.sk-ocean :is(.card,.fcard){border-radius:24px 24px 30px 10px;border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 11%,transparent),rgba(var(--w),.02))}
+body.sk-ocean :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:999px}
+body.sk-ocean :is(.btn:not(.ghost):not(.red)){background:linear-gradient(100deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;animation:shim 5s linear infinite}
+body.sk-forest{--cin:cgrow}
+body.sk-forest::before{background:repeating-linear-gradient(180deg,transparent 0 60px,rgba(52,211,153,.07) 60px 62px) 0 0/100% 124px,radial-gradient(ellipse 80% 40% at 50% 110%,rgba(16,185,129,.22),transparent 70%),linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:streak 9s linear infinite}
+body.sk-forest::after{opacity:.3}
+body.sk-forest :is(.card,.fcard){border-radius:30px 6px 30px 6px;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 9%,transparent),rgba(var(--w),.02))}
+body.sk-forest :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:16px 4px 16px 4px}
+body.sk-royal{--cin:cup}
+body.sk-royal::before{background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(168,85,247,.25),transparent 60%),radial-gradient(ellipse at 50% 120%,rgba(212,175,55,.14),transparent 55%),linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:none}
+body.sk-royal::after{opacity:.3}
+body.sk-royal :is(.ft,.name,.brand){font-family:"Playfair Display",Georgia,serif;letter-spacing:.5px}
+body.sk-royal :is(.card,.fcard){border-radius:6px;border:1px solid color-mix(in srgb,#d4af37 40%,transparent);box-shadow:0 0 0 3px var(--bgA),0 0 0 4px color-mix(in srgb,var(--accent) 45%,transparent),0 18px 40px -20px rgba(0,0,0,.6)}
+body.sk-royal :is(.card,.fcard)::after{display:block;border-radius:6px;background:linear-gradient(110deg,transparent 40%,rgba(255,235,170,.1) 50%,transparent 60%) 0 0/250% 100%;animation:sheen 7s ease-in-out infinite}
+body.sk-royal :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:4px}
+body.sk-royal :is(.btn:not(.ghost):not(.red)){background:linear-gradient(110deg,var(--accent),var(--accent2) 45%,#f5d27a 50%,var(--accent2) 55%,var(--accent));background-size:250% 100%;animation:shim 6s linear infinite;font-family:"Playfair Display",Georgia,serif;letter-spacing:2px;text-transform:uppercase}
+body.sk-crimson{--cin:cslide}
+body.sk-crimson::before{background:linear-gradient(135deg,transparent 25%,rgba(244,63,94,.05) 25% 50%,transparent 50% 75%,rgba(244,63,94,.05) 75%) 0 0/60px 60px,linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:diag 5s linear infinite}
+body.sk-crimson::after{opacity:.35}
+body.sk-crimson :is(.ft,.fk,.brand,.name,label,.pillx,.btn,.tfs button,#thPanel .tile .tt b,.px,.adv){font-family:"Rajdhani","Manrope",sans-serif;text-transform:uppercase;letter-spacing:1.2px;font-weight:700}
+body.sk-crimson :is(.card,.fcard){border-radius:0;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-left:4px solid var(--accent);clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
+body.sk-crimson :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:2px}
+body.sk-crimson :is(.btn:not(.ghost):not(.red)){clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);box-shadow:none}
+body.sk-crimson .pill.live{animation:pulseg 1.2s ease-in-out infinite}
+body.sk-amber{--cin:cflick;text-shadow:0 0 5px color-mix(in srgb,var(--accent) 45%,transparent)}
+body.sk-amber::before{background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,.14),transparent 60%),linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:none}
+body.sk-amber::after{display:none}
+body.sk-amber #hudFx{display:block;position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55));animation:crt .14s steps(2) infinite}
+body.sk-amber :is(.ft,.fk,.brand,.name,label,.pillx,.btn,.tfs button,#thPanel .tile .tt b,.px,.adv){font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
+body.sk-amber :is(.card,.fcard){border-radius:10px;border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);background:rgba(245,158,11,.04);box-shadow:inset 0 0 26px rgba(245,158,11,.07),0 0 16px var(--glow)}
+body.sk-amber :is(.card,.fcard)::after{display:none}
+body.sk-amber :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:6px}
+body.sk-amber :is(.btn:not(.ghost):not(.red)){background:transparent;color:var(--accent);border:1px solid var(--accent);box-shadow:inset 0 0 14px var(--glow)}
+body.sk-amber .brand::after{content:"_";margin-left:2px;animation:blink 1s steps(2) infinite}
+body.sk-daylight{--cin:cup;font-family:"Space Grotesk","Manrope",sans-serif}
+body.sk-daylight::before{background:linear-gradient(var(--bgA),var(--bgC));animation:none}
+body.sk-daylight::after{display:none}
+body.sk-daylight :is(.card,.fcard){border-radius:10px;background:#fff;border:1px solid rgba(var(--w),.1);backdrop-filter:none;box-shadow:0 1px 2px rgba(var(--w),.06),0 8px 24px -14px rgba(var(--w),.14)}
+body.sk-daylight :is(.card,.fcard)::after{display:none}
+body.sk-daylight :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:8px}
+body.sk-daylight :is(.btn:not(.ghost):not(.red)){box-shadow:0 1px 2px rgba(var(--w),.2)}
+body.sk-daylight :is(.ft,.px,.adv){letter-spacing:-.5px}
+body.sk-daylight .page.on>:is(.card,.fcard,.hero){animation-duration:.3s}
+body.sk-mint{--cin:cpop}
+body.sk-mint::before{background:var(--bgB);animation:none}
+body.sk-mint::after{opacity:.4}
+body.sk-mint .page.on>:is(.card,.fcard,.hero){animation-timing-function:cubic-bezier(.34,1.56,.64,1)}
+body.sk-mint :is(.card,.fcard){border-radius:28px;border:0;background:var(--bgB);backdrop-filter:none;box-shadow:9px 9px 22px rgba(var(--w),.12),-9px -9px 22px rgba(255,255,255,.95)}
+body.sk-mint :is(.card,.fcard)::after{display:none}
+body.sk-mint :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:20px}
+body.sk-mint :is(.btn:not(.ghost):not(.red)){box-shadow:6px 6px 14px rgba(var(--w),.14),-6px -6px 14px rgba(255,255,255,.9);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
+body.sk-mint :is(.btn:not(.ghost):not(.red)):active{transform:scale(.94)}
+body.sk-lavender{--cin:cfloat}
+body.sk-lavender::after{opacity:1;filter:blur(36px);animation-duration:14s}
+body.sk-lavender :is(.card,.fcard){border-radius:30px;border:1.5px solid transparent;background:linear-gradient(var(--bgB),var(--bgB)) padding-box,linear-gradient(135deg,var(--accent),var(--accent2)) border-box;box-shadow:0 18px 40px -22px var(--glow)}
+body.sk-lavender :is(.card,.fcard)::after{display:none}
+body.sk-lavender :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:999px}
+body.sk-lavender :is(.btn:not(.ghost):not(.red)){background:linear-gradient(100deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;animation:shim 5s linear infinite}
+@media (prefers-reduced-motion:reduce){body::before,body::after,#hudFx,#hudFx::after,.page.on>*,.radar,.radar::after,.btn,.brand::after,.pill,.fcard::after,.card::after{animation:none!important}}
 </style></head>
 <body>
 <div id="lock"><div class="l3d big" data-l3d style="--s:150px"></div>
@@ -637,7 +738,7 @@ function theme(n){
  ['w','text','t2','btn','buy','sell','wait','buyr','sellr','waitr','up','dn','mid','warnt','dgrt','cvbg','sh','card'].forEach(k=>set('--'+k,T[k]));
  set('--bd',`rgba(${T.w},.09)`);st.colorScheme=T.dark?'dark':'light';
  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=T.bg[0];
- document.body.classList.toggle('hud',n==='hud');S.theme=n;save();document.querySelectorAll('#sw button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));if(D)draw()}
+ document.body.classList.toggle('hud',n==='hud');[...document.body.classList].forEach(c=>{if(c.startsWith('sk-'))document.body.classList.remove(c)});document.body.classList.add('sk-'+n);S.theme=n;save();document.querySelectorAll('#sw button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));if(D)draw()}
 Object.keys(THEMES).forEach(n=>{const T=THEMES[n],b=document.createElement('button');b.type='button';b.dataset.t=n;
  b.innerHTML=`<i style="background:linear-gradient(135deg,${T.bg[0]} 50%,${T.a} 50%)"></i><span>${T.n}</span>`;b.onclick=()=>{try{localStorage.setItem('sp_ck_theme','1')}catch(e){}theme(n);renderCk()};$('sw').append(b)});theme(S.theme);
 // nav
