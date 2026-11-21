@@ -504,6 +504,15 @@ body.sk-lavender :is(.card,.fcard)::after{display:none}
 body.sk-lavender :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:999px}
 body.sk-lavender :is(.btn:not(.ghost):not(.red)){background:linear-gradient(100deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;animation:shim 5s linear infinite}
 @media (prefers-reduced-motion:reduce){body::before,body::after,#hudFx,#hudFx::after,.page.on>*,.radar,.radar::after,.btn,.brand::after,.pill,.fcard::after,.card::after{animation:none!important}}
+
+/* scanner result fixes: nothing may sit on top of the chart or the entry details */
+#p-scan{padding-bottom:130px}
+#scChart{scroll-margin-top:calc(96px + env(safe-area-inset-top));scroll-margin-bottom:130px;overflow:visible}
+#scCvw{overflow:hidden}
+#scCvw .ov{right:auto;left:8px;top:auto;bottom:40px}
+#scCvw #scLatest{top:8px;left:8px}
+#scLg,#scAn{position:relative;z-index:2}
+body:not(.hud):not(.sk-amber) #hudFx{display:none}
 </style></head>
 <body>
 <div id="lock"><div class="l3d big" data-l3d style="--s:150px"></div>
