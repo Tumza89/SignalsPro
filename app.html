@@ -414,7 +414,6 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 <div class="shb"><div id="plans"><div class="empty">Load a chart to see entries and targets.</div></div>
 <div class="grid"><div class="g s"><div class="k">Nearest support</div><div id="ns">—</div></div><div class="g r"><div class="k">Nearest resistance</div><div id="nr">—</div></div>
 <div class="g"><div class="k">Zones found</div><div id="zc">—</div></div><div class="g"><div class="k">Last signal</div><div id="ls">—</div></div></div>
-<div class="fk" style="margin-top:14px">Chart layers</div><div class="tfs" style="margin-top:8px"><button id="lySes">Sessions</button><button id="lyNews">News markers</button></div>
 <div class="legend"><span style="--c:var(--buy)">Buy / support</span><span style="--c:var(--sell)">Sell / resistance</span></div>
 <div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></div>
 </section>
@@ -431,7 +430,7 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 <p>The circles on the chart mark <b>zones</b>, which are areas where price has turned before.</p>
 <ul><li><b>Red</b> circles are resistance (sell) zones.</li><li><b>Green</b> circles are support (buy) zones.</li></ul>
 <p>A zone is a place to watch, not an instruction. Price can touch a zone, react, or break straight through it.</p>
-<p>Use the <b>+</b> and <b>−</b> buttons to zoom, and the full-screen button for a bigger view. <b>Chart layers</b> lets you switch the market sessions and news markers on or off.</p></div></details>
+<p>Use the <b>+</b> and <b>−</b> buttons to zoom, and the full-screen button for a bigger view.</p></div></details>
 
 <details class="gd"><summary><span class="gn">3</span>The advice label (BUY / SELL / WAIT)</summary><div class="gb">
 <p>The big label on the Indicator page changes when price touches a zone: a resistance zone gives <b>SELL</b> and a support zone gives <b>BUY</b>.</p>
@@ -738,18 +737,6 @@ function draw(){
   let lo=0,hi=n-1;while(hi-lo>1){const m=(lo+hi)>>1;if(T[m]>ms)lo=m;else hi=m}return hi-(ms-T[hi])/(T[lo]-T[hi])},xt=ms=>X(fi(ms))-bw/2;
  let NEWS=[];
  g.save();g.beginPath();g.rect(0,0,W-gut,H);g.clip();
- // session bands (Asia, London, New York) behind the candles
- if(T&&n>3&&S.lySes!==false&&['M1','M5','M15','M30','H1'].includes(S.tf)){
-  const cols=['139,92,246','245,158,11','6,182,212'];
-  chartSess().forEach(q=>{const xa=xt(q.a),xb=xt(q.b);if(xb<0||xa>W-gut)return;const x0=Math.max(0,xa),x1=Math.min(W-gut,xb);
-   g.fillStyle=`rgba(${cols[q.k]},.075)`;g.fillRect(x0,0,x1-x0,H-bm);
-   if(x1-x0>50*r){g.fillStyle=`rgba(${cols[q.k]},.8)`;g.font=`700 ${9*r}px ${MONO}`;g.textAlign='left';g.fillText(q.n.toUpperCase(),x0+6*r,H-bm-6*r-q.k*11*r)}})}
- // news release lines
- if(T&&n>3&&S.lyNews!==false&&FD&&FD.events){
-  NEWS=FD.events.filter(showEv).map(e=>({e,t:Date.parse(e.date)})).filter(x=>x.t).sort((a,b)=>a.t-b.t);NEWS.forEach(x=>{x.x=xt(x.t)});
-  g.setLineDash([3*r,4*r]);g.lineWidth=r;g.globalAlpha=.55;
-  NEWS.forEach(x=>{if(x.x<0||x.x>W-gut)return;g.strokeStyle=x.e.impact==='High'?CV('--sell'):CV('--wait');g.beginPath();g.moveTo(x.x,0);g.lineTo(x.x,H-bm);g.stroke()});
-  g.globalAlpha=1;g.setLineDash([])}
  for(let i=i1;i>=i0;i--){const x=X(i);if(x<-bw||x>W-gut+bw)continue;const up=c[i]>=o[i];g.strokeStyle=g.fillStyle=up?CV('--up'):CV('--dn');
   g.lineWidth=Math.max(r,bw*.12);g.beginPath();g.moveTo(x,Y(h[i]));g.lineTo(x,Y(l[i]));g.stroke();
   g.fillRect(x-bw*.32,Math.min(Y(o[i]),Y(c[i])),bw*.64,Math.max(r,Math.abs(Y(o[i])-Y(c[i]))))}
@@ -1779,8 +1766,6 @@ $('fsBtn').onclick=()=>fsSet(!$('cvw').classList.contains('fs'));
 addEventListener('popstate',()=>{if($('cvw').classList.contains('fs')){fsPushed=false;fsSet(false)}});
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&$('cvw').classList.contains('fs'))fsSet(false)});
 $('shH').onclick=()=>$('sheet').classList.toggle('open');
-const lyRender=()=>{$('lySes').classList.toggle('on',S.lySes!==false);$('lyNews').classList.toggle('on',S.lyNews!==false)};
-$('lySes').onclick=()=>{S.lySes=S.lySes===false;save();lyRender();draw()};$('lyNews').onclick=()=>{S.lyNews=S.lyNews===false;save();lyRender();draw()};lyRender();
 $('cv').addEventListener('pointerdown',()=>$('sheet').classList.remove('open'));
 const ptr=document.createElement('div');ptr.id='ptr';ptr.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 5v10M7 12l5 5 5-5"/></svg>';document.body.appendChild(ptr);
 function refreshNow(){const on=document.querySelector('.page.on'),id=on?on.id:'';let pr=null;if(id==='p-ind')pr=tick();else if(id==='p-home'||id==='p-fund'){pr=loadFund(true);if(id==='p-home')tickerLoad(true)}else return;
