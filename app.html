@@ -645,18 +645,6 @@ body:not(.hud):not(.sk-amber) #hudFx{display:none}
 <div class="fh"><button class="fb" id="aBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></div><div><div class="ft">Admin Portal</div><div class="fk" style="margin-top:2px">Subscribers</div></div></div>
 <div id="aGate" class="card"><div style="font-size:16px;font-weight:800;margin-bottom:6px">Admin PIN</div><div class="note" style="margin:0 0 12px">Enter the PIN you set in the script properties. It is only kept in memory for 10 minutes.</div><input class="inp" id="aPin" type="password" placeholder="Admin PIN" autocomplete="off"><button class="btn" id="aGo">Unlock admin</button><div id="aErr" style="color:var(--sell);font-size:13px;margin-top:12px;display:none"></div></div>
 <div id="aMain" style="display:none"><div id="aSum"></div><div class="tfs" id="aFlt" style="flex-wrap:wrap"></div><input class="inp" id="aQ" placeholder="Search name or email" autocapitalize="none"><label>Activate for</label><select class="inp" id="aDays"><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option><option value="0">No expiry</option></select><div id="aMsg" class="note" style="display:none;margin:0 0 10px"></div><div id="aList"></div><button class="btn ghost" id="aRef">Refresh</button></div></section>
-<section class="page" id="p-cscan">
-<div class="fh"><button class="fb" id="csBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16" fill="none" stroke="var(--btn)" stroke-width="2" stroke-linecap="round"/><path d="M7 14l3-3 2.5 2L17 9" fill="none" stroke="var(--btn)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div><div class="ft">Chart Scanner</div><div class="fk" style="margin-top:2px">Admin only</div></div></div>
-<div class="card"><label>Chart screenshot</label>
-<input type="file" id="csFile" accept="image/*" style="display:none">
-<button class="btn ghost" id="csPick" style="margin-top:0">Choose or take a screenshot</button>
-<div id="csPrev" style="display:none;margin-top:12px"><img id="csImg" alt="Chart preview" style="width:100%;border-radius:14px;border:1px solid var(--bd)"></div>
-<label style="margin-top:12px">Notes (optional)</label><input class="inp" id="csNote" placeholder="e.g. EUR/USD H1, looking for a London open setup" autocomplete="off" style="margin-bottom:6px">
-<div id="csPinBox" style="display:none"><label>Admin PIN</label><input class="inp" id="csPin" type="password" placeholder="Admin PIN" autocomplete="off" style="margin-bottom:6px"></div>
-<button class="btn" id="csGo" disabled>Scan chart</button>
-<div id="csErr" style="color:var(--sell);font-size:13px;margin-top:12px;display:none"></div>
-<div class="note">The screenshot is sent to your server for analysis and is not stored in the app. Analysis is for education, not financial advice.</div></div>
-<div id="csOut"></div></section>
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <label>Symbols to scan</label><input class="inp" id="scWl" placeholder="Tap to pick, or type e.g. EUR/USD, BTC/USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
 <div class="pick" id="scPick" style="display:none"></div>
@@ -688,7 +676,7 @@ body:not(.hud):not(.sk-amber) #hudFx{display:none}
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div>
-<div id="hudFx" aria-hidden="true"></div><aside id="thPanel"><div class="dh"><div class="l3d" data-l3d style="--s:72px"></div><div class="dw">SIGNALSPRO</div><div class="dl"></div></div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="taBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></span><span class="tt"><b>Technical analysis</b><i>London &amp; New York open signals</i></span></button><button class="tile" id="howBtn"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></span><span class="tt"><b>How to use</b><i>A quick guide</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><button class="tile" id="csBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><path d="M4 8V5.5A1.5 1.5 0 015.5 4H8M16 4h2.5A1.5 1.5 0 0120 5.5V8M20 16v2.5a1.5 1.5 0 01-1.5 1.5H16M8 20H5.5A1.5 1.5 0 014 18.5V16"/><path d="M7 14l3-3 2.5 2L17 9"/></svg></span><span class="tt"><b>Chart Scanner</b><i>Admin: analyse a chart screenshot</i></span></button><div class="dv"></div><div class="pt" style="margin:0 8px 12px">Theme</div><div class="sw" id="sw"></div></aside>
+<div id="hudFx" aria-hidden="true"></div><aside id="thPanel"><div class="dh"><div class="l3d" data-l3d style="--s:72px"></div><div class="dw">SIGNALSPRO</div><div class="dl"></div></div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="taBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></span><span class="tt"><b>Technical analysis</b><i>London &amp; New York open signals</i></span></button><button class="tile" id="howBtn"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></span><span class="tt"><b>How to use</b><i>A quick guide</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><div class="dv"></div><div class="pt" style="margin:0 8px 12px">Theme</div><div class="sw" id="sw"></div></aside>
 <script>
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
@@ -725,7 +713,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('csBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -764,12 +752,11 @@ Object.keys(THEMES).forEach(n=>{const T=THEMES[n],b=document.createElement('butt
  b.innerHTML=`<i style="background:linear-gradient(135deg,${T.bg[0]} 50%,${T.a} 50%)"></i><span>${T.n}</span>`;b.onclick=()=>{try{localStorage.setItem('sp_ck_theme','1')}catch(e){}theme(n);renderCk()};$('sw').append(b)});theme(S.theme);
 // nav
 function page(n){
- if(n==='cscan'&&ROLE!=='admin')n='home';
  const sw=()=>{document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
   window.scrollTo(0,0);document.documentElement.scrollTop=0;document.body.scrollTop=0;
   document.querySelectorAll('#nav button').forEach(b=>b.classList.toggle('on',b.dataset.p===n));document.body.classList.toggle('onind',n==='ind');moveInd(n);if(n==='ind')fit()};
  if(document.startViewTransition&&!matchMedia('(prefers-reduced-motion: reduce)').matches){try{document.startViewTransition(sw)}catch(e){sw()}}else sw();
- if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='ta'){if(!$('taSym').value)$('taSym').value=S.sym;taNote()}{const mp={fund:'fundBtn',hist:'jrnBtn',ta:'taBtn',how:'howBtn',admin:'admBtn',cscan:'csBtn'};document.querySelectorAll('#thPanel .tile').forEach(t=>t.classList.toggle('on',mp[n]===t.id))}if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad();hlLoad()}}
+ if(n==='scan')setTimeout(()=>scDraw(),80);if(n==='ind')tick();if(n==='fund')loadFund();if(n==='ta'){if(!$('taSym').value)$('taSym').value=S.sym;taNote()}{const mp={fund:'fundBtn',hist:'jrnBtn',ta:'taBtn',how:'howBtn',admin:'admBtn'};document.querySelectorAll('#thPanel .tile').forEach(t=>t.classList.toggle('on',mp[n]===t.id))}if(n==='hist'){renderJournal();settleNews()}if(n==='admin')admOpen();if(n==='home'){renderCk();tickerLoad();hlLoad()}}
 document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset.p));
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
@@ -1911,40 +1898,6 @@ function admRender(){
   const acts=u.status==='pending'?b('activate','Activate')+b('block','Block'):u.status==='active'?b('activate','Extend')+(u.device?b('reset','Reset device'):'')+b('block','Block'):u.status==='blocked'?b('unblock','Unblock'):'';
   return `<div class="fcard ${u.status==='pending'?'bear':u.status==='active'?'bull':''}"><div class="hl"><div style="min-width:0"><div style="font-size:16px;font-weight:800">${esc(nm)}</div><div class="note" style="margin:3px 0 0;word-break:break-all">${esc(u.email)}</div></div><span class="pillx ${u.status==='active'?'up':''}">${esc(u.status)}</span></div><div class="note" style="margin:8px 0 0">Registered ${esc(u.registered||'—')} · Expires ${esc(u.expires||'never')} · ${u.device?'Device linked':'No device yet'}</div>${acts?'<div class="seg">'+acts+'</div>':'<div class="note" style="margin:8px 0 0">Admin accounts are managed in the sheet.</div>'}</div>`}).join(''):'<div class="empty">Nobody here.</div>'}
 $('admBtn').onclick=()=>{thOpen(false);page('admin')};$('aBack').onclick=()=>page('home');$('aGo').onclick=admUnlock;$('aPin').onkeypress=e=>{if(e.key==='Enter')admUnlock()};$('aRef').onclick=admLoad;$('aQ').oninput=()=>{ADMQ=$('aQ').value;admRender()};
-
-// ---- admin chart scanner (screenshot analysis through the server) ----
-let CSIMG='',CSBUSY=false;
-function csErr(m){const x=$('csErr');x.textContent=m||'';x.style.display=m?'block':'none'}
-function csShrink(file){return new Promise((ok,no)=>{const u=URL.createObjectURL(file),im=new Image();
- im.onload=()=>{const m=1600,k=Math.min(1,m/Math.max(im.width,im.height)),c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);
-  c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);ok(c.toDataURL('image/jpeg',.85))};
- im.onerror=()=>{URL.revokeObjectURL(u);no(Error('Could not read that image.'))};im.src=u})}
-$('csBtn').onclick=()=>{thOpen(false);page('cscan')};$('csBack').onclick=()=>page('home');
-$('csPick').onclick=()=>$('csFile').click();
-$('csFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;csErr('');
- try{CSIMG=await csShrink(f);$('csImg').src=CSIMG;$('csPrev').style.display='block';$('csGo').disabled=false;$('csOut').innerHTML=''}
- catch(x){CSIMG='';$('csGo').disabled=true;csErr(x.message)}e.target.value=''};
-const csNum=v=>v==null||v===''?'—':esc(v);
-function csPaint(a){const b=String(a.bias||'WAIT').toUpperCase(),cls=b==='BUY'?'bull':b==='SELL'?'bear':'',pl=a.plan||{};
- const zones=(a.zones||[]).map(z=>`<div class="pr"><span>${esc(z.type||'Zone')}</span><span>${csNum(z.price)}${z.note?' · '+esc(z.note):''}</span></div>`).join('');
- const risks=(a.risks||[]).map(r=>`<li>${esc(r)}</li>`).join('');
- $('csOut').innerHTML=`<div class="fcard ${cls}"><div class="hl"><div style="min-width:0"><div style="font-size:18px;font-weight:800">${esc(a.pair||'Chart')}${a.timeframe?' · '+esc(a.timeframe):''}</div><div class="note" style="margin:3px 0 0">Trend: ${esc(a.trend||'—')}${a.confidence!=null?' · Confidence '+esc(a.confidence)+'%':''}</div></div><span class="pillx ${b==='BUY'?'up':''}">${esc(b)}</span></div><div class="note" style="margin:10px 0 0;font-size:13px">${esc(a.summary||'')}</div></div>
- ${zones?`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Key levels</div>${zones}</div>`:''}
- ${(pl.entry||pl.sl||pl.tp1)?`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Trade idea</div><div class="pr"><span>Entry</span><span>${csNum(pl.entry)}</span></div><div class="pr"><span>Stop loss</span><span>${csNum(pl.sl)}</span></div><div class="pr"><span>Target 1</span><span>${csNum(pl.tp1)}</span></div><div class="pr"><span>Target 2</span><span>${csNum(pl.tp2)}</span></div><div class="pr"><span>Risk : reward</span><span>${csNum(pl.rr)}</span></div></div>`:''}
- ${risks?`<div class="card"><div style="font-size:15px;font-weight:800;margin-bottom:8px">Watch out for</div><ul class="note" style="margin:0;padding-left:18px">${risks}</ul></div>`:''}`}
-async function csRun(){
- if(CSBUSY||!CSIMG)return;if(ROLE!=='admin'){page('home');return}
- const pin=ADMPIN||$('csPin').value;if(!pin){$('csPinBox').style.display='block';csErr('Enter your admin PIN.');return}
- CSBUSY=true;csErr('');const b=$('csGo');b.disabled=true;b.textContent='Scanning…';$('csOut').innerHTML='<div class="card"><div class="note" style="margin:0">Reading the chart…</div></div>';
- let txt='';
- try{const r=await fetch(API,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action:'chart_scan',email:EM,dev:DEV,pin:pin,note:$('csNote').value.trim(),image:CSIMG})});txt=await r.text()}
- catch(e){$('csOut').innerHTML='';csErr('Cannot reach the server. Check your internet, and that the Apps Script is deployed as a Web app open to Anyone.');CSBUSY=false;b.disabled=false;b.textContent='Scan chart';return}
- let j=null;try{j=JSON.parse(txt)}catch(e){}
- if(!j){$('csOut').innerHTML='';csErr('The server replied, but not with data. In Apps Script make sure doPost is added, then Deploy > Manage deployments > New version.')}
- else if(j.ok){ADMPIN=pin;ADMT=Date.now();$('csPinBox').style.display='none';$('csPin').value='';csPaint(j.analysis||{})}
- else{if(j.pinErr){ADMPIN='';$('csPinBox').style.display='block'}$('csOut').innerHTML='';csErr(j.msg||'The scan failed.')}
- CSBUSY=false;b.disabled=false;b.textContent='Scan chart'}
-$('csGo').onclick=csRun;$('csPin').onkeypress=e=>{if(e.key==='Enter')csRun()};
 // first-run checklist
 function renderCk(){
  const el=$('ck');if(!el)return;
@@ -2112,7 +2065,7 @@ hlPaint();hlLoad();setInterval(()=>hlLoad(),30000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('tkSel').value=String(S.tkIv==null?300:S.tkIv);$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.tkIv=+$('tkSel').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();tkBuild();tkPaint();tickerLoad(true);if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
-$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';$('csBtn').style.display='none';CSIMG='';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
+$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{
  if(window.AndroidBridge){try{
   if(!AndroidBridge.hasPermission()){AndroidBridge.requestPermission();setTimeout(()=>{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Alerts blocked';renderCk()},2500);return}
