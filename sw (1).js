@@ -1,6 +1,6 @@
 // SignalsPro service worker.
 // Change VERSION on every release: it makes phones drop the old files and pick up the new ones.
-const VERSION = '2026.11.24.1';
+const VERSION = '2026.11.24.2';
 const CACHE = 'signalspro-' + VERSION;
 const CORE = ['./', 'index.html', 'manifest.json', 'icon-192.png'];
 
