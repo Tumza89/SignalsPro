@@ -688,7 +688,7 @@ document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
 const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tf));mark();
-$('symIn').value=S.sym;$('symIn').onfocus=synEnsure;$('symIn').onchange=()=>{const v=$('symIn').value.trim(),k=synKey(v);S.sym=k||v;if(k)$('symIn').value=k;VO=0;save();tick()};
+$('symIn').value=S.sym;$('symIn').onfocus=()=>synEnsure();$('symIn').onchange=()=>{const v=$('symIn').value.trim(),k=synKey(v);S.sym=k||v;if(k)$('symIn').value=k;VO=0;save();tick()};
 // indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
 const IDXS={NDX:{n:'Nasdaq 100 futures',tz:'America/New_York',fut:1},DJI:{n:'Dow Jones futures',tz:'America/New_York',fut:1},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
 const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
