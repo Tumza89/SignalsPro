@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="SignalsPro">
 <meta name="theme-color" content="#050508"><title>SignalsPro</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Manrope:wght@500;600;700;800&family=Playfair+Display:wght@600;800&family=Rajdhani:wght@600;700&family=Space+Grotesk:wght@500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;700;800&family=Manrope:wght@500;600;700;800&display=swap">
 <style>
 :root{--mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;--bg:#050508;--bgA:#050508;--bgB:#0a0a12;--bgC:#080812;--w:255,255,255;--btn:#000;--accent2:#06b6d4;--buyr:0,255,85;--sellr:255,59,48;--waitr:255,204,0;--up:#4fd18b;--dn:#e0605e;--mid:#4a4a64;--warnt:#ffe28a;--dgrt:#ffb3ad;--cvbg:rgba(0,0,0,.25);--sh:rgba(0,0,0,.28);--card:rgba(255,255,255,.045);--hdr:rgba(7,7,12,.75);--nav:rgba(18,18,28,.92);--panel:rgba(14,14,22,.93);--accent:#3b82f6;--glow:rgba(59,130,246,.35);--pg:rgba(59,130,246,.45);--text:#fff;--t2:#a0a0b0;--bd:rgba(var(--w),.09);--buy:#00ff55;--sell:#ff3b30;--wait:#ffcc00}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -321,7 +321,7 @@ canvas{-webkit-touch-callout:none;-webkit-user-select:none;user-select:none}
 #thPanel .dv{height:1px;margin:14px 8px;background:rgba(var(--w),.1)}
 
 /* ===== v2: type, depth, plan ladder, festive ===== */
-.trk{height:auto;overflow:visible;margin-top:14px;padding:12px 14px 12px;border-radius:14px;background:rgba(var(--w),.05);border:1px solid rgba(var(--w),.1)}.trkh{font:800 12px/1.4 var(--mono);letter-spacing:.5px}
+.trk{margin-top:14px;padding:12px 14px 12px;border-radius:14px;background:rgba(var(--w),.05);border:1px solid rgba(var(--w),.1)}.trkh{font:800 12px/1.4 var(--mono);letter-spacing:.5px}
 .trkb{position:relative;height:10px;border-radius:6px;background:rgba(var(--w),.08);margin:14px 6px 24px}.trkr,.trkg{position:absolute;top:0;bottom:0}
 .trkr{left:0;background:linear-gradient(90deg,rgba(var(--sellr),.75),rgba(var(--sellr),.25));border-radius:6px 0 0 6px}.trkg{background:linear-gradient(90deg,rgba(var(--buyr),.25),rgba(var(--buyr),.75));border-radius:0 6px 6px 0}
 .trkt{position:absolute;top:-3px;bottom:-3px;width:2px;margin-left:-1px;background:rgba(var(--w),.55)}.trkm{position:absolute;top:50%;width:16px;height:16px;margin:-8px 0 0 -8px;border-radius:50%;background:var(--text);border:3px solid var(--bg);box-shadow:0 0 14px var(--accent)}
@@ -363,156 +363,76 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 .kzl{display:inline-flex;gap:5px;font:700 11px var(--mono);padding:4px 8px;border-radius:8px;background:rgba(var(--w),.06);margin:6px 6px 0 0}.kzl i{font-style:normal;color:var(--t2)}
 .kzw{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:12.5px;font-weight:700;background:rgba(var(--w),.07);border:1px solid var(--wait);color:var(--wait)}
 
-/* ===== Holographic HUD theme (active when body has class "hud") ===== */
-.radar,#hudFx{display:none}
-body.hud{--hl:color-mix(in srgb,var(--accent) 32%,transparent)}
-body.hud::before{background:linear-gradient(rgba(0,229,255,.045) 1px,transparent 1px) 0 0/34px 34px,linear-gradient(90deg,rgba(0,229,255,.045) 1px,transparent 1px) 0 0/34px 34px,radial-gradient(ellipse 70% 45% at 50% 0%,rgba(0,229,255,.15),transparent 70%),linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:none}
-body.hud::after{opacity:.45}
-body.hud #hudFx{display:block;position:fixed;inset:0;z-index:2;pointer-events:none;overflow:hidden;background:repeating-linear-gradient(0deg,rgba(0,229,255,.03) 0 1px,transparent 1px 3px)}
-body.hud #hudFx::after{content:'';position:absolute;left:0;right:0;top:-120px;height:120px;background:linear-gradient(180deg,transparent,rgba(0,229,255,.07),transparent);animation:hudSweep 8s linear infinite}
-@keyframes hudSweep{to{transform:translateY(calc(100vh + 240px))}}
-@keyframes radarSpin{to{transform:rotate(360deg)}}
-body.hud header{border-bottom:1px solid var(--hl);box-shadow:0 1px 18px var(--glow)}
-body.hud .brand,body.hud .ft,body.hud .name,body.hud .fk{font-family:var(--mono);text-transform:uppercase}
-body.hud .brand{letter-spacing:2px;font-size:16px}
-body.hud .ft{font-size:19px;letter-spacing:1.6px}body.hud .name{font-size:20px;letter-spacing:2px}body.hud .fk{letter-spacing:1.8px}
-body.hud .px,body.hud .adv{font-family:var(--mono);text-shadow:0 0 14px var(--glow)}
-body.hud .card,body.hud .fcard{border-radius:4px;border:1px solid var(--hl);box-shadow:inset 0 0 30px rgba(0,229,255,.05),0 0 18px rgba(0,229,255,.07);
- background:linear-gradient(var(--accent),var(--accent)) 0 0/16px 2px no-repeat,linear-gradient(var(--accent),var(--accent)) 0 0/2px 16px no-repeat,
- linear-gradient(var(--accent),var(--accent)) 100% 0/16px 2px no-repeat,linear-gradient(var(--accent),var(--accent)) 100% 0/2px 16px no-repeat,
- linear-gradient(var(--accent),var(--accent)) 0 100%/16px 2px no-repeat,linear-gradient(var(--accent),var(--accent)) 0 100%/2px 16px no-repeat,
- linear-gradient(var(--accent),var(--accent)) 100% 100%/16px 2px no-repeat,linear-gradient(var(--accent),var(--accent)) 100% 100%/2px 16px no-repeat,
- linear-gradient(180deg,rgba(0,229,255,.07),rgba(0,229,255,.015))}
-body.hud .card::after,body.hud .fcard::after{display:none}
-body.hud .fcard::before{width:2px}
-body.hud .btn{background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 24%,transparent),color-mix(in srgb,var(--accent) 7%,transparent));color:var(--accent);border:1px solid var(--accent);border-radius:2px;font-family:var(--mono);font-size:13px;letter-spacing:2px;text-transform:uppercase;box-shadow:inset 0 0 16px var(--glow);clip-path:polygon(10px 0,100% 0,100% calc(100% - 10px),calc(100% - 10px) 100%,0 100%,0 10px)}
-body.hud .btn.ghost{background:transparent;color:var(--text);border-color:var(--hl);box-shadow:none}
-body.hud .btn.red{color:var(--sell);border-color:rgba(var(--sellr),.5);background:transparent;box-shadow:none}
-body.hud .btn:disabled{opacity:.55}
-body.hud .inp{border-radius:2px;border-color:var(--hl);background:rgba(0,229,255,.04);font-family:var(--mono)}
-body.hud .tfs button,body.hud .chip,body.hud .pillx,body.hud .fb,body.hud .fi,body.hud .pill{border-radius:3px}
-body.hud .tfs button{font-family:var(--mono);letter-spacing:.5px;border-color:var(--hl)}
-body.hud .tfs button.on{background:color-mix(in srgb,var(--accent) 14%,transparent)}
-body.hud .fi{background:linear-gradient(135deg,var(--accent),var(--accent2))}
-body.hud nav{border-radius:6px;border:1px solid var(--hl);box-shadow:0 0 24px var(--glow)}
-body.hud #navInd{border-radius:4px}
-body.hud #thPanel .tile .tt b{font-family:var(--mono);font-size:13px;letter-spacing:1.5px;text-transform:uppercase}
-body.hud #thPanel{border-right:1px solid var(--hl)}
-body.hud .sring circle:not(.rt){filter:drop-shadow(0 0 3px var(--accent))}
-body.hud #scBtn:disabled~.radar{display:block;position:relative;width:120px;height:120px;margin:16px auto 6px;border-radius:50%;border:1px solid var(--accent);box-shadow:0 0 22px var(--glow);
- background:linear-gradient(var(--hl),var(--hl)) 50% 0/1px 100% no-repeat,linear-gradient(var(--hl),var(--hl)) 0 50%/100% 1px no-repeat,repeating-radial-gradient(circle,transparent 0 19px,var(--hl) 19px 20px)}
-body.hud #scBtn:disabled~.radar::after{content:'';position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 270deg,color-mix(in srgb,var(--accent) 60%,transparent) 360deg);animation:radarSpin 1.8s linear infinite}
-@media (prefers-reduced-motion:reduce){body.hud #hudFx::after,body.hud #scBtn:disabled~.radar::after{animation:none}}
-
-/* ===== Per-theme skins: every theme has its own layout, motion and loader ===== */
-@keyframes cup{from{opacity:0;transform:translateY(16px)}}
-@keyframes cslide{from{opacity:0;transform:translateX(-28px)}}
-@keyframes cgrow{from{opacity:0;transform:scale(.93) translateY(12px)}}
-@keyframes cpop{from{opacity:0;transform:scale(.88)}}
-@keyframes cfloat{from{opacity:0;transform:translateY(22px) rotate(-1.2deg)}}
-@keyframes ctype{from{opacity:.3;clip-path:inset(0 100% 0 0)}}
-@keyframes cflick{0%{opacity:0}20%{opacity:.9}30%{opacity:.2}45%{opacity:1}60%{opacity:.5}100%{opacity:1}}
-@keyframes cboot{0%{opacity:0;transform:scaleY(.04)}40%{opacity:.85;transform:scaleY(1.04)}60%{opacity:.5}100%{opacity:1;transform:none}}
-@keyframes stripe{to{background-position:28px 0}}
-@keyframes ripple{from{transform:scale(.3);opacity:1}to{transform:scale(1.5);opacity:0}}
-@keyframes shim{to{background-position:200% 0}}
-@keyframes swell{to{transform:translateX(-4%) scaleY(1.3)}}
-@keyframes streak{to{background-position:0 -124px,0 0}}
-@keyframes diag{to{background-position:60px 60px,0 0}}
-@keyframes sheen{0%{background-position:150% 0}60%,100%{background-position:-50% 0}}
-@keyframes blink{50%{opacity:0}}
-@keyframes pulseg{50%{box-shadow:0 0 16px currentColor}}
-@keyframes crt{50%{opacity:.93}}
-.page.on>:is(.card,.fcard,.hero){animation:var(--cin,cup) .55s cubic-bezier(.22,1,.36,1) backwards}
-.page.on>:nth-child(2){animation-delay:.06s}.page.on>:nth-child(3){animation-delay:.12s}.page.on>:nth-child(4){animation-delay:.18s}.page.on>:nth-child(n+5){animation-delay:.24s}
-/* scan loader: stripes by default, ripple on soft themes */
-#scBtn:disabled~.radar{display:block;height:6px;margin:14px 0 4px;border-radius:3px;background:repeating-linear-gradient(135deg,var(--accent) 0 10px,transparent 10px 20px);background-size:28px 100%;animation:stripe .8s linear infinite;opacity:.85}
-body:is(.sk-midnight,.sk-ocean,.sk-lavender,.sk-mint) #scBtn:disabled~.radar{width:64px;height:64px;margin:16px auto 4px;border-radius:50%;border:2px solid var(--accent);background:none;animation:ripple 1.4s ease-out infinite}
-body.hud{--cin:cboot}
-body.sk-midnight{--cin:cup}
-body.sk-midnight::after{opacity:1;filter:blur(42px)}
-body.sk-midnight :is(.card,.fcard){border-radius:28px;background:linear-gradient(135deg,rgba(var(--w),.09),rgba(var(--w),.025));border:1px solid rgba(var(--w),.14);backdrop-filter:blur(28px) saturate(1.4);-webkit-backdrop-filter:blur(28px) saturate(1.4);box-shadow:inset 0 1px 0 rgba(var(--w),.22),0 24px 50px -24px rgba(0,0,0,.6)}
-body.sk-midnight :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:999px}
-body.sk-midnight :is(.card,.fcard)::after{border-radius:28px}
-body.sk-graphite{--cin:ctype}
-body.sk-graphite::before{background:radial-gradient(rgba(var(--w),.08) 1px,transparent 1px) 0 0/18px 18px,var(--bgA);animation:none}
-body.sk-graphite::after{display:none}
-body.sk-graphite :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:2px}
-body.sk-graphite :is(.ft,.fk,.brand,.name,label,.pillx,.btn,.tfs button,#thPanel .tile .tt b,.px,.adv){font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
-body.sk-graphite :is(.card,.fcard){border-radius:2px;border:1px solid rgba(var(--w),.2);border-left:3px solid var(--accent);background:rgba(var(--w),.03);backdrop-filter:none;box-shadow:none}
-body.sk-graphite :is(.card,.fcard)::after{display:none}
-body.sk-graphite :is(.btn:not(.ghost):not(.red)){background:var(--text);color:var(--bg);box-shadow:none}
-body.sk-graphite .brand::after{content:"_";margin-left:2px;animation:blink 1s steps(2) infinite}
-body.sk-ocean{--cin:cfloat}
-body.sk-ocean::after{inset:auto -10% -12% -10%;height:46%;background:radial-gradient(ellipse at 30% 100%,var(--accent),transparent 62%),radial-gradient(ellipse at 75% 100%,var(--accent2),transparent 62%);opacity:.35;filter:blur(12px);animation:swell 7s ease-in-out infinite alternate}
-body.sk-ocean :is(.card,.fcard){border-radius:24px 24px 30px 10px;border:1px solid color-mix(in srgb,var(--accent) 28%,transparent);background:linear-gradient(160deg,color-mix(in srgb,var(--accent) 11%,transparent),rgba(var(--w),.02))}
-body.sk-ocean :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:999px}
-body.sk-ocean :is(.btn:not(.ghost):not(.red)){background:linear-gradient(100deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;animation:shim 5s linear infinite}
-body.sk-forest{--cin:cgrow}
-body.sk-forest::before{background:repeating-linear-gradient(180deg,transparent 0 60px,rgba(52,211,153,.07) 60px 62px) 0 0/100% 124px,radial-gradient(ellipse 80% 40% at 50% 110%,rgba(16,185,129,.22),transparent 70%),linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:streak 9s linear infinite}
-body.sk-forest::after{opacity:.3}
-body.sk-forest :is(.card,.fcard){border-radius:30px 6px 30px 6px;border:1px solid color-mix(in srgb,var(--accent) 30%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 9%,transparent),rgba(var(--w),.02))}
-body.sk-forest :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:16px 4px 16px 4px}
-body.sk-royal{--cin:cup}
-body.sk-royal::before{background:radial-gradient(ellipse 80% 50% at 50% -10%,rgba(168,85,247,.25),transparent 60%),radial-gradient(ellipse at 50% 120%,rgba(212,175,55,.14),transparent 55%),linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:none}
-body.sk-royal::after{opacity:.3}
-body.sk-royal :is(.ft,.name,.brand){font-family:"Playfair Display",Georgia,serif;letter-spacing:.5px}
-body.sk-royal :is(.card,.fcard){border-radius:6px;border:1px solid color-mix(in srgb,#d4af37 40%,transparent);box-shadow:0 0 0 3px var(--bgA),0 0 0 4px color-mix(in srgb,var(--accent) 45%,transparent),0 18px 40px -20px rgba(0,0,0,.6)}
-body.sk-royal :is(.card,.fcard)::after{display:block;border-radius:6px;background:linear-gradient(110deg,transparent 40%,rgba(255,235,170,.1) 50%,transparent 60%) 0 0/250% 100%;animation:sheen 7s ease-in-out infinite}
-body.sk-royal :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:4px}
-body.sk-royal :is(.btn:not(.ghost):not(.red)){background:linear-gradient(110deg,var(--accent),var(--accent2) 45%,#f5d27a 50%,var(--accent2) 55%,var(--accent));background-size:250% 100%;animation:shim 6s linear infinite;font-family:"Playfair Display",Georgia,serif;letter-spacing:2px;text-transform:uppercase}
-body.sk-crimson{--cin:cslide}
-body.sk-crimson::before{background:linear-gradient(135deg,transparent 25%,rgba(244,63,94,.05) 25% 50%,transparent 50% 75%,rgba(244,63,94,.05) 75%) 0 0/60px 60px,linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:diag 5s linear infinite}
-body.sk-crimson::after{opacity:.35}
-body.sk-crimson :is(.ft,.fk,.brand,.name,label,.pillx,.btn,.tfs button,#thPanel .tile .tt b,.px,.adv){font-family:"Rajdhani","Manrope",sans-serif;text-transform:uppercase;letter-spacing:1.2px;font-weight:700}
-body.sk-crimson :is(.card,.fcard){border-radius:0;border:1px solid color-mix(in srgb,var(--accent) 35%,transparent);border-left:4px solid var(--accent);clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,18px 100%,0 calc(100% - 18px))}
-body.sk-crimson :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:2px}
-body.sk-crimson :is(.btn:not(.ghost):not(.red)){clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);box-shadow:none}
-body.sk-crimson .pill.live{animation:pulseg 1.2s ease-in-out infinite}
-body.sk-amber{--cin:cflick;text-shadow:0 0 5px color-mix(in srgb,var(--accent) 45%,transparent)}
-body.sk-amber::before{background:radial-gradient(ellipse at 50% 0%,rgba(245,158,11,.14),transparent 60%),linear-gradient(160deg,var(--bgA),var(--bgB) 50%,var(--bgC));animation:none}
-body.sk-amber::after{display:none}
-body.sk-amber #hudFx{display:block;position:fixed;inset:0;z-index:2;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(0,0,0,.28) 0 1px,transparent 1px 3px),radial-gradient(ellipse at center,transparent 55%,rgba(0,0,0,.55));animation:crt .14s steps(2) infinite}
-body.sk-amber :is(.ft,.fk,.brand,.name,label,.pillx,.btn,.tfs button,#thPanel .tile .tt b,.px,.adv){font-family:var(--mono);text-transform:uppercase;letter-spacing:1px}
-body.sk-amber :is(.card,.fcard){border-radius:10px;border:1px solid color-mix(in srgb,var(--accent) 42%,transparent);background:rgba(245,158,11,.04);box-shadow:inset 0 0 26px rgba(245,158,11,.07),0 0 16px var(--glow)}
-body.sk-amber :is(.card,.fcard)::after{display:none}
-body.sk-amber :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:6px}
-body.sk-amber :is(.btn:not(.ghost):not(.red)){background:transparent;color:var(--accent);border:1px solid var(--accent);box-shadow:inset 0 0 14px var(--glow)}
-body.sk-amber .brand::after{content:"_";margin-left:2px;animation:blink 1s steps(2) infinite}
-body.sk-daylight{--cin:cup;font-family:"Space Grotesk","Manrope",sans-serif}
-body.sk-daylight::before{background:linear-gradient(var(--bgA),var(--bgC));animation:none}
-body.sk-daylight::after{display:none}
-body.sk-daylight :is(.card,.fcard){border-radius:10px;background:#fff;border:1px solid rgba(var(--w),.1);backdrop-filter:none;box-shadow:0 1px 2px rgba(var(--w),.06),0 8px 24px -14px rgba(var(--w),.14)}
-body.sk-daylight :is(.card,.fcard)::after{display:none}
-body.sk-daylight :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:8px}
-body.sk-daylight :is(.btn:not(.ghost):not(.red)){box-shadow:0 1px 2px rgba(var(--w),.2)}
-body.sk-daylight :is(.ft,.px,.adv){letter-spacing:-.5px}
-body.sk-daylight .page.on>:is(.card,.fcard,.hero){animation-duration:.3s}
-body.sk-mint{--cin:cpop}
-body.sk-mint::before{background:var(--bgB);animation:none}
-body.sk-mint::after{opacity:.4}
-body.sk-mint .page.on>:is(.card,.fcard,.hero){animation-timing-function:cubic-bezier(.34,1.56,.64,1)}
-body.sk-mint :is(.card,.fcard){border-radius:28px;border:0;background:var(--bgB);backdrop-filter:none;box-shadow:9px 9px 22px rgba(var(--w),.12),-9px -9px 22px rgba(255,255,255,.95)}
-body.sk-mint :is(.card,.fcard)::after{display:none}
-body.sk-mint :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:20px}
-body.sk-mint :is(.btn:not(.ghost):not(.red)){box-shadow:6px 6px 14px rgba(var(--w),.14),-6px -6px 14px rgba(255,255,255,.9);transition:transform .25s cubic-bezier(.34,1.56,.64,1)}
-body.sk-mint :is(.btn:not(.ghost):not(.red)):active{transform:scale(.94)}
-body.sk-lavender{--cin:cfloat}
-body.sk-lavender::after{opacity:1;filter:blur(36px);animation-duration:14s}
-body.sk-lavender :is(.card,.fcard){border-radius:30px;border:1.5px solid transparent;background:linear-gradient(var(--bgB),var(--bgB)) padding-box,linear-gradient(135deg,var(--accent),var(--accent2)) border-box;box-shadow:0 18px 40px -22px var(--glow)}
-body.sk-lavender :is(.card,.fcard)::after{display:none}
-body.sk-lavender :is(.btn,.inp,.chip,.tfs button,.pillx,.fb,.fi,.pill,nav,.g,#thPanel .tile){border-radius:999px}
-body.sk-lavender :is(.btn:not(.ghost):not(.red)){background:linear-gradient(100deg,var(--accent),var(--accent2),var(--accent));background-size:200% 100%;animation:shim 5s linear infinite}
-@media (prefers-reduced-motion:reduce){body::before,body::after,#hudFx,#hudFx::after,.page.on>*,.radar,.radar::after,.btn,.brand::after,.pill,.fcard::after,.card::after{animation:none!important}}
-
-/* scanner result fixes: nothing may sit on top of the chart or the entry details */
-#p-scan{padding-bottom:130px}
-#scChart{scroll-margin-top:calc(96px + env(safe-area-inset-top));scroll-margin-bottom:130px;overflow:visible}
-#scCvw{overflow:hidden}
-#scCvw .ov{right:auto;left:8px;top:auto;bottom:40px}
-#scCvw #scLatest{top:8px;left:8px}
-#scLg,#scAn{position:relative;z-index:2}
-body:not(.hud):not(.sk-amber) #hudFx{display:none}
+/* ===== themes: layout + animation per theme (set by data-lay and data-an on <html>) ===== */
+nav,header,.card,.fcard,.btn,.tile,.chip,.tfs button{transition-property:border-radius,padding,margin,box-shadow,background,border-color,transform,color;transition-duration:.4s}
+.sw button em{font-style:normal;font-size:9.5px;font-weight:600;color:var(--t2);opacity:.85;margin-top:-4px;letter-spacing:.2px}
+/* layout: dock (flat, full-width bar, tight and pro) */
+html[data-lay=dock] nav{left:0;right:0;bottom:0;transform:none;width:100%;max-width:none;border-radius:0;border-width:1px 0 0;padding:8px 10px calc(10px + env(safe-area-inset-bottom));box-shadow:0 -12px 30px -16px var(--sh)}
+html[data-lay=dock] #navInd{top:0;bottom:auto;height:3px;border-radius:0 0 4px 4px;background:var(--accent);box-shadow:0 0 14px var(--accent);transition:transform .3s ease,width .3s ease,opacity .3s}
+html[data-lay=dock] nav button span{width:36px;height:30px;border-radius:8px}
+html[data-lay=dock] .card,html[data-lay=dock] .fcard{border-radius:10px;padding:14px;margin-bottom:10px;box-shadow:none}
+html[data-lay=dock] .btn,html[data-lay=dock] .tile,html[data-lay=dock] .tfs button,html[data-lay=dock] .chip,html[data-lay=dock] .g{border-radius:8px}
+html[data-lay=dock] header{background:var(--bg);padding-left:14px;padding-right:14px}
+html[data-lay=dock] .page{padding:12px}
+html[data-lay=dock] body{padding-bottom:86px}
+html[data-lay=dock] .page.on>*{animation-name:lfade;animation-duration:.22s;animation-timing-function:ease}
+@keyframes lfade{from{opacity:0}}
+/* layout: island (small floating capsule, labels only on the active tab, pill shapes, slide in from the right) */
+html[data-lay=island] nav{width:auto;max-width:none;padding:8px 10px;border-radius:999px;bottom:calc(20px + env(safe-area-inset-bottom))}
+html[data-lay=island] nav button{min-width:64px;font-size:0;gap:0}
+html[data-lay=island] nav button.on{font-size:10px;gap:2px}
+html[data-lay=island] nav button span{width:40px;height:36px}
+html[data-lay=island] .card,html[data-lay=island] .fcard{border-radius:30px;padding:20px;margin-bottom:16px}
+html[data-lay=island] .btn,html[data-lay=island] .tfs button,html[data-lay=island] .chip{border-radius:999px}
+html[data-lay=island] .tile,html[data-lay=island] .g{border-radius:22px}
+html[data-lay=island] .page{padding:18px}
+html[data-lay=island] .page.on>*{animation-name:lslide;animation-duration:.5s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+@keyframes lslide{from{opacity:0;transform:translateX(22px)}}
+/* layout: airy (icons only, roomy, very round, zoom in) */
+html[data-lay=soft] nav{max-width:320px;border-radius:46px;padding:8px 6px 10px;bottom:calc(24px + env(safe-area-inset-bottom))}
+html[data-lay=soft] nav button{font-size:0;gap:0;min-width:58px}
+html[data-lay=soft] nav button span{width:46px;height:44px}
+html[data-lay=soft] .card,html[data-lay=soft] .fcard{border-radius:32px;padding:22px;margin-bottom:20px;border-color:rgba(var(--w),.05);box-shadow:0 26px 60px -32px var(--sh)}
+html[data-lay=soft] .btn,html[data-lay=soft] .tile,html[data-lay=soft] .g{border-radius:20px}
+html[data-lay=soft] .tfs button,html[data-lay=soft] .chip{border-radius:999px}
+html[data-lay=soft] .page{padding:22px 18px}
+html[data-lay=soft] .page.on>*{animation-name:lzoom;animation-duration:.7s;animation-timing-function:cubic-bezier(.22,1,.36,1)}
+@keyframes lzoom{from{opacity:0;transform:scale(.94)}}
+/* layout: bold (chunky, solid accent tab, uppercase labels, accent edge on cards, drop in) */
+html[data-lay=bold] nav{max-width:380px;border-radius:22px;border:2px solid rgba(var(--w),.12);padding:12px 8px}
+html[data-lay=bold] nav button{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.7px}
+html[data-lay=bold] #navInd{top:6px;bottom:6px;border-radius:15px;background:var(--accent);box-shadow:0 6px 22px var(--glow)}
+html[data-lay=bold] nav button.on{color:var(--btn)}
+html[data-lay=bold] nav button.on span{filter:none}
+html[data-lay=bold] .card{border-radius:14px;border-left:4px solid var(--accent);padding:16px 18px}
+html[data-lay=bold] .fcard{border-radius:14px}
+html[data-lay=bold] .btn{border-radius:12px;text-transform:uppercase;letter-spacing:.9px}
+html[data-lay=bold] .tfs button,html[data-lay=bold] .chip,html[data-lay=bold] .tile,html[data-lay=bold] .g{border-radius:10px}
+html[data-lay=bold] .pt,html[data-lay=bold] .k,html[data-lay=bold] .fk{text-transform:uppercase;letter-spacing:1.6px}
+html[data-lay=bold] .page.on>*{animation-name:ldrop;animation-duration:.55s;animation-timing-function:cubic-bezier(.34,1.56,.64,1)}
+@keyframes ldrop{from{opacity:0;transform:translateY(-16px)}}
+/* animation: grid (a faint grid drifts, like a terminal) */
+html[data-an=grid] body::after{inset:0;filter:none;background:radial-gradient(60% 50% at 50% 30%,var(--pg),transparent 75%),linear-gradient(rgba(var(--w),.06) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,rgba(var(--w),.06) 1px,transparent 1px) 0 0/46px 46px;-webkit-mask-image:radial-gradient(ellipse 95% 80% at 50% 35%,#000 25%,transparent 100%);mask-image:radial-gradient(ellipse 95% 80% at 50% 35%,#000 25%,transparent 100%);animation:agrid 20s linear infinite}
+@keyframes agrid{to{background-position:0 0,0 46px,46px 0}}
+/* animation: waves (slow flowing bands) */
+html[data-an=waves] body::after{inset:-10% -40%;filter:blur(30px);background:repeating-linear-gradient(100deg,transparent 0 110px,var(--glow) 170px,transparent 250px 360px),radial-gradient(40% 30% at 70% 70%,var(--pg),transparent 70%);animation:awave 18s ease-in-out infinite alternate}
+@keyframes awave{to{transform:translate3d(16%,3%,0) skewX(-10deg)}}
+/* animation: particles (dots rise slowly) */
+html[data-an=particles] body::after{inset:0;filter:none;opacity:.55;background:radial-gradient(circle,var(--accent) 0 1.6px,transparent 2.4px) 20px 40px/190px 230px,radial-gradient(circle,var(--accent2) 0 1.2px,transparent 2px) 90px 120px/310px 360px,radial-gradient(circle,rgba(var(--w),.6) 0 1px,transparent 1.8px) 150px 10px/240px 280px;animation:aptc 42s linear infinite}
+@keyframes aptc{to{background-position:20px -190px,90px -240px,150px -270px}}
+/* animation: embers (warm sparks rise faster) */
+html[data-an=embers] body::after{inset:0;filter:none;opacity:.65;background:radial-gradient(circle,var(--accent2) 0 2px,transparent 3.4px) 30px 80px/170px 210px,radial-gradient(circle,var(--accent) 0 1.4px,transparent 2.6px) 120px 20px/260px 300px,radial-gradient(circle,rgba(var(--w),.7) 0 1px,transparent 2px) 60px 150px/330px 380px;animation:aemb 20s linear infinite}
+@keyframes aemb{to{background-position:30px -130px,120px -280px,60px -230px}}
+/* animation: pulse (the glow breathes, buttons glow) */
+html[data-an=pulse] body::after{filter:blur(30px);animation:apls 5.5s ease-in-out infinite}
+@keyframes apls{0%,100%{transform:scale(.94);opacity:.55}50%{transform:scale(1.1);opacity:1}}
+html[data-an=pulse] .btn{animation:abtn 3.2s ease-in-out infinite}
+@keyframes abtn{50%{box-shadow:0 8px 36px var(--accent)}}
+/* animation: sweep (a band of light crosses the screen) */
+html[data-an=sweep] body::after{inset:0;filter:none;background:linear-gradient(115deg,transparent 35%,rgba(var(--w),.07) 47%,var(--glow) 51%,transparent 64%) 0 0/260% 100%,radial-gradient(40% 35% at 25% 30%,var(--pg),transparent 70%);animation:aswp 9s ease-in-out infinite}
+@keyframes aswp{0%{background-position:130% 0,0 0}60%,100%{background-position:-130% 0,0 0}}
+/* animation: calm (almost still) */
+html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 </style></head>
 <body>
 <div id="lock"><div class="l3d big" data-l3d style="--s:150px"></div>
@@ -565,6 +485,7 @@ body:not(.hud):not(.sk-amber) #hudFx{display:none}
 <div class="shb"><div id="plans"><div class="empty">Load a chart to see entries and targets.</div></div>
 <div class="grid"><div class="g s"><div class="k">Nearest support</div><div id="ns">—</div></div><div class="g r"><div class="k">Nearest resistance</div><div id="nr">—</div></div>
 <div class="g"><div class="k">Zones found</div><div id="zc">—</div></div><div class="g"><div class="k">Last signal</div><div id="ls">—</div></div></div>
+<div class="fk" style="margin-top:14px">Chart layers</div><div class="tfs" style="margin-top:8px"><button id="lySes">Sessions</button><button id="lyNews">News markers</button></div>
 <div class="legend"><span style="--c:var(--buy)">Buy / support</span><span style="--c:var(--sell)">Sell / resistance</span></div>
 <div class="note">Limit entries sit a little in front of the zone so near-misses still fill. When a reaction candle closes at the zone the plan switches to ENTER NOW at the market price instead of waiting for a pullback. Entries more than 2 ATR away are shown as watch-only. Stop: a quarter ATR beyond the far edge of the zone. Targets: the next opposite zones (or 1.5R and 3R). Not financial advice.</div></div></div>
 </section>
@@ -581,7 +502,7 @@ body:not(.hud):not(.sk-amber) #hudFx{display:none}
 <p>The circles on the chart mark <b>zones</b>, which are areas where price has turned before.</p>
 <ul><li><b>Red</b> circles are resistance (sell) zones.</li><li><b>Green</b> circles are support (buy) zones.</li></ul>
 <p>A zone is a place to watch, not an instruction. Price can touch a zone, react, or break straight through it.</p>
-<p>Use the <b>+</b> and <b>−</b> buttons to zoom, and the full-screen button for a bigger view.</p></div></details>
+<p>Use the <b>+</b> and <b>−</b> buttons to zoom, and the full-screen button for a bigger view. <b>Chart layers</b> lets you switch the market sessions and news markers on or off.</p></div></details>
 
 <details class="gd"><summary><span class="gn">3</span>The advice label (BUY / SELL / WAIT)</summary><div class="gb">
 <p>The big label on the Indicator page changes when price touches a zone: a resistance zone gives <b>SELL</b> and a support zone gives <b>BUY</b>.</p>
@@ -620,6 +541,10 @@ body:not(.hud):not(.sk-amber) #hudFx{display:none}
 <details class="gd"><summary><span class="gn">10</span>Indices: prices and the broker</summary><div class="gb">
 <p>NDX and DJI prices come from <b>futures</b> contracts, and DAX from the cash index. Your broker may quote a different price because of spread, rollover or feed timing, so levels can be a few points off.</p>
 <p>Always check your broker's price before you trade, and set your entry, stop loss and targets from it.</p></div></details>
+<details class="gd" id="gdSyn" style="display:none"><summary><span class="gn">11</span>Synthetic indices (admin test)</summary><div class="gb">
+<p>Under <b>Scanner</b> and in the <b>Indicator</b> symbol box you can now pick <b>Synthetic indices</b> from Deriv: Volatility, Boom and Crash, Step and Jump. They trade 24 hours a day, 7 days a week, including weekends.</p>
+<p>Their prices are generated, so news and real buyers and sellers do not move them. The zones, trade plans and the scanner still work on them, but treat the signals as <b>experimental</b>. Strategies that depend on real sessions or volume (PO3, ORB, VWAP and Order flow) are switched off for them.</p>
+<p>They support the M1 to D1 timeframes and need no data key. Always use your stop loss, because these markets can move very fast.</p></div></details>
 
 <div class="note" style="text-align:center;padding:4px 6px 14px">SignalsPro is a tool to help you see the market. It is not financial advice, and you are responsible for your own trades.</div>
 </section>
@@ -650,7 +575,7 @@ body:not(.hud):not(.sk-amber) #hudFx{display:none}
 <div class="pick" id="scPick" style="display:none"></div>
 <label>Trading style</label><div class="tfs" id="scStyle"></div><div class="note" id="scStyleD" style="margin:0 0 10px"></div>
 <label>Strategies (tap to pick one or more)</label><div class="tfs" id="scStrat" style="flex-wrap:wrap"></div><div class="note" id="scDesc" style="margin:0 0 10px"></div>
-<button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button><div class="radar" aria-hidden="true"></div>
+<button class="btn" id="scBtn">Scan now</button><button class="btn ghost" id="scHtf">Higher-timeframe check</button><button class="btn ghost" id="scAuto">Auto-scan every 30 min: Off</button>
 <div class="note" id="scSt">Each symbol uses 1 data credit and takes about 8 seconds, to stay inside the free 8-per-minute limit. Picking more strategies costs no extra credits.</div><div class="note" id="scCr"></div></div>
 <div class="card" id="scChart" style="display:none"><div class="hl"><div><div style="font-size:17px;font-weight:800" id="scChT"></div><div class="fk" style="margin-top:3px" id="scChS"></div></div><button class="fb" id="scChX" aria-label="Close chart"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
 <div class="tfs" id="scChTabs" style="flex-wrap:wrap;margin-top:12px"></div>
@@ -676,12 +601,12 @@ body:not(.hud):not(.sk-amber) #hudFx{display:none}
 <button data-p="set"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19 12a7 7 0 00-.1-1.3l2-1.5-2-3.4-2.3 1a7 7 0 00-2.2-1.3L14 3h-4l-.4 2.5a7 7 0 00-2.2 1.3l-2.3-1-2 3.4 2 1.5a7 7 0 000 2.6l-2 1.5 2 3.4 2.3-1a7 7 0 002.2 1.3L10 21h4l.4-2.5a7 7 0 002.2-1.3l2.3 1 2-3.4-2-1.5c.1-.4.1-.9.1-1.3z"/></svg></span>Settings</button></nav>
 
 <div id="thBack"></div>
-<div id="hudFx" aria-hidden="true"></div><aside id="thPanel"><div class="dh"><div class="l3d" data-l3d style="--s:72px"></div><div class="dw">SIGNALSPRO</div><div class="dl"></div></div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="taBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></span><span class="tt"><b>Technical analysis</b><i>London &amp; New York open signals</i></span></button><button class="tile" id="howBtn"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></span><span class="tt"><b>How to use</b><i>A quick guide</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><div class="dv"></div><div class="pt" style="margin:0 8px 12px">Theme</div><div class="sw" id="sw"></div></aside>
+<aside id="thPanel"><div class="dh"><div class="l3d" data-l3d style="--s:72px"></div><div class="dw">SIGNALSPRO</div><div class="dl"></div></div><button class="tile" id="fundBtn"><span class="ti"><svg viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="16.5" rx="3.5"/><path d="M3 9.5h18M8 2.5v4M16 2.5v4"/><text class="calDay" x="12" y="18.2" text-anchor="middle" style="fill:var(--btn);stroke:none;font-size:8.5px;font-weight:900;font-family:inherit">1</text></svg></span><span class="tt"><b>Fundamentals</b><i>High-impact US news</i></span><em class="tdot" id="fundDot"></em></button><button class="tile" id="jrnBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></span><span class="tt"><b>Signal journal</b><i>Mark your results</i></span></button><button class="tile" id="taBtn"><span class="ti"><svg viewBox="0 0 24 24"><path d="M3 17l5-5 4 3 8-9M15 6h5v5"/></svg></span><span class="tt"><b>Technical analysis</b><i>London &amp; New York open signals</i></span></button><button class="tile" id="howBtn"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.6 2.6 0 115 .9c0 1.7-2.5 2.1-2.5 3.6M12 17.2h.01"/></svg></span><span class="tt"><b>How to use</b><i>A quick guide</i></span></button><button class="tile" id="admBtn" style="display:none"><span class="ti"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></span><span class="tt"><b>Admin Portal</b><i>Manage subscribers</i></span></button><div class="dv"></div><div class="pt" style="margin:0 8px 12px">Theme</div><div class="sw" id="sw"></div></aside>
 <script>
 const $=id=>document.getElementById(id);
 const P={zf:.65,ff:2,sf:4,back:1200,shift:8,cool:60,show:{4:1,3:1,1:1,2:1}};
 const TFB={M1:'1m',M5:'5m',M15:'15m',M30:'30m',H1:'1h',H4:'4h',D1:'1d'},TFT={M1:'1min',M5:'5min',M15:'15min',M30:'30min',H1:'1h',H4:'4h',D1:'1day'},SN={4:'Proven',3:'Verified',2:'Untested',1:'Turncoat'};
-let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'hud',wl:'',stf:'M15',tz:'Africa/Johannesburg'};
+let S={src:'twelve',sym:'EUR/USD',tf:'M15',key:'',hook:'',iv:120,theme:'midnight',wl:'',stf:'M15',tz:'Africa/Johannesburg'};
 try{Object.assign(S,JSON.parse(localStorage.getItem('sp_cfg')||'{}'))}catch(e){}
 const STYLES={scalp:{n:'Scalp',tf:'M5',htf:'M15',d:'Quick trades held minutes to an hour.'},day:{n:'Day trade',tf:'M15',htf:'H1',d:'Trades opened and closed within the same day.'},swing:{n:'Swing',tf:'H4',htf:'D1',d:'Trades held for days to weeks.'}};
 if(!STYLES[S.style])S.style=S.stf==='M5'?'scalp':S.stf==='H4'?'swing':'day';
@@ -713,7 +638,7 @@ async function check(email,silent){
  EM=email.trim().toLowerCase();if(!EM){if(!silent)showLock('Enter your email.');return}
  if(!silent){$('btnU').disabled=true;$('btnU').textContent='Checking…'}
  try{const j=await(await fetch(`${API}?action=check&${qs()}`)).json();
-  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
+  if(j.ok){try{localStorage.setItem('sp_em',EM)}catch(e){}ROLE=j.role||'user';$('admBtn').style.display=ROLE==='admin'?'':'none';synUI();$('lock').classList.add('hidden');$('who').textContent='Signed in';showWelcome();loadFund();renderCk();tickerLoad()}
   else{try{localStorage.removeItem('sp_em')}catch(e){}showLock(j.msg||'Access denied.')}
  }catch(e){if(!silent)showLock('Cannot reach the server. Check your internet and try again.')}}
 $('btnU').onclick=()=>check($('emailIn').value);$('emailIn').onkeypress=e=>{if(e.key==='Enter')check($('emailIn').value)};
@@ -726,7 +651,6 @@ $('menuBtn').onclick=()=>thOpen(true);$('thBack').onclick=()=>thOpen(false);
 const DARK={w:'255,255,255',text:'#ffffff',t2:'#a0a0b0',btn:'#000000',buy:'#00ff55',sell:'#ff3b30',wait:'#ffcc00',buyr:'0,255,85',sellr:'255,59,48',waitr:'255,204,0',up:'#4fd18b',dn:'#e0605e',mid:'#4a4a64',warnt:'#ffe28a',dgrt:'#ffb3ad',cvbg:'rgba(0,0,0,.25)',sh:'rgba(0,0,0,.28)',card:'rgba(255,255,255,.045)',ga:.35,pa:.45,dark:1};
 const LIGHT={w:'15,23,42',text:'#0f172a',t2:'#64748b',btn:'#ffffff',buy:'#16a34a',sell:'#dc2626',wait:'#d97706',buyr:'22,163,74',sellr:'220,38,38',waitr:'217,119,6',up:'#16a34a',dn:'#dc2626',mid:'#cbd5e1',warnt:'#92400e',dgrt:'#991b1b',cvbg:'rgba(15,23,42,.04)',sh:'rgba(15,23,42,.08)',card:'rgba(255,255,255,.92)',ga:.2,pa:.25,dark:0};
 const THEMES={
- hud:Object.assign({},DARK,{n:'HUD',a:'#00e5ff',a2:'#00ffc8',rgb:'0,229,255',bg:['#020a10','#041620','#030f17'],ga:.3,pa:.3}),
  midnight:Object.assign({},DARK,{n:'Midnight',a:'#3b82f6',a2:'#06b6d4',rgb:'59,130,246',bg:['#050508','#0a0a12','#080812']}),
  graphite:Object.assign({},DARK,{n:'Graphite',a:'#d4d4d8',a2:'#a1a1aa',rgb:'212,212,216',bg:['#09090b','#111113','#0c0c0e'],ga:.2,pa:.25}),
  ocean:Object.assign({},DARK,{n:'Ocean',a:'#22d3ee',a2:'#3b82f6',rgb:'34,211,238',bg:['#03111a','#071a26','#04141f']}),
@@ -737,6 +661,8 @@ const THEMES={
  daylight:Object.assign({},LIGHT,{n:'Daylight',a:'#2563eb',a2:'#06b6d4',rgb:'37,99,235',bg:['#f4f6fb','#eef2f9','#f8fafc']}),
  mint:Object.assign({},LIGHT,{n:'Mint',a:'#059669',a2:'#0ea5e9',rgb:'5,150,105',bg:['#f2f8f5','#ebf4ef','#f6faf8']}),
  lavender:Object.assign({},LIGHT,{n:'Lavender',a:'#7c3aed',a2:'#3b82f6',rgb:'124,58,237',bg:['#f6f4fc','#efeaf9','#faf8fe']})};
+const TSTYLE={midnight:['float','aurora'],graphite:['dock','grid'],ocean:['island','waves'],forest:['soft','particles'],royal:['bold','pulse'],crimson:['bold','sweep'],amber:['soft','embers'],daylight:['float','calm'],mint:['soft','waves'],lavender:['island','pulse']};
+const LAYN={float:'Floating',dock:'Dock',island:'Island',soft:'Airy',bold:'Bold'},ANN={aurora:'Aurora',grid:'Grid',waves:'Waves',particles:'Particles',pulse:'Pulse',sweep:'Sweep',embers:'Embers',calm:'Calm'},LAYR={float:'50%',dock:'8px',island:'50%',soft:'16px',bold:'11px'};
 const OLDT={cobalt:'midnight',structure:'amber',cyan:'ocean',violet:'royal',emerald:'forest',crimson:'crimson',amber:'amber',rose:'crimson',lime:'forest',arctic:'graphite'};
 const hexRgb=h=>{h=h.replace('#','');return parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)};
 function theme(n){
@@ -747,9 +673,10 @@ function theme(n){
  ['w','text','t2','btn','buy','sell','wait','buyr','sellr','waitr','up','dn','mid','warnt','dgrt','cvbg','sh','card'].forEach(k=>set('--'+k,T[k]));
  set('--bd',`rgba(${T.w},.09)`);st.colorScheme=T.dark?'dark':'light';
  const m=document.querySelector('meta[name=theme-color]');if(m)m.content=T.bg[0];
- document.body.classList.toggle('hud',n==='hud');[...document.body.classList].forEach(c=>{if(c.startsWith('sk-'))document.body.classList.remove(c)});document.body.classList.add('sk-'+n);S.theme=n;save();document.querySelectorAll('#sw button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));if(D)draw()}
+ {const st2=TSTYLE[n]||['float','aurora'],de=document.documentElement;de.dataset.lay=st2[0];de.dataset.an=st2[1];setTimeout(()=>{try{moveInd(curPage())}catch(e){}},60);setTimeout(()=>{try{moveInd(curPage())}catch(e){}},520)}
+ S.theme=n;save();document.querySelectorAll('#sw button').forEach(b=>b.classList.toggle('on',b.dataset.t===n));if(D)draw()}
 Object.keys(THEMES).forEach(n=>{const T=THEMES[n],b=document.createElement('button');b.type='button';b.dataset.t=n;
- b.innerHTML=`<i style="background:linear-gradient(135deg,${T.bg[0]} 50%,${T.a} 50%)"></i><span>${T.n}</span>`;b.onclick=()=>{try{localStorage.setItem('sp_ck_theme','1')}catch(e){}theme(n);renderCk()};$('sw').append(b)});theme(S.theme);
+ {const ts=TSTYLE[n]||['float','aurora'];b.innerHTML=`<i style="background:linear-gradient(135deg,${T.bg[0]} 50%,${T.a} 50%);border-radius:${LAYR[ts[0]]}"></i><span>${T.n}</span><em>${LAYN[ts[0]]} · ${ANN[ts[1]]}</em>`}b.onclick=()=>{try{localStorage.setItem('sp_ck_theme','1')}catch(e){}theme(n);renderCk()};$('sw').append(b)});theme(S.theme);
 // nav
 function page(n){
  const sw=()=>{document.querySelectorAll('.page').forEach(p=>p.classList.toggle('on',p.id==='p-'+n));
@@ -761,15 +688,70 @@ document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
 const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tf));mark();
-$('symIn').value=S.sym;$('symIn').onchange=()=>{S.sym=$('symIn').value.trim();VO=0;save();tick()};
+$('symIn').value=S.sym;$('symIn').onfocus=synEnsure;$('symIn').onchange=()=>{const v=$('symIn').value.trim(),k=synKey(v);S.sym=k||v;if(k)$('symIn').value=k;VO=0;save();tick()};
 // indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
 const IDXS={NDX:{n:'Nasdaq 100 futures',tz:'America/New_York',fut:1},DJI:{n:'Dow Jones futures',tz:'America/New_York',fut:1},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
 const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
 const IDXN={NDX:{l:'Nasdaq 100 · US Tech 100',s:'US Tech 100'},DJI:{l:'Dow Jones 30 · US 30',s:'US 30'},DAX:{l:'Germany 40 Index',s:'Germany 40'}};
 const idxSub=(sym,inl)=>{const k=idxKey(sym);return k?`<small class="idxn${inl?' in':''}">${IDXN[k].l}</small>`:''};
+// ---- Synthetic indices: Deriv public market data (no key needed, markets open 24/7) ----
+const SYN0=[['R_10','Volatility 10 Index'],['R_25','Volatility 25 Index'],['R_50','Volatility 50 Index'],['R_75','Volatility 75 Index'],['R_100','Volatility 100 Index'],
+ ['1HZ10V','Volatility 10 (1s) Index'],['1HZ25V','Volatility 25 (1s) Index'],['1HZ50V','Volatility 50 (1s) Index'],['1HZ75V','Volatility 75 (1s) Index'],['1HZ100V','Volatility 100 (1s) Index'],
+ ['BOOM300N','Boom 300 Index'],['BOOM500','Boom 500 Index'],['BOOM1000','Boom 1000 Index'],['CRASH300N','Crash 300 Index'],['CRASH500','Crash 500 Index'],['CRASH1000','Crash 1000 Index'],
+ ['stpRNG','Step Index'],['JD10','Jump 10 Index'],['JD25','Jump 25 Index'],['JD50','Jump 50 Index'],['JD75','Jump 75 Index'],['JD100','Jump 100 Index']];
+const synMeta=([c,n])=>({c,n,g:/^Volatility.*\(1s\)/i.test(n)?'Volatility (1s)':/^Volatility/i.test(n)?'Volatility':/^(Boom|Crash)/i.test(n)?'Boom & Crash':'Step, Jump & Range',s:n.replace(/ Index$/i,'').replace(/^Volatility/,'Vol')});
+let SYN=SYN0.map(synMeta),synCached=false;
+try{const c=JSON.parse(localStorage.getItem('sp_syn')||'null');if(c&&c.t&&Date.now()-c.t<864e5&&c.l&&c.l.length>5){SYN=c.l.map(synMeta);synCached=true}}catch(e){}
+const isAdm=()=>{try{return ROLE==='admin'}catch(e){return false}};   // synthetics are admin-only while they are being tested
+const synNorm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
+function synKey(v){if(!isAdm())return null;const u=synNorm(v);if(u.length<3)return null;
+ for(const x of SYN){if(synNorm(x.c)===u||synNorm(x.n)===u||synNorm(x.s)===u)return x.c}
+ const m=u.match(/^(?:V|VOL|VOLATILITY)(\d{2,3})(1S)?$/);if(m){const c=m[2]?'1HZ'+m[1]+'V':'R_'+m[1];if(SYN.some(x=>x.c===c))return c}
+ return null}
+const isSyn=sym=>!!synKey(sym),isFree=sym=>isIdx(sym)||isSyn(sym);
+const synSub=(sym,inl,more)=>{const k=synKey(sym),x=k&&SYN.find(y=>y.c===k);return x?`<small class="idxn${inl?' in':''}">${esc(x.n)}${more?' · open 24/7':''}</small>`:''};
+const synGroups=()=>{if(!isAdm())return[];const o={};SYN.forEach(x=>(o[x.g]=o[x.g]||[]).push(x.c));return['Volatility','Volatility (1s)','Boom & Crash','Step, Jump & Range'].filter(g=>o[g]).map(g=>['Synthetic · '+g,o[g]])};
+const chipLbl=x=>{const k=synKey(x),y=k&&SYN.find(z=>z.c===k);return y?y.s:x};
+function synDatalist(){const dl=$('syms');if(!dl)return;dl.querySelectorAll('[data-syn]').forEach(o=>o.remove());if(!isAdm())return;SYN.forEach(x=>{const o=document.createElement('option');o.value=x.c;o.label=x.n;o.dataset.syn=1;dl.appendChild(o)})}
+const DV_URLS=['wss://api.derivws.com/trading/v1/options/ws/public','wss://ws.derivws.com/websockets/v3?app_id=1089'];
+const DVG={M1:60,M5:300,M15:900,M30:1800,H1:3600,H4:14400,D1:86400};
+let dvWs=null,dvOpen=null,dvUrl=0,dvId=0;const dvWait={},DVC={};
+function dvConnect(){if(dvOpen)return dvOpen;
+ dvOpen=new Promise((res,rej)=>{let done=false;const ws=new WebSocket(DV_URLS[dvUrl]),t=setTimeout(()=>{if(!done){done=true;try{ws.close()}catch(e){}rej(Error('timeout'))}},8000);
+  ws.onopen=()=>{if(!done){done=true;clearTimeout(t);dvWs=ws;res(ws)}};
+  ws.onmessage=e=>{let m;try{m=JSON.parse(e.data)}catch(x){return}const w=dvWait[m.req_id];if(w){delete dvWait[m.req_id];clearTimeout(w.t);m.error?w.rej(Error(m.error.message||'Deriv error')):w.res(m)}};
+  ws.onerror=()=>{if(!done){done=true;clearTimeout(t);rej(Error('connect'))}};
+  ws.onclose=()=>{dvWs=null;dvOpen=null;Object.keys(dvWait).forEach(k=>{const w=dvWait[k];delete dvWait[k];clearTimeout(w.t);w.rej(Error('Connection to the synthetic index data closed. Try again.'))})}});
+ dvOpen.catch(()=>{dvOpen=null});return dvOpen}
+async function dvReq(p){
+ const once=async()=>{let ws;try{ws=await dvConnect()}catch(e){throw Error('Cannot reach the synthetic index data (Deriv). Check your internet.')}
+  return new Promise((res,rej)=>{const id=++dvId;dvWait[id]={res,rej,t:setTimeout(()=>{delete dvWait[id];rej(Error('The synthetic index data did not answer in time. Try again.'))},12000)};ws.send(JSON.stringify(Object.assign({},p,{req_id:id})))})};
+ try{return await once()}catch(e){
+  if(dvUrl<DV_URLS.length-1){dvUrl++;try{if(dvWs)dvWs.close()}catch(x){}dvWs=null;dvOpen=null;return await once()}   // try Deriv's older server once
+  throw e}}
+async function dvLoad(sym,tf){
+ const code=synKey(sym),g=DVG[tf];if(!g)throw Error('Synthetic indices support M1 to D1. Pick one of those timeframes.');
+ const ck=code+'|'+tf,hit=DVC[ck];if(hit&&Date.now()-hit.t<15000)return hit.d;
+ const m=await dvReq({ticks_history:code,adjust_start_time:1,count:1500,end:'latest',style:'candles',granularity:g});
+ const cs=(m.candles||[]).filter(x=>x&&x.open!=null&&x.high!=null&&x.low!=null&&x.close!=null).reverse();
+ if(cs.length<30)throw Error('Not enough data for this synthetic index yet. Try again shortly.');
+ let dec=0;const ps=+m.pip_size;
+ if(ps>0&&ps<1)dec=Math.round(-Math.log10(ps));else if(ps>=2)dec=ps;else cs.slice(0,60).forEach(x=>{const d=(String(x.close).split('.')[1]||'').length;if(d>dec)dec=d});
+ dec=Math.max(1,Math.min(5,dec));
+ const d={o:cs.map(x=>+x.open),h:cs.map(x=>+x.high),l:cs.map(x=>+x.low),c:cs.map(x=>+x.close),t:cs.map(x=>x.epoch*1000),v:cs.map(()=>0),dec,n:cs.length};
+ DVC[ck]={t:Date.now(),d};return d}
+// the list of symbols comes from Deriv itself, so new ones appear without an app update
+async function synRefresh(){try{const m=await dvReq({active_symbols:'brief'});
+ const L=(m.active_symbols||[]).filter(x=>x.market==='synthetic_index'||x.submarket==='random_index').map(x=>[x.underlying_symbol||x.symbol,x.underlying_symbol_name||x.display_name]).filter(x=>x[0]&&x[1]);
+ const num=n=>parseInt((String(n).match(/\d+/)||[0])[0],10);L.sort((a,b)=>num(a[1])-num(b[1])||String(a[1]).localeCompare(b[1]));
+ if(L.length>5){SYN=L.map(synMeta);synCached=true;try{localStorage.setItem('sp_syn',JSON.stringify({t:Date.now(),l:L}))}catch(e){}synDatalist();if($('scPick')&&$('scPick').style.display!=='none')pickRender()}}catch(e){}}
+let synAsked=false;const synEnsure=()=>{if(isAdm()&&!synAsked&&!synCached){synAsked=true;synRefresh()}};
+synDatalist();
+function synUI(){synDatalist();const g=$('gdSyn');if(g)g.style.display=isAdm()?'':'none';if($('scPick')&&$('scPick').style.display!=='none')pickRender()}
 // data
 async function load(sym,tf,size){
  sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
+ if(isSyn(sym))return dvLoad(sym,tf);
  if(isIdx(sym)){let j;try{j=await(await fetch(`${API}?action=candles&${qs()}&sym=${idxKey(sym)}&int=${TFT[tf]}`)).json()}catch(e){throw Error('Cannot reach the index data server. Check your internet.')}
   if(j.ok===false){showLock(j.msg);throw Error(j.msg||'Access denied')}
   if(j.err||!j.t||j.t.length<20)throw Error(j.err||'Index data is unavailable right now. Try again shortly.');
@@ -889,6 +871,18 @@ function draw(){
   let lo=0,hi=n-1;while(hi-lo>1){const m=(lo+hi)>>1;if(T[m]>ms)lo=m;else hi=m}return hi-(ms-T[hi])/(T[lo]-T[hi])},xt=ms=>X(fi(ms))-bw/2;
  let NEWS=[];
  g.save();g.beginPath();g.rect(0,0,W-gut,H);g.clip();
+ // session bands (Asia, London, New York) behind the candles
+ if(T&&n>3&&S.lySes!==false&&['M1','M5','M15','M30','H1'].includes(S.tf)){
+  const cols=['139,92,246','245,158,11','6,182,212'];
+  chartSess().forEach(q=>{const xa=xt(q.a),xb=xt(q.b);if(xb<0||xa>W-gut)return;const x0=Math.max(0,xa),x1=Math.min(W-gut,xb);
+   g.fillStyle=`rgba(${cols[q.k]},.075)`;g.fillRect(x0,0,x1-x0,H-bm);
+   if(x1-x0>50*r){g.fillStyle=`rgba(${cols[q.k]},.8)`;g.font=`700 ${9*r}px ${MONO}`;g.textAlign='left';g.fillText(q.n.toUpperCase(),x0+6*r,H-bm-6*r-q.k*11*r)}})}
+ // news release lines
+ if(T&&n>3&&S.lyNews!==false&&FD&&FD.events){
+  NEWS=FD.events.filter(showEv).map(e=>({e,t:Date.parse(e.date)})).filter(x=>x.t).sort((a,b)=>a.t-b.t);NEWS.forEach(x=>{x.x=xt(x.t)});
+  g.setLineDash([3*r,4*r]);g.lineWidth=r;g.globalAlpha=.55;
+  NEWS.forEach(x=>{if(x.x<0||x.x>W-gut)return;g.strokeStyle=x.e.impact==='High'?CV('--sell'):CV('--wait');g.beginPath();g.moveTo(x.x,0);g.lineTo(x.x,H-bm);g.stroke()});
+  g.globalAlpha=1;g.setLineDash([])}
  for(let i=i1;i>=i0;i--){const x=X(i);if(x<-bw||x>W-gut+bw)continue;const up=c[i]>=o[i];g.strokeStyle=g.fillStyle=up?CV('--up'):CV('--dn');
   g.lineWidth=Math.max(r,bw*.12);g.beginPath();g.moveTo(x,Y(h[i]));g.lineTo(x,Y(l[i]));g.stroke();
   g.fillRect(x-bw*.32,Math.min(Y(o[i]),Y(c[i])),bw*.64,Math.max(r,Math.abs(Y(o[i])-Y(c[i]))))}
@@ -972,7 +966,7 @@ async function tick(){
   // the label expires: after 6 candles without a new touch, or when a candle closes 1.5 ATR against the signal
   if(advice&&advAt){const bar=BARMS[S.tf]||9e5,age=(D.t[0]-advAt.t)/bar,cl=D.c[1]!=null?D.c[1]:px,adverse=advice>0?advAt.px-cl:cl-advAt.px;if(closed||age>6||adverse>1.5*advAt.atr){advice=0;advAt=null}}
   const a=$('adv');a.textContent=closed?'CLOSED':advice>0?'BUY':advice<0?'SELL':'WAIT';a.className='adv '+(closed?'':advice>0?'buy':advice<0?'sell':'');
-  $('sym').textContent=`${S.sym} · ${S.tf}`;$('px').textContent=px.toFixed(D.dec);
+  $('sym').innerHTML=esc(`${S.sym} · ${S.tf}`)+synSub(S.sym,0,1);$('px').textContent=px.toFixed(D.dec);
   const sup=R.zones.filter(z=>!z.res&&z.lo<px).sort((a,b)=>b.hi-a.hi)[0],res=R.zones.filter(z=>z.res&&z.hi>px).sort((a,b)=>a.lo-b.lo)[0],f=z=>z?`${z.lo.toFixed(D.dec)}–${z.hi.toFixed(D.dec)} · ${SN[z.s]}`:'None';
   $('ns').textContent=f(sup);$('nr').textContent=f(res);$('zc').textContent=R.zones.length;$('ls').textContent=(()=>{const z=sigs.find(x=>x.price);return z?z.type+' '+z.price:'None yet'})();
   $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;if(closed){$('st').textContent='Market closed';$('shT').textContent='Market closed';$('shV').textContent=''}
@@ -1451,7 +1445,8 @@ const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:
  vol:{n:'Volatility',d:'ATR expansion with rising ADX, entry on the retest of the breakout.',fn:sVOL},
  mr:{n:'Mean reversion',d:'Bollinger band pierce with an extreme RSI, targeting the middle band.',fn:sMR},
  of:{n:'Order flow',d:'Estimated volume pressure: high-volume absorption at swing levels plus a delta estimate. Needs volume (NDX, DJI, crypto).',fn:sOF}};
-const sl=r=>r.strat&&STRATS[r.strat]?' · '+STRATS[r.strat].n:'';
+['po3','orb','vwap','of'].forEach(k=>{const f=STRATS[k].fn;STRATS[k].fn=(sy,d,hd)=>isSyn(sy)?noTrade(sy,d,k,STRATS[k].n+' relies on real trading sessions or volume, so it is not used on synthetic indices.'):f(sy,d,hd)});
+const sl=r=>(r.strat&&STRATS[r.strat]?' · '+STRATS[r.strat].n:'')+synSub(r.sym);
 if(!Array.isArray(S.strats)||!S.strats.length||S.strats.some(k=>!STRATS[k]))S.strats=['po3'];
 function strChips(){$('scStrat').innerHTML=Object.keys(STRATS).map(k=>`<button class="${S.strats.includes(k)?'on':''}" onclick="togStrat('${k}')">${STRATS[k].n}</button>`).join('')+`<button class="${S.strats.length===Object.keys(STRATS).length?'on':''}" onclick="allStrat()">All</button>`;
  $('scDesc').textContent=S.strats.map(k=>STRATS[k].n+': '+STRATS[k].d).join('  ')}
@@ -1500,28 +1495,28 @@ async function scan(auto){
  RS.clear();scanning=true;const out=[];let stop=false;$('scBtn').disabled=true;
  for(let i=0;i<list.length&&!stop;i++){let tries=0;
   while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
-   try{const d=await load(list[i],S.stf);if(!isIdx(list[i]))addCred();let hd=null;
-    if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'&&!isIdx(list[i])?8000:300);const d2=await load(list[i],HT[S.stf]);if(!isIdx(list[i]))addCred();hd=htfDir(d2)}catch(_){hd=null}}
+   try{const d=await load(list[i],S.stf);if(!isFree(list[i]))addCred();let hd=null;
+    if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'&&!isFree(list[i])?8000:300);const d2=await load(list[i],HT[S.stf]);if(!isFree(list[i]))addCred();hd=htfDir(d2)}catch(_){hd=null}}
     const sel=S.strats.filter(k=>STRATS[k]),rs=sel.map(k=>{OVX=null;try{const r=Object.assign(STRATS[k].fn(list[i],d,hd),{strat:k});if(!r.ov&&OVX)r.ov=OVX;return r}catch(err){return noTrade(list[i],d,k,'Could not run this strategy')}});
-    {const zz=(d.c[0]-d.c[Math.min(48,d.c.length-1)])/((atr7(d.h,d.l,d.c,d.n)[0]||1e-9)*Math.sqrt(Math.min(48,d.c.length-1)||1));rs.forEach(r=>{r.z=zz;if(isIdx(list[i]))r.idx=true})}SCS[list[i]]={d,rs,tf:S.stf,sty:(STYLES[S.style]||{}).n||'',t:Date.now()};try{trkUpdate(list[i],d,rs)}catch(e){}
+    {const zz=(d.c[0]-d.c[Math.min(48,d.c.length-1)])/((atr7(d.h,d.l,d.c,d.n)[0]||1e-9)*Math.sqrt(Math.min(48,d.c.length-1)||1));rs.forEach(r=>{r.z=zz;if(isFree(list[i]))r.idx=true})}SCS[list[i]]={d,rs,tf:S.stf,sty:(STYLES[S.style]||{}).n||'',t:Date.now()};try{trkUpdate(list[i],d,rs)}catch(e){}
     if(rs.length>1){const use=rs.filter(r=>r.v!=='NO TRADE');if(use.length)use.forEach(r=>out.push(r));else out.push(Object.assign({},rs[0],{why:'No setup on any picked strategy',strat:'all'}))}else out.push(rs[0]);break}
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
     out.push({sym:list[i],err:e.message,score:-1});if(/day|credits/i.test(e.message)&&!/minute/i.test(e.message))stop=true;break}}
-  renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'&&!isIdx(list[i])&&!isIdx(list[i+1])?8000:300)}
+  renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'&&!isFree(list[i])&&!isFree(list[i+1])?8000:300)}
  finalize(out);scAuto(out,auto);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym+x.strat]||0)>3600).forEach(x=>{notified[x.sym+x.strat]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',strat:STRATS[x.strat]?STRATS[x.strat].n:'',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED${sl(x)} · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent=wkNote+'Scan finished at '+new Date().toLocaleTimeString()+'. The chart below shows the best setup. Tap any result to switch it.'}
 function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
 $('scWl').value=S.wl?S.wl.split(',').join(', '):'';styleRender();showCred();strChips();
 const PICK=[['Forex',['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','NZD/USD','USD/CHF','EUR/JPY','GBP/JPY','EUR/GBP']],['Metals',['XAU/USD','XAG/USD']],['Crypto',['BTC/USD','ETH/USD','SOL/USD','XRP/USD']],['Indices',['NDX','DJI','DAX']]];
 // EURUSD / xauusd -> EUR/USD, XAU/USD
-const normSym=v=>{v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return /^[A-Z]{6}$/.test(v)?v.slice(0,3)+'/'+v.slice(3):v};
+const normSym=v=>{const k=synKey(v);if(k)return k;v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return /^[A-Z]{6}$/.test(v)?v.slice(0,3)+'/'+v.slice(3):v};
 function wlList(){const seen={};return String(S.wl||'').split(/[,;]+/).map(normSym).filter(x=>x&&!seen[x]&&(seen[x]=1))}
 function wlSet(l){S.wl=l.join(',');save();$('scWl').value=l.join(', ');pickRender()}
 function pickRender(){const on=new Set(wlList());
- $('scPick').innerHTML=PICK.map(g=>`<div class="g">${g[0]}</div><div class="row">${g[1].map(x=>`<button type="button" class="chip ${on.has(x)?'on':''}" onclick="pickTog('${x}')">${x}</button>`).join('')}</div>`).join('')+'<div class="row" style="margin-top:12px"><button type="button" class="chip" onclick="wlSet([])">Clear</button><button type="button" class="chip" onclick="pickClose()">Done</button></div>'}
+ $('scPick').innerHTML=PICK.concat(synGroups()).map(g=>`<div class="g">${g[0]}</div><div class="row">${g[1].map(x=>`<button type="button" class="chip ${on.has(x)?'on':''}" onclick="pickTog('${x}')">${chipLbl(x)}</button>`).join('')}</div>`).join('')+'<div class="row" style="margin-top:12px"><button type="button" class="chip" onclick="wlSet([])">Clear</button><button type="button" class="chip" onclick="pickClose()">Done</button></div>'}
 function pickTog(x){const l=wlList(),i=l.indexOf(x);if(i>=0)l.splice(i,1);else l.push(x);wlSet(l)}
 function pickClose(){$('scPick').style.display='none';wlSet(wlList())}
-$('scWl').onfocus=()=>{pickRender();$('scPick').style.display='block'};
+$('scWl').onfocus=()=>{synEnsure();pickRender();$('scPick').style.display='block'};
 $('scWl').oninput=()=>{S.wl=$('scWl').value;pickRender()};
 $('scWl').onchange=()=>wlSet(wlList());
 document.addEventListener('click',e=>{if(!e.target.closest('#scWl,#scPick')&&$('scPick').style.display!=='none')pickClose()});
@@ -1918,6 +1913,8 @@ $('fsBtn').onclick=()=>fsSet(!$('cvw').classList.contains('fs'));
 addEventListener('popstate',()=>{if($('cvw').classList.contains('fs')){fsPushed=false;fsSet(false)}});
 document.addEventListener('fullscreenchange',()=>{if(!document.fullscreenElement&&$('cvw').classList.contains('fs'))fsSet(false)});
 $('shH').onclick=()=>$('sheet').classList.toggle('open');
+const lyRender=()=>{$('lySes').classList.toggle('on',S.lySes!==false);$('lyNews').classList.toggle('on',S.lyNews!==false)};
+$('lySes').onclick=()=>{S.lySes=S.lySes===false;save();lyRender();draw()};$('lyNews').onclick=()=>{S.lyNews=S.lyNews===false;save();lyRender();draw()};lyRender();
 $('cv').addEventListener('pointerdown',()=>$('sheet').classList.remove('open'));
 const ptr=document.createElement('div');ptr.id='ptr';ptr.innerHTML='<svg viewBox="0 0 24 24"><path d="M12 5v10M7 12l5 5 5-5"/></svg>';document.body.appendChild(ptr);
 function refreshNow(){const on=document.querySelector('.page.on'),id=on?on.id:'';let pr=null;if(id==='p-ind')pr=tick();else if(id==='p-home'||id==='p-fund'){pr=loadFund(true);if(id==='p-home')tickerLoad(true)}else return;
@@ -1939,7 +1936,7 @@ function fxClosed(ms){const o=tzParts('America/New_York',ms),h=+o.hour;return o.
 function idxClosed(sym,ms){const c=IDXS[idxKey(sym)],o=tzParts(c.tz,ms||Date.now()),m=+o.hour*60+ +o.minute;
  if(c.fut){if(o.weekday==='Sat')return true;if(o.weekday==='Fri'&&m>=1020)return true;if(o.weekday==='Sun'&&m<1080)return true;return m>=1020&&m<1080}
  if(o.weekday==='Sat'||o.weekday==='Sun')return true;return m<c.o[0]*60+c.o[1]||m>=c.c[0]*60+c.c[1]}
-const symClosed=(sym,ms)=>isCrypto(sym)?false:isIdx(sym)?idxClosed(sym,ms):fxClosed(ms==null?Date.now():ms);
+const symClosed=(sym,ms)=>isCrypto(sym)||isSyn(sym)?false:isIdx(sym)?idxClosed(sym,ms):fxClosed(ms==null?Date.now():ms);
 const marketClosed=sym=>symClosed(sym);
 function nextFxOpen(ms){let t=ms;for(let i=0;i<400&&fxClosed(t);i++)t+=9e5;return t}
 const fmtSast=ms=>new Date(ms).toLocaleString('en-ZA',{weekday:'short',hour:'2-digit',minute:'2-digit',hour12:false,timeZone:'Africa/Johannesburg'});
@@ -2065,7 +2062,7 @@ hlPaint();hlLoad();setInterval(()=>hlLoad(),30000);
 // settings
 S.src='twelve';$('src').value='twelve';$('key').value=S.key;$('iv').value=S.iv;$('tkSel').value=String(S.tkIv==null?300:S.tkIv);$('hook').value=S.hook;$('tz').value=S.tz;
 $('save').onclick=()=>{S.src=$('src').value;S.key=$('key').value.trim();S.iv=+$('iv').value;S.tkIv=+$('tkSel').value;S.hook=$('hook').value.trim();S.tz=$('tz').value;mkFmt();save();renderCk();tkBuild();tkPaint();tickerLoad(true);if(run)setRun(true);$('save').textContent='Saved';setTimeout(()=>$('save').textContent='Save settings',1200)};
-$('logout').onclick=()=>{ROLE='user';ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
+$('logout').onclick=()=>{ROLE='user';synUI();ADMPIN='';$('admBtn').style.display='none';if(run)setRun(false);try{localStorage.removeItem('sp_em')}catch(e){}EM='';$('emailIn').value='';$('who').textContent='Premium zone indicator';showLock('')};
 $('notif').onclick=()=>{
  if(window.AndroidBridge){try{
   if(!AndroidBridge.hasPermission()){AndroidBridge.requestPermission();setTimeout(()=>{$('notif').textContent=AndroidBridge.hasPermission()?'Send test alert':'Alerts blocked';renderCk()},2500);return}
