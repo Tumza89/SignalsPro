@@ -363,6 +363,14 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 .kzl{display:inline-flex;gap:5px;font:700 11px var(--mono);padding:4px 8px;border-radius:8px;background:rgba(var(--w),.06);margin:6px 6px 0 0}.kzl i{font-style:normal;color:var(--t2)}
 .kzw{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:12.5px;font-weight:700;background:rgba(var(--w),.07);border:1px solid var(--wait);color:var(--wait)}
 
+#upd{position:fixed;left:12px;right:12px;top:calc(10px + env(safe-area-inset-top));z-index:9990;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-radius:16px;background:var(--panel);border:1px solid var(--accent);box-shadow:0 12px 40px var(--glow);font:700 13px 'Manrope',sans-serif;color:var(--text);animation:pi .4s}
+#upd button{background:var(--accent);color:var(--btn);border:0;border-radius:10px;padding:9px 14px;font:800 12px 'Manrope',sans-serif;cursor:pointer}
+.ver{opacity:.7;font-variant-numeric:tabular-nums}
+.mk{display:none;gap:4px;padding:4px;border-radius:999px;background:rgba(var(--w),.06);border:1px solid rgba(var(--w),.1);margin:0 0 12px;width:max-content;max-width:100%}
+.mk.on{display:inline-flex}
+.mk button{border:0;background:transparent;color:var(--t2);font:700 12.5px 'Manrope',sans-serif;padding:9px 16px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
+.mk button.sel{background:var(--accent);color:var(--btn)}
+html[data-lay=dock] .mk,html[data-lay=dock] .mk button{border-radius:8px}html[data-lay=bold] .mk,html[data-lay=bold] .mk button{border-radius:11px}
 /* ===== themes: layout + animation per theme (set by data-lay and data-an on <html>) ===== */
 nav,header,.card,.fcard,.btn,.tile,.chip,.tfs button{transition-property:border-radius,padding,margin,box-shadow,background,border-color,transform,color;transition-duration:.4s}
 .sw button em{font-style:normal;font-size:9.5px;font-weight:600;color:var(--t2);opacity:.85;margin-top:-4px;letter-spacing:.2px}
@@ -456,7 +464,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <div id="regDone" style="display:none"><div style="font-size:18px;font-weight:800;margin-bottom:8px">Registration received</div><div class="note" id="regDoneMsg" style="margin:0"></div></div>
 <div class="note" style="margin-top:16px;text-align:center"><a href="#" id="goLogin" class="lnk">Already approved? Sign in</a></div>
 <div class="note sup" style="text-align:center">Need help? <a href="tel:+27696750129">Call +27 69 675 0129</a> · <a href="https://wa.me/27696750129" target="_blank" rel="noopener">WhatsApp</a></div></div>
-<div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved.</div></div>
+<div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved. <span class="ver"></span></div></div>
 
 <div id="welcome"><div class="l3d big" data-l3d style="--s:150px"></div>
 <div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">Your desk is ready.</div>
@@ -473,6 +481,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <div class="hint" id="hint">Tap to start live signals</div></div><div id="ck"></div><div id="hl"></div><div id="news" style="display:none"></div></section>
 
 <section class="page" id="p-ind">
+<div class="mk"><button type="button" data-m="std">Markets</button><button type="button" data-m="syn">Synthetics</button></div>
 <div class="ibar"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
 <datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>BTC/USD</option><option>ETH/USD</option><option>SOL/USD</option><option>XRP/USD</option><option>NDX</option><option>DJI</option><option>DAX</option></datalist>
 <div class="ir"><div class="px" id="px">—</div><div class="k" id="sym">Symbol</div></div>
@@ -542,7 +551,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <p>NDX and DJI prices come from <b>futures</b> contracts, and DAX from the cash index. Your broker may quote a different price because of spread, rollover or feed timing, so levels can be a few points off.</p>
 <p>Always check your broker's price before you trade, and set your entry, stop loss and targets from it.</p></div></details>
 <details class="gd" id="gdSyn" style="display:none"><summary><span class="gn">11</span>Synthetic indices (admin test)</summary><div class="gb">
-<p>Under <b>Scanner</b> and in the <b>Indicator</b> symbol box you can now pick <b>Synthetic indices</b> from Deriv: Volatility, Boom and Crash, Step and Jump. They trade 24 hours a day, 7 days a week, including weekends.</p>
+<p>Use the <b>Markets | Synthetics</b> switch above the symbol box on the <b>Indicator</b> page, and at the top of the <b>Scanner</b>, to move between normal markets and <b>Synthetic indices</b> from Deriv: Volatility, Boom and Crash, Step and Jump. Each side keeps its own symbol list and its own scanner list. They trade 24 hours a day, 7 days a week, including weekends.</p>
 <p>Their prices are generated, so news and real buyers and sellers do not move them. The zones, trade plans and the scanner still work on them, but treat the signals as <b>experimental</b>. Strategies that depend on real sessions or volume (PO3, ORB, VWAP and Order flow) are switched off for them.</p>
 <p>They support the M1 to D1 timeframes and need no data key. Always use your stop loss, because these markets can move very fast.</p></div></details>
 
@@ -571,6 +580,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <div id="aGate" class="card"><div style="font-size:16px;font-weight:800;margin-bottom:6px">Admin PIN</div><div class="note" style="margin:0 0 12px">Enter the PIN you set in the script properties. It is only kept in memory for 10 minutes.</div><input class="inp" id="aPin" type="password" placeholder="Admin PIN" autocomplete="off"><button class="btn" id="aGo">Unlock admin</button><div id="aErr" style="color:var(--sell);font-size:13px;margin-top:12px;display:none"></div></div>
 <div id="aMain" style="display:none"><div id="aSum"></div><div class="tfs" id="aFlt" style="flex-wrap:wrap"></div><input class="inp" id="aQ" placeholder="Search name or email" autocapitalize="none"><label>Activate for</label><select class="inp" id="aDays"><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option><option value="0">No expiry</option></select><div id="aMsg" class="note" style="display:none;margin:0 0 10px"></div><div id="aList"></div><button class="btn ghost" id="aRef">Refresh</button></div></section>
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
+<div class="mk"><button type="button" data-m="std">Markets</button><button type="button" data-m="syn">Synthetics</button></div>
 <label>Symbols to scan</label><input class="inp" id="scWl" placeholder="Tap to pick, or type e.g. EUR/USD, BTC/USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
 <div class="pick" id="scPick" style="display:none"></div>
 <label>Trading style</label><div class="tfs" id="scStyle"></div><div class="note" id="scStyleD" style="margin:0 0 10px"></div>
@@ -593,7 +603,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <button class="btn" id="save">Save settings</button><button class="btn ghost" id="notif">Enable alerts</button><button class="btn red" id="logout">Log out</button>
 <div class="note">Zone and scanner alerts fire only while the app is open and started. In the Android app, news alerts are scheduled on the phone and also arrive when the app is closed. Open the app now and then so they stay up to date.</div></div></section>
 
-<footer class="copy">© 2026 SignalsPro. All rights reserved.</footer>
+<footer class="copy">© 2026 SignalsPro. All rights reserved. <span class="ver"></span></footer>
 <nav id="nav"><i id="navInd"></i>
 <button class="on" data-p="home"><span><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg></span>Home</button>
 <button data-p="scan"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-4"/></svg></span>Scanner</button>
@@ -688,7 +698,7 @@ document.querySelectorAll('#nav button').forEach(b=>b.onclick=()=>page(b.dataset
 // timeframe chips
 Object.keys(TFB).forEach(t=>{const b=document.createElement('button');b.textContent=t;b.dataset.t=t;b.onclick=()=>{S.tf=t;VO=0;save();mark();tick()};$('tfs').append(b)});
 const mark=()=>document.querySelectorAll('#tfs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tf));mark();
-$('symIn').value=S.sym;$('symIn').onfocus=()=>synEnsure();$('symIn').onchange=()=>{const v=$('symIn').value.trim(),k=synKey(v);S.sym=k||v;if(k)$('symIn').value=k;VO=0;save();tick()};
+$('symIn').value=S.sym;$('symIn').onfocus=()=>synEnsure();$('symIn').onchange=()=>{const v=$('symIn').value.trim(),k=synKey(v);S.sym=k||v;if(k)$('symIn').value=k;mktFollow(S.sym);VO=0;save();tick()};
 // indices (NASDAQ 100, Dow Jones, DAX) come from your Apps Script (Yahoo Finance), not from Twelve Data
 const IDXS={NDX:{n:'Nasdaq 100 futures',tz:'America/New_York',fut:1},DJI:{n:'Dow Jones futures',tz:'America/New_York',fut:1},DAX:{n:'DAX',tz:'Europe/Berlin',o:[9,0],c:[17,30]}};
 const idxKey=sym=>{const u=String(sym||'').toUpperCase().replace(/[^A-Z0-9]/g,'');return IDXS[u]?u:null},isIdx=sym=>!!idxKey(sym);
@@ -702,17 +712,30 @@ const SYN0=[['R_10','Volatility 10 Index'],['R_25','Volatility 25 Index'],['R_50
 const synMeta=([c,n])=>({c,n,g:/^Volatility.*\(1s\)/i.test(n)?'Volatility (1s)':/^Volatility/i.test(n)?'Volatility':/^(Boom|Crash)/i.test(n)?'Boom & Crash':'Step, Jump & Range',s:n.replace(/ Index$/i,'').replace(/^Volatility/,'Vol')});
 let SYN=SYN0.map(synMeta),synCached=false;
 try{const c=JSON.parse(localStorage.getItem('sp_syn')||'null');if(c&&c.t&&Date.now()-c.t<864e5&&c.l&&c.l.length>5){SYN=c.l.map(synMeta);synCached=true}}catch(e){}
-const isAdm=()=>{try{return ROLE==='admin'}catch(e){return false}};   // synthetics are admin-only while they are being tested
+const SYN_FOR_ALL=false;   // false = synthetics are for admin accounts only (testing). Set to true to open them to every subscriber.
+const isAdm=()=>{try{return ROLE==='admin'}catch(e){return false}};
+const synAllowed=()=>SYN_FOR_ALL||isAdm();
 const synNorm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
-function synKey(v){if(!isAdm())return null;const u=synNorm(v);if(u.length<3)return null;
+function synKey(v){if(!synAllowed())return null;const u=synNorm(v);if(u.length<3)return null;
  for(const x of SYN){if(synNorm(x.c)===u||synNorm(x.n)===u||synNorm(x.s)===u)return x.c}
  const m=u.match(/^(?:V|VOL|VOLATILITY)(\d{2,3})(1S)?$/);if(m){const c=m[2]?'1HZ'+m[1]+'V':'R_'+m[1];if(SYN.some(x=>x.c===c))return c}
  return null}
 const isSyn=sym=>!!synKey(sym),isFree=sym=>isIdx(sym)||isSyn(sym);
 const synSub=(sym,inl,more)=>{const k=synKey(sym),x=k&&SYN.find(y=>y.c===k);return x?`<small class="idxn${inl?' in':''}">${esc(x.n)}${more?' · open 24/7':''}</small>`:''};
-const synGroups=()=>{if(!isAdm())return[];const o={};SYN.forEach(x=>(o[x.g]=o[x.g]||[]).push(x.c));return['Volatility','Volatility (1s)','Boom & Crash','Step, Jump & Range'].filter(g=>o[g]).map(g=>['Synthetic · '+g,o[g]])};
+const synGroups=()=>{if(!synAllowed())return[];const o={};SYN.forEach(x=>(o[x.g]=o[x.g]||[]).push(x.c));return['Volatility','Volatility (1s)','Boom & Crash','Step, Jump & Range'].filter(g=>o[g]).map(g=>['Synthetic · '+g,o[g]])};
 const chipLbl=x=>{const k=synKey(x),y=k&&SYN.find(z=>z.c===k);return y?y.s:x};
-function synDatalist(){const dl=$('syms');if(!dl)return;dl.querySelectorAll('[data-syn]').forEach(o=>o.remove());if(!isAdm())return;SYN.forEach(x=>{const o=document.createElement('option');o.value=x.c;o.label=x.n;o.dataset.syn=1;dl.appendChild(o)})}
+let STDOPT=null;
+// the symbol box lists ONE kind of market at a time: normal markets, or synthetics
+function synDatalist(){const dl=$('syms');if(!dl)return;if(!STDOPT)STDOPT=[...dl.querySelectorAll('option')].filter(o=>!o.dataset.syn).map(o=>o.value||o.textContent);
+ dl.innerHTML='';const syn=S.mkt==='syn'&&synAllowed();
+ (syn?SYN.map(x=>[x.c,x.n]):STDOPT.map(v=>[v,''])).forEach(([v,l])=>{const o=document.createElement('option');o.value=v;if(l)o.label=l;o.dataset.syn=syn?1:'';dl.appendChild(o)})}
+const wlKey=()=>S.mkt==='syn'&&synAllowed()?'wlSyn':'wl';
+function mktUI(){const ok=synAllowed(),m=S.mkt==='syn'&&ok?'syn':'std';document.querySelectorAll('.mk').forEach(e=>{e.classList.toggle('on',ok);e.querySelectorAll('button').forEach(b=>b.classList.toggle('sel',b.dataset.m===m))})}
+function mktSync(){synDatalist();mktUI();const w=$('scWl');if(w)w.value=S[wlKey()]?S[wlKey()].split(',').join(', '):'';if($('scPick')&&$('scPick').style.display!=='none')pickRender()}
+function setMkt(m){if(m==='syn'&&!synAllowed())m='std';if(m===(S.mkt==='syn'?'syn':'std'))return;
+ if(S.mkt==='syn')S.symSyn=S.sym;else S.symStd=S.sym;
+ S.mkt=m;S.sym=m==='syn'?(S.symSyn||'R_75'):(S.symStd||'EUR/USD');$('symIn').value=S.sym;S.tf=S.tf;mktSync();VO=0;save();tick()}
+document.querySelectorAll('.mk button').forEach(b=>{b.onclick=()=>setMkt(b.dataset.m)});
 const DV_URLS=['wss://api.derivws.com/trading/v1/options/ws/public','wss://ws.derivws.com/websockets/v3?app_id=1089'];
 const DVG={M1:60,M5:300,M15:900,M30:1800,H1:3600,H4:14400,D1:86400};
 let dvWs=null,dvOpen=null,dvUrl=0,dvId=0;const dvWait={},DVC={};
@@ -745,9 +768,14 @@ async function synRefresh(){try{const m=await dvReq({active_symbols:'brief'});
  const L=(m.active_symbols||[]).filter(x=>x.market==='synthetic_index'||x.submarket==='random_index').map(x=>[x.underlying_symbol||x.symbol,x.underlying_symbol_name||x.display_name]).filter(x=>x[0]&&x[1]);
  const num=n=>parseInt((String(n).match(/\d+/)||[0])[0],10);L.sort((a,b)=>num(a[1])-num(b[1])||String(a[1]).localeCompare(b[1]));
  if(L.length>5){SYN=L.map(synMeta);synCached=true;try{localStorage.setItem('sp_syn',JSON.stringify({t:Date.now(),l:L}))}catch(e){}synDatalist();if($('scPick')&&$('scPick').style.display!=='none')pickRender()}}catch(e){}}
-let synAsked=false;const synEnsure=()=>{if(isAdm()&&!synAsked&&!synCached){synAsked=true;synRefresh()}};
+let synAsked=false;const synEnsure=()=>{if(synAllowed()&&!synAsked&&!synCached){synAsked=true;synRefresh()}};
 synDatalist();
-function synUI(){synDatalist();const g=$('gdSyn');if(g)g.style.display=isAdm()?'':'none';if($('scPick')&&$('scPick').style.display!=='none')pickRender()}
+function mktFollow(sym){   // a symbol of the other kind switches the Markets / Synthetics switch for you
+ if(!synAllowed())return;const m=synKey(sym)?'syn':'std';if(m===(S.mkt==='syn'?'syn':'std'))return;
+ if(S.mkt==='syn')S.symSyn=S.sym;else S.symStd=S.sym;S.mkt=m;mktSync()}
+function synUI(){
+ if(!synAllowed()&&S.mkt==='syn'){S.mkt='std';S.sym=S.symStd||'EUR/USD';try{$('symIn').value=S.sym;save()}catch(e){}}   // not allowed: back to normal markets
+ const g=$('gdSyn');if(g)g.style.display=synAllowed()?'':'none';mktSync()}
 // data
 async function load(sym,tf,size){
  sym=(sym||S.sym).trim();tf=tf||S.tf;let u;const gated=false;
@@ -1505,19 +1533,19 @@ async function scan(auto){
   renderScan(out);if(i<list.length-1&&!stop)await sleep(S.src==='twelve'&&!isFree(list[i])&&!isFree(list[i+1])?8000:300)}
  finalize(out);scAuto(out,auto);const now=Date.now()/1000;out.filter(x=>!x.err&&x.v==='CONFIRMED'&&x.score>=60&&now-(notified[x.sym+x.strat]||0)>3600).forEach(x=>{notified[x.sym+x.strat]=now;const f=v=>v.toFixed(x.dec);logSig({src:'scan',strat:STRATS[x.strat]?STRATS[x.strat].n:'',sym:x.sym,tf:S.stf,type:x.p.side,price:f(x.p.e),pl:{e:f(x.p.e),sl:f(x.p.sl),t1:f(x.p.t1),t2:f(x.p.t2)}});notify(`${x.sym} ${x.p.side} CONFIRMED${sl(x)} · Entry ${f(x.p.e)} SL ${f(x.p.sl)} TP1 ${f(x.p.t1)}`)});
  scanning=false;$('scBtn').disabled=false;$('scSt').textContent=wkNote+'Scan finished at '+new Date().toLocaleTimeString()+'. The chart below shows the best setup. Tap any result to switch it.'}
-function openSym(sym){VO=0;S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
-$('scWl').value=S.wl?S.wl.split(',').join(', '):'';styleRender();showCred();strChips();
+function openSym(sym){VO=0;mktFollow(sym);S.sym=sym;S.tf=S.stf;save();$('symIn').value=sym;mark();page('ind')}
+$('scWl').value=S[wlKey()]?S[wlKey()].split(',').join(', '):'';styleRender();showCred();strChips();
 const PICK=[['Forex',['EUR/USD','GBP/USD','USD/JPY','AUD/USD','USD/CAD','NZD/USD','USD/CHF','EUR/JPY','GBP/JPY','EUR/GBP']],['Metals',['XAU/USD','XAG/USD']],['Crypto',['BTC/USD','ETH/USD','SOL/USD','XRP/USD']],['Indices',['NDX','DJI','DAX']]];
 // EURUSD / xauusd -> EUR/USD, XAU/USD
 const normSym=v=>{const k=synKey(v);if(k)return k;v=String(v||'').trim().toUpperCase().replace(/\s+/g,'');return /^[A-Z]{6}$/.test(v)?v.slice(0,3)+'/'+v.slice(3):v};
-function wlList(){const seen={};return String(S.wl||'').split(/[,;]+/).map(normSym).filter(x=>x&&!seen[x]&&(seen[x]=1))}
-function wlSet(l){S.wl=l.join(',');save();$('scWl').value=l.join(', ');pickRender()}
+function wlList(){const seen={};return String(S[wlKey()]||'').split(/[,;]+/).map(normSym).filter(x=>x&&!seen[x]&&(seen[x]=1))}
+function wlSet(l){S[wlKey()]=l.join(',');save();$('scWl').value=l.join(', ');pickRender()}
 function pickRender(){const on=new Set(wlList());
- $('scPick').innerHTML=PICK.concat(synGroups()).map(g=>`<div class="g">${g[0]}</div><div class="row">${g[1].map(x=>`<button type="button" class="chip ${on.has(x)?'on':''}" onclick="pickTog('${x}')">${chipLbl(x)}</button>`).join('')}</div>`).join('')+'<div class="row" style="margin-top:12px"><button type="button" class="chip" onclick="wlSet([])">Clear</button><button type="button" class="chip" onclick="pickClose()">Done</button></div>'}
+ $('scPick').innerHTML=(S.mkt==='syn'&&synAllowed()?synGroups():PICK).map(g=>`<div class="g">${g[0]}</div><div class="row">${g[1].map(x=>`<button type="button" class="chip ${on.has(x)?'on':''}" onclick="pickTog('${x}')">${chipLbl(x)}</button>`).join('')}</div>`).join('')+'<div class="row" style="margin-top:12px"><button type="button" class="chip" onclick="wlSet([])">Clear</button><button type="button" class="chip" onclick="pickClose()">Done</button></div>'}
 function pickTog(x){const l=wlList(),i=l.indexOf(x);if(i>=0)l.splice(i,1);else l.push(x);wlSet(l)}
 function pickClose(){$('scPick').style.display='none';wlSet(wlList())}
 $('scWl').onfocus=()=>{synEnsure();pickRender();$('scPick').style.display='block'};
-$('scWl').oninput=()=>{S.wl=$('scWl').value;pickRender()};
+$('scWl').oninput=()=>{S[wlKey()]=$('scWl').value;pickRender()};
 $('scWl').onchange=()=>wlSet(wlList());
 document.addEventListener('click',e=>{if(!e.target.closest('#scWl,#scPick')&&$('scPick').style.display!=='none')pickClose()});
 function styleRender(){const st=STYLES[S.style];
@@ -2212,6 +2240,19 @@ function kzTick(){const pg=$('p-ta'),el=$('kz');if(!pg||!el||!pg.classList.conta
   html+=`<div class="card kz"><div class="kzh"><span style="font:800 15px Manrope,sans-serif;color:var(--text)">${def.n} · ${def.syms.join(' & ')}</span><span>${day} ${hm} SAST</span></div><div class="kzc" style="color:${dt<=3e5&&dt>0?'var(--wait)':'var(--text)'}">${cd}</div>${rows}</div>`});
  el.innerHTML=html||'<div class="note" style="margin:4px 4px 12px">No session opens right now. The open signals return on the next trading day.</div>'}
 setInterval(kzTick,1000);
-if('serviceWorker'in navigator)navigator.serviceWorker.register('sw.js').catch(()=>{});
+const APP_VER='2026.11.24.2';   // keep the same as VERSION in sw.js
+document.querySelectorAll('.ver').forEach(e=>e.textContent=' · v'+APP_VER);
+if('serviceWorker'in navigator){
+ const had=!!navigator.serviceWorker.controller;
+ navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{
+  const chk=()=>{try{reg.update()}catch(e){}};
+  chk();setInterval(chk,30*60*1000);                                                  // look for a new version every 30 minutes
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk()});   // and whenever the app is opened again
+ }).catch(()=>{});
+ navigator.serviceWorker.addEventListener('controllerchange',()=>{
+  if(!had||document.getElementById('upd'))return;                                      // first install: nothing to announce
+  const b=document.createElement('div');b.id='upd';b.innerHTML='<span>A new version of SignalsPro is ready</span><button type="button">Update</button>';
+  b.querySelector('button').onclick=()=>location.reload();document.body.appendChild(b)});
+}
 addEventListener('resize',draw);
 </script></body></html>
