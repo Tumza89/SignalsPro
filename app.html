@@ -372,6 +372,45 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 .mk button{border:0;background:transparent;color:var(--t2);font:700 12.5px 'Manrope',sans-serif;padding:9px 16px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
 .mk button.sel{background:var(--accent);color:var(--btn)}
 html[data-lay=dock] .mk,html[data-lay=dock] .mk button{border-radius:8px}html[data-lay=bold] .mk,html[data-lay=bold] .mk button{border-radius:11px}
+
+/* ===== start button: a physical, remote-control style key ===== */
+.go{position:relative;isolation:isolate;width:96px;height:96px;margin:18px 0 22px;border-radius:50%;border:0;cursor:pointer;display:flex;align-items:center;justify-content:center;-webkit-tap-highlight-color:transparent;
+ background:radial-gradient(120% 90% at 32% 16%,rgba(255,255,255,.62) 0 7%,rgba(255,255,255,0) 42%),linear-gradient(165deg,var(--accent),var(--accent2));
+ box-shadow:inset 0 3px 3px rgba(255,255,255,.55),inset 0 -10px 14px rgba(0,0,0,.38),inset 0 0 0 2px rgba(255,255,255,.14),0 8px 0 0 #00000099,0 18px 26px rgba(0,0,0,.5);
+ box-shadow:inset 0 3px 3px rgba(255,255,255,.55),inset 0 -10px 14px rgba(0,0,0,.38),inset 0 0 0 2px rgba(255,255,255,.14),0 8px 0 0 color-mix(in srgb,var(--accent2) 45%,#000),0 18px 26px rgba(0,0,0,.5);
+ transition:transform .08s ease,box-shadow .08s ease,background .3s;animation:none}
+.go::before{content:'';position:absolute;inset:-14px;border-radius:50%;z-index:-1;background:radial-gradient(circle at 50% 28%,rgba(var(--w),.13),rgba(var(--w),.03));box-shadow:inset 0 3px 9px rgba(0,0,0,.6),0 1px 0 rgba(var(--w),.2)}
+.go:not(.stop)::before{animation:gopl 2.8s ease-in-out infinite}
+@keyframes gopl{0%,100%{box-shadow:inset 0 3px 9px rgba(0,0,0,.6),0 1px 0 rgba(var(--w),.2),0 0 0 0 var(--glow)}50%{box-shadow:inset 0 3px 9px rgba(0,0,0,.6),0 1px 0 rgba(var(--w),.2),0 0 0 14px transparent}}
+.go::after{content:'';position:absolute;top:-38px;left:50%;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:#59606e;box-shadow:inset 0 1px 1px rgba(255,255,255,.45),0 0 0 2px rgba(0,0,0,.35);transition:background .3s,box-shadow .3s}
+.go:active{transform:translateY(7px);box-shadow:inset 0 2px 2px rgba(255,255,255,.4),inset 0 -6px 10px rgba(0,0,0,.42),inset 0 0 0 2px rgba(255,255,255,.1),0 1px 0 0 #00000099,0 6px 10px rgba(0,0,0,.5);box-shadow:inset 0 2px 2px rgba(255,255,255,.4),inset 0 -6px 10px rgba(0,0,0,.42),inset 0 0 0 2px rgba(255,255,255,.1),0 1px 0 0 color-mix(in srgb,var(--accent2) 45%,#000),0 6px 10px rgba(0,0,0,.5)}
+.go i{border-width:15px 0 15px 25px;border-left-color:var(--btn);margin-left:7px;filter:drop-shadow(0 1.5px 0 rgba(255,255,255,.5)) drop-shadow(0 -1px 0 rgba(0,0,0,.3))}
+.go.stop{transform:translateY(4px);background:radial-gradient(120% 90% at 32% 16%,rgba(255,255,255,.5) 0 7%,rgba(255,255,255,0) 42%),linear-gradient(165deg,#ff6a5c,#d3281d);
+ box-shadow:inset 0 3px 3px rgba(255,255,255,.45),inset 0 -10px 14px rgba(0,0,0,.4),inset 0 0 0 2px rgba(255,255,255,.12),0 4px 0 0 #7a1510,0 12px 20px rgba(0,0,0,.5)}
+.go.stop:active{transform:translateY(8px);box-shadow:inset 0 2px 2px rgba(255,255,255,.35),inset 0 -6px 10px rgba(0,0,0,.45),0 0 0 0 #7a1510,0 4px 8px rgba(0,0,0,.5)}
+.go.stop i{width:24px;height:24px;border:0;border-radius:5px;margin:0;background:#fff;filter:drop-shadow(0 1.5px 0 rgba(0,0,0,.28))}
+.go.stop::after{background:#2cf08a;box-shadow:0 0 12px 3px #2cf08a,inset 0 1px 1px rgba(255,255,255,.6),0 0 0 2px rgba(0,0,0,.3)}
+/* ===== welcome: the logo assembles itself from seven pieces over about 6.4 seconds ===== */
+#asm{position:relative;width:190px;height:190px;margin-bottom:8px}
+#asm svg{width:100%;height:100%;overflow:visible}
+#asm .p{transform-box:fill-box;transform-origin:center;opacity:0}
+#asm .rot{transform-box:fill-box;transform-origin:center}
+#welcome.on #asm .p{animation:asmIn var(--d) cubic-bezier(.42,.04,.22,1) var(--dl) both}
+@keyframes asmIn{0%{opacity:0;transform:translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(var(--sc))}22%{opacity:1}100%{opacity:1;transform:none}}
+#welcome.on #asm .rot{animation:spin 20s linear 6.4s infinite}
+#asm::before{content:'';position:absolute;inset:-18%;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 68%);opacity:0}
+#welcome.on #asm::before{animation:asmGlow 1.8s ease-out 5.2s both}
+@keyframes asmGlow{0%{opacity:0;transform:scale(.6)}60%{opacity:1}100%{opacity:.85;transform:scale(1)}}
+#asm .burst{position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent);opacity:0}
+#welcome.on #asm .burst{animation:asmBurst 1.4s ease-out 6.3s both}
+@keyframes asmBurst{0%{opacity:.9;transform:scale(.7)}100%{opacity:0;transform:scale(2.3)}}
+#welcome.on #asm svg{animation:asmFloat 5s ease-in-out 6.4s infinite}
+@keyframes asmFloat{50%{transform:translateY(-6px)}}
+#welcome>:not(#asm){opacity:0}
+#welcome.on>:not(#asm){animation:asmTx .9s cubic-bezier(.22,1,.36,1) both}
+#welcome.on>:nth-child(2){animation-delay:6.3s}#welcome.on>:nth-child(3){animation-delay:6.5s}#welcome.on>:nth-child(4){animation-delay:6.7s}#welcome.on>:nth-child(5){animation-delay:7s}
+@keyframes asmTx{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){#welcome.on #asm .p,#welcome.on>:not(#asm),#welcome.on #asm::before{animation:none;opacity:1;transform:none}}
 /* ===== themes: layout + animation per theme (set by data-lay and data-an on <html>) ===== */
 nav,header,.card,.fcard,.btn,.tile,.chip,.tfs button{transition-property:border-radius,padding,margin,box-shadow,background,border-color,transform,color;transition-duration:.4s}
 .sw button em{font-style:normal;font-size:9.5px;font-weight:600;color:var(--t2);opacity:.85;margin-top:-4px;letter-spacing:.2px}
@@ -467,7 +506,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <div class="note sup" style="text-align:center">Need help? <a href="tel:+27696750129">Call +27 69 675 0129</a> · <a href="https://wa.me/27696750129" target="_blank" rel="noopener">WhatsApp</a></div></div>
 <div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved. <span class="ver"></span></div></div>
 
-<div id="welcome"><div class="l3d big" data-l3d style="--s:150px"></div>
+<div id="welcome"><div id="asm" role="img" aria-label="SignalsPro logo"><svg viewBox="0 0 120 120"><g class="p" style="--tx:-540px;--ty:-300px;--rot:-300deg;--sc:2.8;--d:5.7s;--dl:.2s"><g class="rot"><circle cx="60" cy="60" r="54" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/></g></g><g class="p" style="--tx:0px;--ty:540px;--rot:220deg;--sc:.12;--d:5.3s;--dl:.8s"><circle cx="60" cy="60" r="42" fill="none" stroke="var(--accent)" stroke-width="2" opacity=".4"/></g><g class="p" style="--tx:80px;--ty:-540px;--rot:40deg;--sc:1.8;--d:4.7s;--dl:1.3s"><path d="M42 40v40M60 30v52M78 44v34" stroke="var(--text)" stroke-width="2" stroke-linecap="round" opacity=".55"/></g><g class="p" style="--tx:-580px;--ty:140px;--rot:-200deg;--sc:3;--d:4.5s;--dl:1.7s"><rect x="37" y="52" width="10" height="20" rx="2" fill="var(--sell)"/></g><g class="p" style="--tx:90px;--ty:580px;--rot:180deg;--sc:2.2;--d:4.3s;--dl:2.1s"><rect x="55" y="40" width="10" height="28" rx="2" fill="var(--buy)"/></g><g class="p" style="--tx:580px;--ty:-180px;--rot:260deg;--sc:.4;--d:4s;--dl:2.4s"><rect x="73" y="50" width="10" height="18" rx="2" fill="var(--buy)"/></g><g class="p" style="--tx:-500px;--ty:440px;--rot:-90deg;--sc:1.6;--d:3.8s;--dl:2.6s"><path d="M30 86L52 70l14 6 24-28" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g></svg><i class="burst"></i></div>
 <div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">Your desk is ready.</div>
 <button class="btn" id="wgo" style="max-width:300px">Enter terminal</button></div>
 
@@ -1007,7 +1046,7 @@ async function tick(){
  }catch(e){$('cvw').classList.remove('ld');$('st').textContent='Error: '+e.message}}
 function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
  $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
-$('go').onclick=()=>{setRun(!run);if(run)page('ind')};
+$('go').onclick=()=>{try{navigator.vibrate&&navigator.vibrate(14)}catch(e){}setRun(!run);if(run)page('ind')};
 // scanner
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));let scanning=false,autoT=null,notified={},scanForce=false;const HT={M5:'M15',M15:'H1',M30:'H4',H1:'H4',H4:'D1'};
 function ema(a,n){const k=2/(n+1);let e=a[a.length-1];for(let i=a.length-2;i>=0;i--)e=a[i]*k+e*(1-k);return e}
@@ -2245,7 +2284,7 @@ function kzTick(){const pg=$('p-ta'),el=$('kz');if(!pg||!el||!pg.classList.conta
   html+=`<div class="card kz"><div class="kzh"><span style="font:800 15px Manrope,sans-serif;color:var(--text)">${def.n} · ${def.syms.join(' & ')}</span><span>${day} ${hm} SAST</span></div><div class="kzc" style="color:${dt<=3e5&&dt>0?'var(--wait)':'var(--text)'}">${cd}</div>${rows}</div>`});
  el.innerHTML=html||'<div class="note" style="margin:4px 4px 12px">No session opens right now. The open signals return on the next trading day.</div>'}
 setInterval(kzTick,1000);
-const APP_VER='2026.11.24.7';   // keep the same as VERSION in sw.js
+const APP_VER='2026.11.24.8';   // keep the same as VERSION in sw.js
 document.querySelectorAll('.ver').forEach(e=>e.textContent=' · v'+APP_VER);
 if('serviceWorker'in navigator){
  const had=!!navigator.serviceWorker.controller;
