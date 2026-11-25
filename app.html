@@ -368,6 +368,7 @@ html::after{content:'';position:fixed;inset:0;z-index:2;pointer-events:none;opac
 .ver{opacity:.7;font-variant-numeric:tabular-nums}
 .mk{display:none;gap:4px;padding:4px;border-radius:999px;background:rgba(var(--w),.06);border:1px solid rgba(var(--w),.1);margin:0 0 12px;width:max-content;max-width:100%}
 .mk.on{display:inline-flex}
+.mkn{font-size:12px;line-height:1.5;color:var(--wait);margin:-4px 2px 12px}
 .mk button{border:0;background:transparent;color:var(--t2);font:700 12.5px 'Manrope',sans-serif;padding:9px 16px;border-radius:999px;cursor:pointer;transition:background .25s,color .25s}
 .mk button.sel{background:var(--accent);color:var(--btn)}
 html[data-lay=dock] .mk,html[data-lay=dock] .mk button{border-radius:8px}html[data-lay=bold] .mk,html[data-lay=bold] .mk button{border-radius:11px}
@@ -482,6 +483,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 
 <section class="page" id="p-ind">
 <div class="mk"><button type="button" data-m="std">Markets</button><button type="button" data-m="syn">Synthetics</button></div>
+<div class="mkn" style="display:none">Synthetic prices are generated, so signals here are experimental. Always use your stop loss.</div>
 <div class="ibar"><input class="inp" id="symIn" list="syms" placeholder="Symbol e.g. EUR/USD" autocapitalize="characters">
 <datalist id="syms"><option>EUR/USD</option><option>GBP/USD</option><option>USD/JPY</option><option>AUD/USD</option><option>XAU/USD</option><option>XAG/USD</option><option>BTC/USD</option><option>ETH/USD</option><option>SOL/USD</option><option>XRP/USD</option><option>NDX</option><option>DJI</option><option>DAX</option></datalist>
 <div class="ir"><div class="px" id="px">—</div><div class="k" id="sym">Symbol</div></div>
@@ -550,8 +552,8 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <details class="gd"><summary><span class="gn">10</span>Indices: prices and the broker</summary><div class="gb">
 <p>NDX and DJI prices come from <b>futures</b> contracts, and DAX from the cash index. Your broker may quote a different price because of spread, rollover or feed timing, so levels can be a few points off.</p>
 <p>Always check your broker's price before you trade, and set your entry, stop loss and targets from it.</p></div></details>
-<details class="gd" id="gdSyn" style="display:none"><summary><span class="gn">11</span>Synthetic indices (admin test)</summary><div class="gb">
-<p>Use the <b>Markets | Synthetics</b> switch above the symbol box on the <b>Indicator</b> page, and at the top of the <b>Scanner</b>, to move between normal markets and <b>Synthetic indices</b> from Deriv: Volatility, Boom and Crash, Step and Jump. Each side keeps its own symbol list and its own scanner list. They trade 24 hours a day, 7 days a week, including weekends.</p>
+<details class="gd" id="gdSyn" style="display:none"><summary><span class="gn">11</span>Synthetic indices</summary><div class="gb">
+<p>Use the <b>Markets | Synthetics</b> switch above the symbol box on the <b>Indicator</b> page, and at the top of the <b>Scanner</b>, to move between normal markets and <b>Synthetic indices</b> from Deriv: Volatility, Boom and Crash, Step and Jump. When you switch, the symbol box starts empty so you just type the symbol you want, and each side keeps its own scanner list. They trade 24 hours a day, 7 days a week, including weekends.</p>
 <p>Their prices are generated, so news and real buyers and sellers do not move them. The zones, trade plans and the scanner still work on them, but treat the signals as <b>experimental</b>. Strategies that depend on real sessions or volume (PO3, ORB, VWAP and Order flow) are switched off for them.</p>
 <p>They support the M1 to D1 timeframes and need no data key. Always use your stop loss, because these markets can move very fast.</p></div></details>
 
@@ -581,6 +583,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <div id="aMain" style="display:none"><div id="aSum"></div><div class="tfs" id="aFlt" style="flex-wrap:wrap"></div><input class="inp" id="aQ" placeholder="Search name or email" autocapitalize="none"><label>Activate for</label><select class="inp" id="aDays"><option value="30">30 days</option><option value="90">90 days</option><option value="365">1 year</option><option value="0">No expiry</option></select><div id="aMsg" class="note" style="display:none;margin:0 0 10px"></div><div id="aList"></div><button class="btn ghost" id="aRef">Refresh</button></div></section>
 <section class="page" id="p-scan"><div class="card"><div style="font-size:18px;font-weight:800;margin-bottom:12px">Market Scanner</div>
 <div class="mk"><button type="button" data-m="std">Markets</button><button type="button" data-m="syn">Synthetics</button></div>
+<div class="mkn" style="display:none">Synthetic prices are generated, so signals here are experimental. Always use your stop loss.</div>
 <label>Symbols to scan</label><input class="inp" id="scWl" placeholder="Tap to pick, or type e.g. EUR/USD, BTC/USD" autocapitalize="characters" autocomplete="off" spellcheck="false">
 <div class="pick" id="scPick" style="display:none"></div>
 <label>Trading style</label><div class="tfs" id="scStyle"></div><div class="note" id="scStyleD" style="margin:0 0 10px"></div>
@@ -712,7 +715,7 @@ const SYN0=[['R_10','Volatility 10 Index'],['R_25','Volatility 25 Index'],['R_50
 const synMeta=([c,n])=>({c,n,g:/^Volatility.*\(1s\)/i.test(n)?'Volatility (1s)':/^Volatility/i.test(n)?'Volatility':/^(Boom|Crash)/i.test(n)?'Boom & Crash':'Step, Jump & Range',s:n.replace(/ Index$/i,'').replace(/^Volatility/,'Vol')});
 let SYN=SYN0.map(synMeta),synCached=false;
 try{const c=JSON.parse(localStorage.getItem('sp_syn')||'null');if(c&&c.t&&Date.now()-c.t<864e5&&c.l&&c.l.length>5){SYN=c.l.map(synMeta);synCached=true}}catch(e){}
-const SYN_FOR_ALL=false;   // false = synthetics are for admin accounts only (testing). Set to true to open them to every subscriber.
+const SYN_FOR_ALL=true;   // true = every subscriber can use synthetics. Set to false to limit them to admin accounts again.
 const isAdm=()=>{try{return ROLE==='admin'}catch(e){return false}};
 const synAllowed=()=>SYN_FOR_ALL||isAdm();
 const synNorm=v=>String(v||'').toUpperCase().replace(/[^A-Z0-9]/g,'');
@@ -730,11 +733,15 @@ function synDatalist(){const dl=$('syms');if(!dl)return;if(!STDOPT)STDOPT=[...dl
  dl.innerHTML='';const syn=S.mkt==='syn'&&synAllowed();
  (syn?SYN.map(x=>[x.c,x.n]):STDOPT.map(v=>[v,''])).forEach(([v,l])=>{const o=document.createElement('option');o.value=v;if(l)o.label=l;o.dataset.syn=syn?1:'';dl.appendChild(o)})}
 const wlKey=()=>S.mkt==='syn'&&synAllowed()?'wlSyn':'wl';
-function mktUI(){const ok=synAllowed(),m=S.mkt==='syn'&&ok?'syn':'std';document.querySelectorAll('.mk').forEach(e=>{e.classList.toggle('on',ok);e.querySelectorAll('button').forEach(b=>b.classList.toggle('sel',b.dataset.m===m))})}
-function mktSync(){synDatalist();mktUI();const w=$('scWl');if(w)w.value=S[wlKey()]?S[wlKey()].split(',').join(', '):'';if($('scPick')&&$('scPick').style.display!=='none')pickRender()}
+function mktUI(){const ok=synAllowed(),m=S.mkt==='syn'&&ok?'syn':'std';document.querySelectorAll('.mkn').forEach(e=>{e.style.display=m==='syn'?'':'none'});document.querySelectorAll('.mk').forEach(e=>{e.classList.toggle('on',ok);e.querySelectorAll('button').forEach(b=>b.classList.toggle('sel',b.dataset.m===m))})}
+function mktSync(){synDatalist();mktUI();const syn=S.mkt==='syn'&&synAllowed(),w=$('scWl'),si=$('symIn');
+ if(w){w.value=S[wlKey()]?S[wlKey()].split(',').join(', '):'';w.placeholder=syn?'Tap to pick, or type e.g. V75, Boom 1000':'Tap to pick, or type e.g. EUR/USD, BTC/USD'}
+ if(si)si.placeholder=syn?'Type a synthetic, e.g. V75 or Boom 1000':'Symbol e.g. EUR/USD';
+ if($('scPick')&&$('scPick').style.display!=='none')pickRender()}
 function setMkt(m){if(m==='syn'&&!synAllowed())m='std';if(m===(S.mkt==='syn'?'syn':'std'))return;
- if(S.mkt==='syn')S.symSyn=S.sym;else S.symStd=S.sym;
- S.mkt=m;S.sym=m==='syn'?(S.symSyn||'R_75'):(S.symStd||'EUR/USD');$('symIn').value=S.sym;S.tf=S.tf;mktSync();VO=0;save();tick()}
+ S.mkt=m;                                            // each side keeps its own scanner list
+ const si=$('symIn');if(si)si.value='';              // and so is the symbol box, so you just type what you want
+ mktSync();save()}
 document.querySelectorAll('.mk button').forEach(b=>{b.onclick=()=>setMkt(b.dataset.m)});
 const DV_URLS=['wss://api.derivws.com/trading/v1/options/ws/public','wss://ws.derivws.com/websockets/v3?app_id=1089'];
 const DVG={M1:60,M5:300,M15:900,M30:1800,H1:3600,H4:14400,D1:86400};
@@ -2240,7 +2247,7 @@ function kzTick(){const pg=$('p-ta'),el=$('kz');if(!pg||!el||!pg.classList.conta
   html+=`<div class="card kz"><div class="kzh"><span style="font:800 15px Manrope,sans-serif;color:var(--text)">${def.n} · ${def.syms.join(' & ')}</span><span>${day} ${hm} SAST</span></div><div class="kzc" style="color:${dt<=3e5&&dt>0?'var(--wait)':'var(--text)'}">${cd}</div>${rows}</div>`});
  el.innerHTML=html||'<div class="note" style="margin:4px 4px 12px">No session opens right now. The open signals return on the next trading day.</div>'}
 setInterval(kzTick,1000);
-const APP_VER='2026.11.24.2';   // keep the same as VERSION in sw.js
+const APP_VER='2026.11.24.5';   // keep the same as VERSION in sw.js
 document.querySelectorAll('.ver').forEach(e=>e.textContent=' · v'+APP_VER);
 if('serviceWorker'in navigator){
  const had=!!navigator.serviceWorker.controller;
