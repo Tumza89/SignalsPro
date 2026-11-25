@@ -390,25 +390,25 @@ html[data-lay=dock] .mk,html[data-lay=dock] .mk button{border-radius:8px}html[da
 .go.stop:active{transform:translateY(8px);box-shadow:inset 0 2px 2px rgba(255,255,255,.35),inset 0 -6px 10px rgba(0,0,0,.45),0 0 0 0 #7a1510,0 4px 8px rgba(0,0,0,.5)}
 .go.stop i{width:24px;height:24px;border:0;border-radius:5px;margin:0;background:#fff;filter:drop-shadow(0 1.5px 0 rgba(0,0,0,.28))}
 .go.stop::after{background:#2cf08a;box-shadow:0 0 12px 3px #2cf08a,inset 0 1px 1px rgba(255,255,255,.6),0 0 0 2px rgba(0,0,0,.3)}
-/* ===== welcome: the logo assembles itself from seven pieces over about 6.4 seconds ===== */
+/* ===== welcome: the logo assembles itself from seven pieces over 4 seconds ===== */
 #asm{position:relative;width:190px;height:190px;margin-bottom:8px}
 #asm svg{width:100%;height:100%;overflow:visible}
 #asm .p{transform-box:fill-box;transform-origin:center;opacity:0}
 #asm .rot{transform-box:fill-box;transform-origin:center}
 #welcome.on #asm .p{animation:asmIn var(--d) cubic-bezier(.42,.04,.22,1) var(--dl) both}
 @keyframes asmIn{0%{opacity:0;transform:translate(var(--tx),var(--ty)) rotate(var(--rot)) scale(var(--sc))}22%{opacity:1}100%{opacity:1;transform:none}}
-#welcome.on #asm .rot{animation:spin 20s linear 6.4s infinite}
+#welcome.on #asm .rot{animation:spin 20s linear 4s infinite}
 #asm::before{content:'';position:absolute;inset:-18%;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 68%);opacity:0}
-#welcome.on #asm::before{animation:asmGlow 1.8s ease-out 5.2s both}
+#welcome.on #asm::before{animation:asmGlow 1.2s ease-out 3.2s both}
 @keyframes asmGlow{0%{opacity:0;transform:scale(.6)}60%{opacity:1}100%{opacity:.85;transform:scale(1)}}
 #asm .burst{position:absolute;inset:0;border-radius:50%;border:2px solid var(--accent);opacity:0}
-#welcome.on #asm .burst{animation:asmBurst 1.4s ease-out 6.3s both}
+#welcome.on #asm .burst{animation:asmBurst 1.1s ease-out 3.9s both}
 @keyframes asmBurst{0%{opacity:.9;transform:scale(.7)}100%{opacity:0;transform:scale(2.3)}}
-#welcome.on #asm svg{animation:asmFloat 5s ease-in-out 6.4s infinite}
+#welcome.on #asm svg{animation:asmFloat 5s ease-in-out 4s infinite}
 @keyframes asmFloat{50%{transform:translateY(-6px)}}
 #welcome>:not(#asm){opacity:0}
 #welcome.on>:not(#asm){animation:asmTx .9s cubic-bezier(.22,1,.36,1) both}
-#welcome.on>:nth-child(2){animation-delay:6.3s}#welcome.on>:nth-child(3){animation-delay:6.5s}#welcome.on>:nth-child(4){animation-delay:6.7s}#welcome.on>:nth-child(5){animation-delay:7s}
+#welcome.on>:nth-child(2){animation-delay:3.9s}#welcome.on>:nth-child(3){animation-delay:4.05s}#welcome.on>:nth-child(4){animation-delay:4.2s}#welcome.on>:nth-child(5){animation-delay:4.4s}
 @keyframes asmTx{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
 @media (prefers-reduced-motion:reduce){#welcome.on #asm .p,#welcome.on>:not(#asm),#welcome.on #asm::before{animation:none;opacity:1;transform:none}}
 /* ===== themes: layout + animation per theme (set by data-lay and data-an on <html>) ===== */
@@ -506,7 +506,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <div class="note sup" style="text-align:center">Need help? <a href="tel:+27696750129">Call +27 69 675 0129</a> · <a href="https://wa.me/27696750129" target="_blank" rel="noopener">WhatsApp</a></div></div>
 <div class="copy" style="margin-top:18px">© 2026 SignalsPro. All rights reserved. <span class="ver"></span></div></div>
 
-<div id="welcome"><div id="asm" role="img" aria-label="SignalsPro logo"><svg viewBox="0 0 120 120"><g class="p" style="--tx:-540px;--ty:-300px;--rot:-300deg;--sc:2.8;--d:5.7s;--dl:.2s"><g class="rot"><circle cx="60" cy="60" r="54" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/></g></g><g class="p" style="--tx:0px;--ty:540px;--rot:220deg;--sc:.12;--d:5.3s;--dl:.8s"><circle cx="60" cy="60" r="42" fill="none" stroke="var(--accent)" stroke-width="2" opacity=".4"/></g><g class="p" style="--tx:80px;--ty:-540px;--rot:40deg;--sc:1.8;--d:4.7s;--dl:1.3s"><path d="M42 40v40M60 30v52M78 44v34" stroke="var(--text)" stroke-width="2" stroke-linecap="round" opacity=".55"/></g><g class="p" style="--tx:-580px;--ty:140px;--rot:-200deg;--sc:3;--d:4.5s;--dl:1.7s"><rect x="37" y="52" width="10" height="20" rx="2" fill="var(--sell)"/></g><g class="p" style="--tx:90px;--ty:580px;--rot:180deg;--sc:2.2;--d:4.3s;--dl:2.1s"><rect x="55" y="40" width="10" height="28" rx="2" fill="var(--buy)"/></g><g class="p" style="--tx:580px;--ty:-180px;--rot:260deg;--sc:.4;--d:4s;--dl:2.4s"><rect x="73" y="50" width="10" height="18" rx="2" fill="var(--buy)"/></g><g class="p" style="--tx:-500px;--ty:440px;--rot:-90deg;--sc:1.6;--d:3.8s;--dl:2.6s"><path d="M30 86L52 70l14 6 24-28" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g></svg><i class="burst"></i></div>
+<div id="welcome"><div id="asm" role="img" aria-label="SignalsPro logo"><svg viewBox="0 0 120 120"><g class="p" style="--tx:-540px;--ty:-300px;--rot:-300deg;--sc:2.8;--d:3.56s;--dl:0.12s"><g class="rot"><circle cx="60" cy="60" r="54" fill="none" stroke="var(--accent)" stroke-width="1.5" stroke-dasharray="3 7" opacity=".7"/></g></g><g class="p" style="--tx:0px;--ty:540px;--rot:220deg;--sc:.12;--d:3.31s;--dl:0.50s"><circle cx="60" cy="60" r="42" fill="none" stroke="var(--accent)" stroke-width="2" opacity=".4"/></g><g class="p" style="--tx:80px;--ty:-540px;--rot:40deg;--sc:1.8;--d:2.94s;--dl:0.81s"><path d="M42 40v40M60 30v52M78 44v34" stroke="var(--text)" stroke-width="2" stroke-linecap="round" opacity=".55"/></g><g class="p" style="--tx:-580px;--ty:140px;--rot:-200deg;--sc:3;--d:2.81s;--dl:1.06s"><rect x="37" y="52" width="10" height="20" rx="2" fill="var(--sell)"/></g><g class="p" style="--tx:90px;--ty:580px;--rot:180deg;--sc:2.2;--d:2.69s;--dl:1.31s"><rect x="55" y="40" width="10" height="28" rx="2" fill="var(--buy)"/></g><g class="p" style="--tx:580px;--ty:-180px;--rot:260deg;--sc:.4;--d:2.50s;--dl:1.50s"><rect x="73" y="50" width="10" height="18" rx="2" fill="var(--buy)"/></g><g class="p" style="--tx:-500px;--ty:440px;--rot:-90deg;--sc:1.6;--d:2.38s;--dl:1.62s"><path d="M30 86L52 70l14 6 24-28" fill="none" stroke="var(--accent)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></g></svg><i class="burst"></i></div>
 <div class="wm">Signals<span>Pro</span></div><div style="font-size:22px;font-weight:700;margin:20px 0 6px">Welcome</div><div class="sub" style="font-size:16px;margin:0 0 30px">Your desk is ready.</div>
 <button class="btn" id="wgo" style="max-width:300px">Enter terminal</button></div>
 
@@ -613,7 +613,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <section class="page" id="p-hist">
 <div class="fh"><button class="fb" id="jBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM9 9h6M9 13h6M9 17h3"/></svg></div><div><div class="ft">Journal</div><div class="fk" style="margin-top:2px">Mark your results</div></div></div>
 <div id="jStats"></div><div class="tfs" id="jFlt" style="flex-wrap:wrap"></div><div id="jList"></div>
-<button class="btn ghost" id="jGrade" onclick="jGradeNow()">Grade news signals now (1 credit)</button><button class="btn ghost" id="jCopy" onclick="jCopy()">Copy journal (CSV)</button><button class="btn red" id="jClr" onclick="jClear()">Clear journal</button>
+<button class="btn ghost" id="jCopy" onclick="jCopy()">Copy journal (CSV)</button><button class="btn red" id="jClr" onclick="jClear()">Clear journal</button>
 <div class="note" style="text-align:center;padding:0 6px 10px">The journal is saved on this device only. Clearing the app's data or reinstalling deletes it, so copy it out now and then.</div></section>
 <section class="page" id="p-admin">
 <div class="fh"><button class="fb" id="aBack" aria-label="Back"><svg viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg></button><div class="fi"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6 6.5-6s6.5 2.4 6.5 6M17 5.5a3 3 0 010 5.8M18.5 14.4c2 .7 3.5 2.5 3.5 5.1"/></svg></div><div><div class="ft">Admin Portal</div><div class="fk" style="margin-top:2px">Subscribers</div></div></div>
@@ -1804,18 +1804,18 @@ $('fundBtn').onclick=()=>{thOpen(false);page('fund')};$('fBack').onclick=()=>pag
 const srcN={zone:'Zone',scan:'Scanner',news:'News'};let JF='all',jClr=0;
 function saveSigs(){try{localStorage.setItem('sp_sig',JSON.stringify(sigs.slice(0,300)))}catch(e){}}
 function logSig(o){sigs.unshift(Object.assign({id:Date.now()+'-'+Math.random().toString(36).slice(2,6),ts:Date.now(),t:new Date().toLocaleString(),out:''},o));sigs=sigs.slice(0,300);saveSigs();renderJournal()}
-function setOut(id,v){const x=sigs.find(z=>z.id===id);if(!x)return;x.out=x.out===v?'':v;if(x.auto)x.manual=1;saveSigs();renderJournal()}
+function setOut(id,v){const x=sigs.find(z=>z.id===id);if(!x||x.src==='news')return;x.out=x.out===v?'':v;if(x.auto)x.manual=1;saveSigs();renderJournal()}
 function renderJournal(){
  if(!$('jList'))return;
- const W=sigs.filter(x=>x.out==='win').length,Lz=sigs.filter(x=>x.out==='loss').length,K=sigs.filter(x=>x.out==='skip').length,U=sigs.filter(x=>!x.out).length,dn=W+Lz,wr=dn?Math.round(W/dn*100):null;
- $('jStats').innerHTML=`<div class="fcard"><div class="fk">Win rate</div><div style="font-size:34px;font-weight:900;margin-top:4px;color:${wr==null?'var(--t2)':wr>=50?'var(--buy)':'var(--sell)'}">${wr==null?'—':wr+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${W}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${Lz}</b></div><div><span class="fk">Skipped</span><b>${K}</b></div></div><div class="note" style="margin:0">${U} not marked yet · ${sigs.length} logged. The win rate counts only signals you marked Win or Loss.</div></div>`;
+ const W=sigs.filter(x=>x.out==='win').length,Lz=sigs.filter(x=>x.out==='loss').length,K=sigs.filter(x=>x.out==='skip').length,U=sigs.filter(x=>!x.out&&x.src!=='news').length,dn=W+Lz,wr=dn?Math.round(W/dn*100):null;
+ $('jStats').innerHTML=`<div class="fcard"><div class="fk">Win rate</div><div style="font-size:34px;font-weight:900;margin-top:4px;color:${wr==null?'var(--t2)':wr>=50?'var(--buy)':'var(--sell)'}">${wr==null?'—':wr+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${W}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${Lz}</b></div><div><span class="fk">Skipped</span><b>${K}</b></div></div><div class="note" style="margin:0">${U} not marked yet · ${sigs.length} logged. News signals are graded automatically. The win rate counts Wins and Losses only.</div></div>`;
  $('jStats').innerHTML+=newsStats();
  $('jFlt').innerHTML=[['all','All'],['zone','Zones'],['scan','Scanner'],['news','News'],['unmarked','Unmarked']].map(([k,t])=>`<button class="${JF===k?'on':''}" onclick="JF='${k}';renderJournal()">${t}</button>`).join('');
- const L=sigs.filter(x=>JF==='all'||(JF==='unmarked'?!x.out:x.src===JF));
+ const L=sigs.filter(x=>JF==='all'||(JF==='unmarked'?(!x.out&&x.src!=='news'):x.src===JF));
  $('jList').innerHTML=L.length?L.map(x=>{
   const buy=x.type==='BUY',when=x.ts?new Date(x.ts).toLocaleString('en-ZA',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit',timeZone:'Africa/Johannesburg'})+' SAST':x.t,
    det=x.src==='news'?`<div class="note" style="margin:10px 0 0">${x.ev||'News release'}${x.conv?' · '+x.conv+' conviction':''}</div>`+newsLine(x):x.pl?`<div class="note" style="margin:10px 0 0">Entry ${x.pl.e} · SL ${x.pl.sl} · TP1 ${x.pl.t1}${x.strat?' · '+x.strat:''}</div>`:x.price?`<div class="note" style="margin:10px 0 0">Price ${x.price}</div>`:'';
-  return `<div class="fcard ${buy?'bull':'bear'}"><div class="hl"><div><div style="font-size:17px;font-weight:800"><span style="color:${buy?'var(--buy)':'var(--sell)'}">${x.type}</span> ${String(x.sym).replace('/','')}${x.tf?' · '+x.tf:''}</div><div class="note" style="margin:3px 0 0">${when}</div></div><span style="display:flex;gap:6px;align-items:flex-start">${x.auto&&!x.manual?'<span class="pillx" style="color:var(--accent)">Auto</span>':''}<span class="pillx">${srcN[x.src]||'Zone'}</span></span></div>${det}<div class="seg">${['win','loss','skip'].map(k=>`<button class="${x.out===k?'on '+k:''}" onclick="setOut('${x.id}','${k}')">${k==='win'?'Win':k==='loss'?'Loss':'Skip'}</button>`).join('')}</div></div>`}).join(''):'<div class="empty">Nothing here yet.<br>Signals appear when the app fires an alert.</div>'}
+  return `<div class="fcard ${buy?'bull':'bear'}"><div class="hl"><div><div style="font-size:17px;font-weight:800"><span style="color:${buy?'var(--buy)':'var(--sell)'}">${x.type}</span> ${String(x.sym).replace('/','')}${x.tf?' · '+x.tf:''}</div><div class="note" style="margin:3px 0 0">${when}</div></div><span style="display:flex;gap:6px;align-items:flex-start">${x.auto&&!x.manual?'<span class="pillx" style="color:var(--accent)">Auto</span>':''}<span class="pillx">${srcN[x.src]||'Zone'}</span></span></div>${det}${x.src==='news'?newsResult(x):`<div class="seg">${['win','loss','skip'].map(k=>`<button class="${x.out===k?'on '+k:''}" onclick="setOut('${x.id}','${k}')">${k==='win'?'Win':k==='loss'?'Loss':'Skip'}</button>`).join('')}</div>`}</div>`}).join(''):'<div class="empty">Nothing here yet.<br>Signals appear when the app fires an alert.</div>'}
 // ---- auto-graded news signals ----
 // The gold signal is saved as it stands before each release. Once the release is 16 minutes old the app
 // pulls 1-minute gold candles and records where gold went after 5 and 15 minutes, then marks Win / Loss / Flat.
@@ -1844,21 +1844,29 @@ async function settleNews(force){
   if(!sigs.some(x=>x.evId===r.id))logSig({src:'news',sym:r.sym,type:r.side,ev:r.ev,conv:r.conv,evId:r.id,rel:r.t,ts:r.t-6e4,t:new Date(r.t-6e4).toLocaleString()});
   delete P[r.id];ch=true}});
  if(ch)setPend(P);
- const todo=sigs.filter(x=>x.src==='news'&&x.rel&&!x.gr&&now>x.rel+16*6e4);
+ const todo=sigs.filter(x=>x.src==='news'&&x.rel&&(!x.gr||(x.gr==='fail'&&now<x.rel+3*864e5))&&now>x.rel+16*6e4);
  if(!todo.length||!S.key)return;
  NGBUSY=true;
  try{const d=await load('XAU/USD','M1',5000);addCred();
-  todo.forEach(x=>{const g=gradeNews(x,d);if(g){x.auto=g;x.gr='done';if(!x.out)x.out=Math.abs(g.m15)<g.entry*NG_FLAT?'flat':g.m15>0?'win':'loss'}});
+  todo.forEach(x=>{const g=gradeNews(x,d);if(g){x.auto=g;x.gr='done';if(!x.out||x.src==='news')x.out=Math.abs(g.m15)<g.entry*NG_FLAT?'flat':g.m15>0?'win':'loss'}});
   const oldest=d.t[d.n-1];todo.forEach(x=>{if(!x.gr&&(x.rel-6e4<oldest||now>x.rel+4*864e5))x.gr='fail'});
   saveSigs();renderJournal()}
  catch(e){NGWAIT=Date.now()+5*6e4}
  NGBUSY=false}
-async function jGradeNow(){const b=$('jGrade');b.textContent='Grading…';NGWAIT=0;await settleNews(true);b.textContent='Grade news signals now (1 credit)'}
+async function jGradeNow(){NGWAIT=0;await settleNews(true)}
+// automatic: grade on open, when the app comes back to the front, and every minute
+setTimeout(()=>{NGWAIT=0;settleNews(true)},3000);
+setInterval(()=>{if(!document.hidden)settleNews()},6e4);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden){NGWAIT=0;settleNews(true)}});
+function newsResult(x){
+ const m={win:['Win','var(--buy)'],loss:['Loss','var(--sell)'],flat:['Flat','var(--wait)']},r=m[x.out];
+ const tx=r?r[0]+' · graded automatically':(x.gr==='fail'?'Could not be graded (no price history)':'Grading automatically…');
+ return `<div class=\"note\" style=\"margin:10px 0 0;font-weight:800;color:${r?r[1]:'var(--t2)'}\">${tx}</div>`}
 function newsLine(x){
  if(x.auto){const A=x.auto,c=v=>v>=0?'var(--buy)':'var(--sell)';
   return `<div class="note" style="margin:6px 0 0">Gold from ${A.entry.toFixed(2)}: <b style="color:${c(A.m5)}">${usd(A.m5)}</b> after 5 min · <b style="color:${c(A.m15)}">${usd(A.m15)}</b> after 15 min · best ${usd(A.mfe)} · worst ${usd(-A.mae)}${x.out==='flat'?'<br>Flat: gold barely moved, so no win or loss.':''}</div>`}
  if(x.rel&&x.gr==='fail')return '<div class="note" style="margin:6px 0 0">Could not grade: the price history for that time was not available.</div>';
- if(x.rel)return '<div class="note" style="margin:6px 0 0">'+(Date.now()<x.rel+16*6e4?'Gets graded 15 minutes after the release.':'Waiting to be graded. Open the app with a data key set, or tap Grade news signals now.')+'</div>';
+ if(x.rel)return '<div class="note" style="margin:6px 0 0">'+(Date.now()<x.rel+16*6e4?'Gets graded 15 minutes after the release.':'It will be graded automatically as soon as the app can load prices (needs your data key in Settings).')+'</div>';
  return ''}
 function wilson(w,n){const z=1.96,p=w/n,den=1+z*z/n,c=(p+z*z/(2*n))/den,h=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/den;return[Math.max(0,c-h),Math.min(1,c+h)]}
 function newsStats(){
@@ -1867,7 +1875,7 @@ function newsStats(){
   avg=g.length?g.reduce((a,x)=>a+x.auto.m15,0)/g.length:null,r=n?Math.round(w/n*100):null;let msg;
  if(n<30)msg='';
  else{const[lo,hi]=wilson(w,n),a=Math.round(lo*100),b=Math.round(hi*100);msg=`Win rate ${r}% (95% range ${a}% to ${b}%). `+(lo>.5?'The whole range is above 50%, so this looks better than a coin flip.':hi<.5?'The whole range is below 50%, so this signal has not worked.':'50% sits inside that range, so it is not clearly better than a coin flip yet.')}
- return `<div class="fcard"><div class="fk">News signals · auto-graded</div><div style="font-size:30px;font-weight:900;margin-top:4px;color:${r==null?'var(--t2)':r>=50?'var(--buy)':'var(--sell)'}">${r==null?'—':r+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${w}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${l}</b></div><div><span class="fk">Flat</span><b>${f}</b></div></div>${msg?'<div class="note" style="margin:0 0 6px">'+msg+'</div>':''}<div class="note" style="margin:0">${avg!=null?'Average gold move in the signal direction after 15 minutes: '+usd(avg)+'. ':''}${wait?wait+' waiting to be graded. ':''}Graded 15 minutes after the release: win if gold moved your way, loss if against, flat if under 0.015% either way. Spread and slippage are not included.</div></div>`}
+ return `<div class="fcard"><div class="fk">News signals · auto-graded</div><div style="font-size:30px;font-weight:900;margin-top:4px;color:${r==null?'var(--t2)':r>=50?'var(--buy)':'var(--sell)'}">${r==null?'—':r+'%'}</div><div class="fgrid"><div><span class="fk">Wins</span><b style="color:var(--buy)">${w}</b></div><div><span class="fk">Losses</span><b style="color:var(--sell)">${l}</b></div><div><span class="fk">Flat</span><b>${f}</b></div></div>${msg?'<div class="note" style="margin:0 0 6px">'+msg+'</div>':''}<div class="note" style="margin:0">${avg!=null?'Average gold move in the signal direction after 15 minutes: '+usd(avg)+'. ':''}${wait?wait+' waiting to be graded. ':''}Graded automatically 15 minutes after the release: win if gold moved your way, loss if against, flat if under 0.015% either way. Spread and slippage are not included.</div></div>`}
 function jCsv(){const q=v=>'"'+String(v==null?'':v).replace(/"/g,'""')+'"';return ['time,source,symbol,tf,side,entry,sl,tp1,tp2,result,move5,move15'].concat(sigs.map(x=>[x.ts?new Date(x.ts).toISOString():x.t,x.src,x.sym,x.tf||'',x.type,x.pl?x.pl.e:x.price||'',x.pl?x.pl.sl:'',x.pl?x.pl.t1:'',x.pl?x.pl.t2:'',x.out,x.auto?x.auto.m5.toFixed(2):'',x.auto?x.auto.m15.toFixed(2):''].map(q).join(','))).join('\n')}
 function jCopy(){const t=jCsv(),done=()=>{$('jCopy').textContent='Copied';setTimeout(()=>{$('jCopy').textContent='Copy journal (CSV)'},1500)},
  fb=()=>{const a=document.createElement('textarea');a.value=t;a.style.cssText='position:fixed;opacity:0';document.body.appendChild(a);a.select();try{document.execCommand('copy');done()}catch(e){}a.remove()};
