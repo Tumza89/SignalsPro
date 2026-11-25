@@ -262,8 +262,8 @@ footer{border-top:1px solid rgba(150,180,235,.1);padding:30px 0 calc(40px + env(
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{animation:none!important;transition:none!important}.js .rv{opacity:1;transform:none}}
 /* living colour + interface */
 :root{--hs:0deg;--gh:200}
-.bg,#fx,.grad,.primary,.brand-icon,.pill{filter:hue-rotate(var(--hs))}
-.stage:before{filter:blur(56px) hue-rotate(var(--hs))}
+
+.stage:before{filter:blur(56px)}
 .glow{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(440px circle at var(--px,50%) var(--py,30%),hsla(var(--gh),100%,60%,.13),transparent 70%)}
 .prog{position:fixed;top:0;left:0;height:3px;width:0;z-index:70;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--up));box-shadow:0 0 14px var(--cyan)}
 .tl{transition:transform .12s,opacity .7s,border-color .25s!important;will-change:transform}
@@ -272,7 +272,7 @@ html.pre .prog,html.pre .glow{display:none}
 .word,.wordmark{background:linear-gradient(90deg,#ffffff 0%,#a9d4ff 55%,var(--cyan) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
 .wordmark{font-family:var(--hd);font-weight:800;letter-spacing:-.04em;font-size:clamp(30px,5.4vw,50px);line-height:1;margin-top:6px}
 .hlogo{display:flex;flex-direction:column;align-items:center;margin:0 auto 26px}
-.l3d{--accent:var(--cyan);--buy:var(--up);--sell:var(--dn);--glow:rgba(59,140,255,.42);position:relative;display:block;width:var(--s,44px);height:var(--s,44px);flex:none;perspective:calc(var(--s,44px)*6);touch-action:none;cursor:grab;color:var(--ink);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none;filter:hue-rotate(var(--hs,0deg))}
+.l3d{--accent:var(--cyan);--buy:var(--up);--sell:var(--dn);--glow:rgba(59,140,255,.42);position:relative;display:block;width:var(--s,44px);height:var(--s,44px);flex:none;perspective:calc(var(--s,44px)*6);touch-action:none;cursor:grab;color:var(--ink);-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
 .l3d:active{cursor:grabbing}
 .l3d.big{animation:l3fl 5s ease-in-out infinite}
 @keyframes l3fl{50%{transform:translateY(-10px)}}@keyframes l3spin{to{transform:rotate(360deg)}}
@@ -284,6 +284,31 @@ html.pre .prog,html.pre .glow{display:none}
 .l3disc{inset:4%;border-radius:50%;background:radial-gradient(circle,var(--glow),transparent 68%);box-shadow:0 0 calc(var(--s,44px)*.5) var(--glow);transform:translateZ(calc(var(--s,44px)*-.22))}
 .l3y1{transform:translateZ(calc(var(--s,44px)*-.14))}.l3y2{transform:translateZ(calc(var(--s,44px)*-.03))}.l3y3{transform:translateZ(calc(var(--s,44px)*.07))}.l3y4{transform:translateZ(calc(var(--s,44px)*.16))}
 .l3g{inset:6%;border-radius:50%;pointer-events:none;background:radial-gradient(circle at var(--gx,35%) var(--gy,30%),rgba(255,255,255,.28),transparent 55%);transform:translateZ(calc(var(--s,44px)*.2))}
+
+/* logo assembles from parts */
+.l3disc,.l3y,.l3g{transform:translate3d(0,0,calc(var(--s,44px)*var(--z,0)));animation:l3in 1.6s cubic-bezier(.16,.9,.2,1) both;animation-delay:var(--dl,0s)}
+.l3disc{--z:-.22;--dl:.7s;--fx:0;--fy:0;--fr:0deg}
+.l3y1{--z:-.14;--dl:.1s;--fx:-1.5;--fy:-.9;--fr:-150deg}
+.l3y2{--z:-.03;--dl:.25s;--fx:-1.3;--fy:1.2;--fr:120deg}
+.l3y3{--z:.07;--dl:.4s;--fx:1.4;--fy:1.1;--fr:-100deg}
+.l3y4{--z:.16;--dl:.55s;--fx:1.6;--fy:-1.1;--fr:170deg}
+.l3g{--z:.2;--dl:1.1s;--fx:0;--fy:0;--fr:0deg}
+@keyframes l3in{0%{opacity:0;transform:translate3d(calc(var(--s,44px)*var(--fx,0)),calc(var(--s,44px)*var(--fy,0)),calc(var(--s,44px)*(var(--z,0) + 1.8))) rotate(var(--fr,0deg)) scale(.3)}55%{opacity:1}100%{opacity:1;transform:translate3d(0,0,calc(var(--s,44px)*var(--z,0))) rotate(0deg) scale(1)}}
+/* ui upgrades */
+header{box-shadow:0 12px 40px rgba(0,0,0,.28)}
+.primary{position:relative;overflow:hidden}
+.primary:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.45) 50%,transparent 70%);transform:translateX(-130%);animation:shn 4.5s ease-in-out infinite}
+@keyframes shn{55%,100%{transform:translateX(130%)}}
+.head h2:after{content:"";display:block;width:56px;height:3px;border-radius:3px;margin-top:16px;background:linear-gradient(90deg,var(--blue),var(--up))}
+.head[style*="center"] h2:after{margin-inline:auto}
+.tile,.sc,.st,.dev,.panel{box-shadow:inset 0 1px 0 rgba(255,255,255,.05),0 18px 50px rgba(0,0,0,.25)}
+.price-card{box-shadow:0 30px 90px rgba(40,130,255,.18)}
+.riskbox{display:flex;gap:14px;align-items:flex-start;margin:24px 0 0;padding:18px 20px;border-radius:16px;border:1px solid rgba(255,118,144,.32);background:linear-gradient(90deg,rgba(255,118,144,.1),rgba(255,200,107,.06));color:#e3cdd3;font-size:13px;line-height:1.7}
+.riskbox svg{flex:none;width:22px;height:22px;color:#ffb4c2;margin-top:2px}
+.riskbox p{margin:0}.riskbox strong{color:#ffb4c2}
+.totop{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid rgba(120,170,255,.4);background:rgba(10,17,32,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#cfe3ff;font-size:20px;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);transition:.3s}
+.totop.show{opacity:1;visibility:visible;transform:none}
+html.pre .totop{display:none}
 </style>
 <script>(function(){var L=new Date("2026-11-16T00:00:00+02:00").getTime();if(Date.now()<L&&!/[?&]preview/.test(location.search)){document.documentElement.classList.add("pre")}})()</script>
 </head>
@@ -309,7 +334,6 @@ html.pre .prog,html.pre .glow{display:none}
 <div class="bg" aria-hidden="true"></div>
 <canvas id="fx" aria-hidden="true"></canvas>
 <header>
-  <div class="risk"><b>Risk warning:</b> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for everyone.</div>
   <div class="wrap bar">
     <a class="brand" href="./" aria-label="SignalsPro home"><span class="l3d" data-l3d style="--s:44px"></span><span class="word">SignalsPro</span></a>
     <nav aria-label="Main navigation">
@@ -482,7 +506,7 @@ html.pre .prog,html.pre .glow{display:none}
       <span>© <span id="year">2026</span> SignalsPro. All rights reserved.</span>
       <nav><a href="#install">Install</a><a href="#pricing">Pricing</a><a href="#setup">Setup</a><a href="./app.html">Launch web app ↗</a></nav>
     </div>
-    <p class="legal"><strong>High risk warning:</strong> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for all investors. SignalsPro is an analysis tool, not a broker or financial adviser. Chart values shown here are sample data.</p>
+    <div class="riskbox" role="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg><p><strong>Risk warning:</strong> Foreign exchange and CFD trading are leveraged products that carry a high risk of loss and may not be suitable for everyone. SignalsPro is an analysis tool, not a broker or financial adviser, and guarantees no results. Chart values shown on this page are sample data.</p></div>
   </div>
 </footer>
 
@@ -555,7 +579,7 @@ var ids=["d","h","m","s"],els=ids.map(function(i){return document.getElementById
 function pad(n){return n<10?"0"+n:""+n}
 function tick(){
  var t=L-Date.now();
- if(t<=0){clearInterval(iv);h.classList.add("go");window.scrollTo(0,0);g.classList.add("out");setTimeout(function(){h.classList.remove("pre");h.classList.remove("go")},800);return}
+ if(t<=0){clearInterval(iv);h.classList.add("go");window.scrollTo(0,0);g.classList.add("out");setTimeout(function(){h.classList.remove("pre");h.classList.remove("go");if(window.__l3replay)window.__l3replay()},800);return}
  var v=[Math.floor(t/864e5),Math.floor(t%864e5/36e5),Math.floor(t%36e5/6e4),Math.floor(t%6e4/1e3)];
  v.forEach(function(n,i){var x=pad(n);if(last[i]!==x){els[i].textContent=x;if(last[i]!==undefined){var c=els[i].closest(".cu");c.classList.remove("pop");void c.offsetWidth;c.classList.add("pop")}last[i]=x}})}
 var iv=setInterval(tick,1000);tick();
@@ -655,7 +679,7 @@ if(android){note.hidden=true}else{btn.hidden=true}
 var root=document.documentElement,prog=document.getElementById("prog"),hs=0,dir=1,
 still=window.matchMedia&&matchMedia("(prefers-reduced-motion:reduce)").matches;
 function set(v){hs=v;var st=root.style;st.setProperty("--hs",v+"deg");st.setProperty("--blue","hsl("+(215+v)+",100%,62%)");st.setProperty("--cyan","hsl("+(189+v)+",92%,63%)");st.setProperty("--gh",200+v)}
-setInterval(function(){if(document.hidden)return;hs+=1.2*dir;if(hs>150){hs=150;dir=-1}else if(hs<-60){hs=-60;dir=1}set(hs)},100);
+
 addEventListener("pointermove",function(e){root.style.setProperty("--px",e.clientX+"px");root.style.setProperty("--py",e.clientY+"px")},{passive:true});
 function pr(){var m=root.scrollHeight-innerHeight;prog.style.width=(m>0?scrollY/m*100:0)+"%"}
 addEventListener("scroll",pr,{passive:true});pr();
@@ -701,8 +725,11 @@ function loop(){raf=requestAnimationFrame(loop);if(document.hidden)return;var no
  LG.forEach(function(o){if(o.el.getClientRects().length)tick(o,now)})}
 Array.prototype.forEach.call(document.querySelectorAll("[data-l3d]"),make);
 if(LG.length)raf=requestAnimationFrame(loop);
+window.__l3replay=function(){document.querySelectorAll(".l3disc,.l3y,.l3g").forEach(function(n){n.style.animation="none";void n.offsetWidth;n.style.animation=""})};
 window.__l3={LG:LG,tick:tick};
 })();
 </script>
+<button class="totop" id="totop" type="button" aria-label="Back to top">↑</button>
+<script>(function(){var b=document.getElementById("totop");if(!b)return;addEventListener("scroll",function(){b.classList.toggle("show",scrollY>700)},{passive:true});b.onclick=function(){scrollTo({top:0,behavior:"smooth"})}})();</script>
 </body>
 </html>
