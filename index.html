@@ -309,6 +309,10 @@ header{box-shadow:0 12px 40px rgba(0,0,0,.28)}
 .totop{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:60;width:46px;height:46px;border-radius:50%;border:1px solid rgba(120,170,255,.4);background:rgba(10,17,32,.85);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);color:#cfe3ff;font-size:20px;cursor:pointer;opacity:0;visibility:hidden;transform:translateY(10px);transition:.3s}
 .totop.show{opacity:1;visibility:visible;transform:none}
 html.pre .totop{display:none}
+
+/* tap to shatter, then re-form */
+.l3d.shat .l3disc,.l3d.shat .l3y,.l3d.shat .l3g{animation:l3out 1.2s cubic-bezier(.2,.7,.3,1) both;animation-delay:calc(var(--dl,0s)*.08)}
+@keyframes l3out{0%{opacity:1;transform:translate3d(0,0,calc(var(--s,44px)*var(--z,0))) rotate(0deg) scale(1)}100%{opacity:0;transform:translate3d(calc(var(--s,44px)*var(--fx,0)*1.5),calc(var(--s,44px)*var(--fy,0)*1.5 + var(--s,44px)*.4),calc(var(--s,44px)*(var(--z,0) + 2))) rotate(calc(var(--fr,0deg)*1.6)) scale(.35)}}
 </style>
 <script>(function(){var L=new Date("2026-11-16T00:00:00+02:00").getTime();if(Date.now()<L&&!/[?&]preview/.test(location.search)){document.documentElement.classList.add("pre")}})()</script>
 </head>
@@ -701,13 +705,14 @@ var HTML='<div class="l3s"><i class="l3disc"></i>'+
 '<div class="l3y l3y3"><svg viewBox="0 0 120 120"><rect class="l3sell" x="37" y="52" width="10" height="20" rx="2"/><rect class="l3b" x="55" y="40" width="10" height="28" rx="2"/><rect class="l3b" x="73" y="50" width="10" height="18" rx="2"/></svg></div>'+
 '<div class="l3y l3y4"><svg viewBox="0 0 120 120"><path class="l3a" d="M30 86L52 70l14 6 24-28" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg></div><i class="l3g"></i></div>';
 var LG=[],raf=0,calm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+function shatter(o){if(o.busy)return;o.busy=true;var el=o.el;o.vx=o.vy=0;el.classList.add("shat");setTimeout(function(){el.classList.remove("shat");setTimeout(function(){o.busy=false},4400)},3200)}
 function make(el){
  el.innerHTML=HTML;var o={el:el,rx:0,ry:0,vx:0,vy:0,hx:null,hy:null,drag:false,t0:0,lx:0,ly:0,mv:0,idle:0};LG.push(o);
  el.addEventListener("pointerdown",function(e){try{el.setPointerCapture(e.pointerId)}catch(_){}o.drag=true;o.lx=e.clientX;o.ly=e.clientY;o.mv=0;o.t0=Date.now();o.vx=o.vy=0;o.hx=o.hy=null});
  el.addEventListener("pointermove",function(e){
   if(o.drag){var dx=e.clientX-o.lx,dy=e.clientY-o.ly;o.lx=e.clientX;o.ly=e.clientY;o.mv+=Math.abs(dx)+Math.abs(dy);o.ry+=dx*1.1;o.rx=Math.max(-70,Math.min(70,o.rx-dy*1.1));o.vy=dx*1.1;o.vx=-dy*1.1;o.idle=Date.now()}
   else if(e.pointerType==="mouse"){var r=el.getBoundingClientRect();o.hy=((e.clientX-r.left)/r.width-.5)*50;o.hx=-((e.clientY-r.top)/r.height-.5)*50}});
- function end(){if(!o.drag)return;o.drag=false;o.idle=Date.now();if(o.mv<6&&Date.now()-o.t0<350)o.vy=30}
+ function end(){if(!o.drag)return;o.drag=false;o.idle=Date.now();if(o.mv<6&&Date.now()-o.t0<350)shatter(o)}
  el.addEventListener("pointerup",end);el.addEventListener("pointercancel",end);
  el.addEventListener("pointerleave",function(){o.hx=o.hy=null});
  el.addEventListener("click",function(e){e.preventDefault();e.stopPropagation()});
