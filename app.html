@@ -30,7 +30,7 @@ header{display:flex;flex-wrap:wrap;row-gap:8px;justify-content:space-between;ali
 .pill.live{color:var(--buy);background:rgba(var(--buyr),.1);border-color:rgba(var(--buyr),.2)}
 .page{display:none;padding:16px}.page.on{display:block;animation:pi .3s cubic-bezier(.22,1,.36,1)}
 @keyframes pi{from{opacity:0;transform:translateY(8px)}}
-.card{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(var(--w),.08);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 8px 32px var(--sh)}
+.card{background:var(--card);border:1px solid rgba(var(--w),.08);border-radius:22px;padding:18px;margin-bottom:14px;box-shadow:0 8px 32px var(--sh)}
 .hero{text-align:center;padding:10px 0;display:flex;flex-direction:column;align-items:center}
 .avatar{width:70vw;max-width:280px;aspect-ratio:1;object-fit:cover;border-radius:28px;box-shadow:0 0 0 1px rgba(var(--w),.08),0 0 50px var(--pg),0 16px 32px rgba(0,0,0,.4);margin-bottom:18px;animation:fl 5s ease-in-out infinite}
 .name{font-size:24px;font-weight:800;background:linear-gradient(90deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
@@ -96,7 +96,7 @@ label{display:block;font-size:13px;color:var(--t2);margin:6px 0}
 .fi{width:46px;height:46px;border-radius:15px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 0 22px var(--glow);flex:none}
 .fi svg{width:24px;height:24px;stroke:var(--btn);fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .ft{font-size:26px;font-weight:900;letter-spacing:-.6px;background:linear-gradient(90deg,var(--text),var(--accent));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.fcard{position:relative;overflow:hidden;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(var(--w),.09);border-radius:22px;padding:18px 18px 18px 22px;margin-bottom:14px;box-shadow:0 10px 34px var(--sh)}
+.fcard{position:relative;overflow:hidden;background:var(--card);border:1px solid rgba(var(--w),.09);border-radius:22px;padding:18px 18px 18px 22px;margin-bottom:14px;box-shadow:0 10px 34px var(--sh)}
 .fcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(var(--accent),var(--accent2))}
 .fcard.bull::before{background:linear-gradient(var(--buy),rgba(var(--buyr),.5))}.fcard.bear::before{background:linear-gradient(var(--sell),rgba(var(--sellr),.5))}
 .fk{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--t2);font-weight:700}
@@ -166,7 +166,7 @@ body.onind #sheet{display:block}body.fsm #sheet{display:none}
 #scStrat button{min-width:30%}
 /* ===== premium layer ===== */
 body{font-feature-settings:'tnum' 1;-webkit-font-smoothing:antialiased}
-body::after{content:'';position:fixed;inset:-20%;z-index:-1;pointer-events:none;will-change:transform;background:radial-gradient(40% 35% at 25% 30%,var(--pg),transparent 70%),radial-gradient(35% 30% at 78% 66%,var(--glow),transparent 70%),radial-gradient(28% 24% at 62% 14%,rgba(var(--w),.05),transparent 70%);filter:blur(26px);animation:aur 24s ease-in-out infinite alternate}
+body::after{content:'';position:fixed;inset:-20%;z-index:-1;pointer-events:none;will-change:transform;background:radial-gradient(40% 35% at 25% 30%,var(--pg),transparent 70%),radial-gradient(35% 30% at 78% 66%,var(--glow),transparent 70%),radial-gradient(28% 24% at 62% 14%,rgba(var(--w),.05),transparent 70%);animation:aur 24s ease-in-out infinite alternate}
 @keyframes aur{0%{transform:translate3d(-3%,-2%,0) rotate(0)}100%{transform:translate3d(4%,3%,0) rotate(8deg) scale(1.08)}}
 header{transition:box-shadow .3s,background .3s}header.sc{box-shadow:0 12px 30px -14px var(--sh)}
 .card,.fcard{box-shadow:inset 0 1px 0 rgba(var(--w),.12),0 18px 40px -20px var(--sh);transition:transform .25s,box-shadow .3s}
@@ -177,7 +177,7 @@ header{transition:box-shadow .3s,background .3s}header.sc{box-shadow:0 12px 30px
 @keyframes rise{from{opacity:0;transform:translateY(14px) scale(.985)}}
 .btn{position:relative;overflow:hidden;transition:transform .15s,box-shadow .25s,filter .25s}.btn:active{transform:scale(.98)}
 .btn:not(.ghost):not(.red)::after{content:'';position:absolute;top:0;left:-60%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.35),transparent);transform:skewX(-20deg);animation:sheen 5s ease-in-out infinite;pointer-events:none}
-@keyframes sheen{0%,62%{left:-60%}100%{left:140%}}
+@keyframes sheen{0%,62%{transform:translateX(0) skewX(-20deg)}100%{transform:translateX(500%) skewX(-20deg)}}
 .pl.on{animation:glowp 2.6s ease-in-out infinite}@keyframes glowp{50%{box-shadow:0 0 34px var(--glow)}}
 .imp-t{font-size:9px;font-weight:900;letter-spacing:1px;padding:3px 7px;border-radius:8px;margin-left:8px;vertical-align:3px;background:rgba(var(--w),.08);color:var(--t2)}.imp-t.hi{background:rgba(var(--sellr),.16);color:var(--sell)}
 .pillx .cd{font-variant-numeric:tabular-nums}
@@ -485,7 +485,7 @@ html[data-lay=bold] .page.on>*{animation-name:ldrop;animation-duration:.55s;anim
 html[data-an=grid] body::after{inset:0;filter:none;background:radial-gradient(60% 50% at 50% 30%,var(--pg),transparent 75%),linear-gradient(rgba(var(--w),.06) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,rgba(var(--w),.06) 1px,transparent 1px) 0 0/46px 46px;-webkit-mask-image:radial-gradient(ellipse 95% 80% at 50% 35%,#000 25%,transparent 100%);mask-image:radial-gradient(ellipse 95% 80% at 50% 35%,#000 25%,transparent 100%);animation:agrid 20s linear infinite}
 @keyframes agrid{to{background-position:0 0,0 46px,46px 0}}
 /* animation: waves (slow flowing bands) */
-html[data-an=waves] body::after{inset:-10% -40%;filter:blur(30px);background:repeating-linear-gradient(100deg,transparent 0 110px,var(--glow) 170px,transparent 250px 360px),radial-gradient(40% 30% at 70% 70%,var(--pg),transparent 70%);animation:awave 18s ease-in-out infinite alternate}
+html[data-an=waves] body::after{inset:-10% -40%;filter:blur(12px);background:repeating-linear-gradient(100deg,transparent 0 110px,var(--glow) 170px,transparent 250px 360px),radial-gradient(40% 30% at 70% 70%,var(--pg),transparent 70%);animation:awave 18s ease-in-out infinite alternate}
 @keyframes awave{to{transform:translate3d(16%,3%,0) skewX(-10deg)}}
 /* animation: particles (dots rise slowly) */
 html[data-an=particles] body::after{inset:0;filter:none;opacity:.55;background:radial-gradient(circle,var(--accent) 0 1.6px,transparent 2.4px) 20px 40px/190px 230px,radial-gradient(circle,var(--accent2) 0 1.2px,transparent 2px) 90px 120px/310px 360px,radial-gradient(circle,rgba(var(--w),.6) 0 1px,transparent 1.8px) 150px 10px/240px 280px;animation:aptc 42s linear infinite}
@@ -494,7 +494,7 @@ html[data-an=particles] body::after{inset:0;filter:none;opacity:.55;background:r
 html[data-an=embers] body::after{inset:0;filter:none;opacity:.65;background:radial-gradient(circle,var(--accent2) 0 2px,transparent 3.4px) 30px 80px/170px 210px,radial-gradient(circle,var(--accent) 0 1.4px,transparent 2.6px) 120px 20px/260px 300px,radial-gradient(circle,rgba(var(--w),.7) 0 1px,transparent 2px) 60px 150px/330px 380px;animation:aemb 20s linear infinite}
 @keyframes aemb{to{background-position:30px -130px,120px -280px,60px -230px}}
 /* animation: pulse (the glow breathes, buttons glow) */
-html[data-an=pulse] body::after{filter:blur(30px);animation:apls 5.5s ease-in-out infinite}
+html[data-an=pulse] body::after{animation:apls 5.5s ease-in-out infinite}
 @keyframes apls{0%,100%{transform:scale(.94);opacity:.55}50%{transform:scale(1.1);opacity:1}}
 html[data-an=pulse] .btn{animation:abtn 3.2s ease-in-out infinite}
 @keyframes abtn{50%{box-shadow:0 8px 36px var(--accent)}}
@@ -2103,9 +2103,11 @@ function l3dTick(o,now,calm){
  const nry=((o.ry%360)+540)%360-180;
  o.el.style.setProperty('--rx',o.rx.toFixed(1)+'deg');o.el.style.setProperty('--ry',o.ry.toFixed(1)+'deg');
  o.el.style.setProperty('--gx',(50+nry/180*45).toFixed(0)+'%');o.el.style.setProperty('--gy',(40-o.rx/70*30).toFixed(0)+'%')}
+let l3dLast=0;
 function l3dLoop(){
  LGraf=requestAnimationFrame(l3dLoop);if(document.hidden)return;
- const now=Date.now(),calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
+ const now=Date.now();if(now-l3dLast<32)return;l3dLast=now;
+ const calm=matchMedia('(prefers-reduced-motion: reduce)').matches;
  LG.forEach(o=>{if(o.el.getClientRects().length)l3dTick(o,now,calm)})}
 document.querySelectorAll('[data-l3d]').forEach(mk3d);
 // live ticker strip (Home)
