@@ -390,6 +390,28 @@ html[data-lay=dock] .mk,html[data-lay=dock] .mk button{border-radius:8px}html[da
 .go.stop:active{transform:translateY(8px);box-shadow:inset 0 2px 2px rgba(255,255,255,.35),inset 0 -6px 10px rgba(0,0,0,.45),0 0 0 0 #7a1510,0 4px 8px rgba(0,0,0,.5)}
 .go.stop i{width:24px;height:24px;border:0;border-radius:5px;margin:0;background:#fff;filter:drop-shadow(0 1.5px 0 rgba(0,0,0,.28))}
 .go.stop::after{background:#2cf08a;box-shadow:0 0 12px 3px #2cf08a,inset 0 1px 1px rgba(255,255,255,.6),0 0 0 2px rgba(0,0,0,.3)}
+/* ===== start button v2: premium power key (machined metal ring, pearl disc, engraved power symbol) ===== */
+.go{width:108px;height:108px;margin:24px 0 28px;
+ background:
+  radial-gradient(closest-side at 50% 50%,rgba(255,255,255,.95) 0,rgba(255,255,255,0) 46%) 34% 24%/70% 70% no-repeat,
+  radial-gradient(closest-side at 50% 50%,#f7f8fb 0,#eceef3 58%,#cdd1da 96%,rgba(205,209,218,0) 100%) center/76% 76% no-repeat,
+  radial-gradient(closest-side at 50% 50%,#07080b 0,#0d0e13 94%,rgba(13,14,19,0) 100%) center/84% 84% no-repeat,
+  conic-gradient(from 200deg,#2b2e36,#9aa0ac 10%,#1a1c22 24%,#6e7480 40%,#1a1c22 56%,#a4aab5 74%,#2b2e36 90%,#2b2e36);
+ box-shadow:0 16px 30px rgba(0,0,0,.6),0 3px 0 rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.55),inset 0 -2px 4px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.07);
+ transition:transform .12s ease,box-shadow .25s ease,filter .25s ease}
+.go svg{width:42%;height:42%;fill:none;stroke:#0c0d12;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 1.2px 0 rgba(255,255,255,.85));transition:stroke .25s,filter .25s}
+.go:not(.stop):hover{filter:brightness(1.06)}
+.go:active,.go.stop:active{transform:translateY(3px) scale(.985);box-shadow:0 8px 16px rgba(0,0,0,.6),0 1px 0 rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.45),inset 0 -2px 4px rgba(0,0,0,.5),0 0 0 1px rgba(255,255,255,.07)}
+.go.stop{transform:none;
+ background:
+  radial-gradient(closest-side at 50% 50%,rgba(255,255,255,.75) 0,rgba(255,255,255,0) 46%) 34% 24%/70% 70% no-repeat,
+  radial-gradient(closest-side at 50% 50%,#c9ffe3 0,#3df59a 55%,#10b565 96%,rgba(16,181,101,0) 100%) center/76% 76% no-repeat,
+  radial-gradient(closest-side at 50% 50%,#07080b 0,#0d0e13 94%,rgba(13,14,19,0) 100%) center/84% 84% no-repeat,
+  conic-gradient(from 200deg,#1f4a38,#7ff0b8 10%,#133024 24%,#3fbf86 40%,#133024 56%,#8af5c1 74%,#1f4a38 90%,#1f4a38);
+ box-shadow:0 16px 30px rgba(0,0,0,.6),0 0 34px rgba(44,240,138,.45),0 3px 0 rgba(0,0,0,.55),inset 0 1px 1px rgba(255,255,255,.6),inset 0 -2px 4px rgba(0,0,0,.5),0 0 0 1px rgba(44,240,138,.35)}
+.go.stop svg{stroke:#05261a;filter:drop-shadow(0 1px 0 rgba(255,255,255,.5))}
+.go.stop i{display:none}
+
 /* ===== welcome: the logo assembles itself from seven pieces over 4 seconds ===== */
 #asm{position:relative;width:190px;height:190px;margin-bottom:8px}
 #asm svg{width:100%;height:100%;overflow:visible}
@@ -517,7 +539,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <div class="l3d big" data-l3d style="--s:150px"></div>
 <div class="wm">Signals<span>Pro</span></div><div class="sub" id="who">Premium zone indicator</div>
 <div class="chips"><b>Live zones</b><b>Trade plans</b><b>Market scanner</b></div>
-<button class="go" id="go" aria-label="Start or stop"><i></i></button>
+<button class="go" id="go" aria-label="Start or stop" aria-pressed="false"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 7.5v15.5"/><path d="M14.6 13.6a15.6 15.6 0 1 0 18.8 0"/></svg></button>
 <div class="hint" id="hint">Tap to start live signals</div></div><div id="ck"></div><div id="hl"></div><div id="news" style="display:none"></div></section>
 
 <section class="page" id="p-ind">
@@ -1044,7 +1066,7 @@ async function tick(){
   $('st').textContent=`Last candle ${D.t&&D.t[0]?fT.format(new Date(D.t[0]))+' · '+fD.format(new Date(D.t[0])):'—'} · updated ${new Date().toLocaleTimeString()}`;if(closed){$('st').textContent='Market closed';$('shT').textContent='Market closed';$('shV').textContent=''}
   if(!animateTick(prevD,D))draw();$('cvw').classList.remove('ld')
  }catch(e){$('cvw').classList.remove('ld');$('st').textContent='Error: '+e.message}}
-function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
+function setRun(v){run=v;clearInterval(timer);$('go').classList.toggle('stop',v);$('go').setAttribute('aria-pressed',v?'true':'false');$('pill').classList.toggle('live',v);$('pill').textContent=v?'Live':'Stopped';
  $('hint').textContent=v?'Running. Tap to stop':'Tap to start live signals';if(v){advice=0;tick();timer=setInterval(tick,S.iv*1000)}}
 $('go').onclick=()=>{try{navigator.vibrate&&navigator.vibrate(14)}catch(e){}setRun(!run);if(run)page('ind')};
 // scanner
