@@ -481,6 +481,17 @@ html[data-lay=bold] .tfs button,html[data-lay=bold] .chip,html[data-lay=bold] .t
 html[data-lay=bold] .pt,html[data-lay=bold] .k,html[data-lay=bold] .fk{text-transform:uppercase;letter-spacing:1.6px}
 html[data-lay=bold] .page.on>*{animation-name:ldrop;animation-duration:.55s;animation-timing-function:cubic-bezier(.34,1.56,.64,1)}
 @keyframes ldrop{from{opacity:0;transform:translateY(-16px)}}
+
+/* GTA VI theme: neon Vice sunset (hot pink + orange + dusk purple, sun on the horizon, retro grid floor) */
+html[data-an=vice] body::after{inset:0;filter:none;will-change:opacity;
+ background-image:radial-gradient(circle 120px at 50% 100%,rgba(255,176,46,.55),rgba(255,176,46,0) 100%),radial-gradient(ellipse 85% 42% at 50% 100%,rgba(255,61,154,.34),rgba(255,61,154,0) 100%),linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(125,40,210,.22) 100%),repeating-linear-gradient(0deg,rgba(255,61,154,.16) 0 1px,rgba(0,0,0,0) 1px 34px),repeating-linear-gradient(90deg,rgba(255,61,154,.10) 0 1px,rgba(0,0,0,0) 1px 46px);
+ background-size:100% 100%,100% 100%,100% 100%,100% 26%,100% 26%;background-position:center,center,center,bottom,bottom;background-repeat:no-repeat;
+ animation:vpl 6s ease-in-out infinite alternate}
+@keyframes vpl{from{opacity:.7}to{opacity:1}}
+html[data-an=vice] .btn:not(.ghost):not(.red){background:linear-gradient(120deg,#ff3d9a,#ff7a3c 55%,#ffb02e);color:#1a0612;box-shadow:0 8px 26px rgba(255,61,154,.4)}
+html[data-an=vice] .card,html[data-an=vice] .fcard{border-color:rgba(255,61,154,.22)}
+html[data-an=vice] nav{border-color:rgba(255,61,154,.3);box-shadow:0 10px 34px rgba(255,61,154,.22)}
+html[data-an=vice] .pt,html[data-an=vice] .k,html[data-an=vice] .fk{background:linear-gradient(90deg,#ff3d9a,#ffb02e);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 /* animation: grid (a faint grid drifts, like a terminal) */
 html[data-an=grid] body::after{inset:0;filter:none;background:radial-gradient(60% 50% at 50% 30%,var(--pg),transparent 75%),linear-gradient(rgba(var(--w),.06) 1px,transparent 1px) 0 0/46px 46px,linear-gradient(90deg,rgba(var(--w),.06) 1px,transparent 1px) 0 0/46px 46px;-webkit-mask-image:radial-gradient(ellipse 95% 80% at 50% 35%,#000 25%,transparent 100%);mask-image:radial-gradient(ellipse 95% 80% at 50% 35%,#000 25%,transparent 100%);animation:agrid 20s linear infinite}
 @keyframes agrid{to{background-position:0 0,0 46px,46px 0}}
@@ -732,9 +743,10 @@ const THEMES={
  amber:Object.assign({},DARK,{n:'Amber',a:'#f59e0b',a2:'#f97316',rgb:'245,158,11',bg:['#120d04','#1a1308','#140f05']}),
  daylight:Object.assign({},LIGHT,{n:'Daylight',a:'#2563eb',a2:'#06b6d4',rgb:'37,99,235',bg:['#f4f6fb','#eef2f9','#f8fafc']}),
  mint:Object.assign({},LIGHT,{n:'Mint',a:'#059669',a2:'#0ea5e9',rgb:'5,150,105',bg:['#f2f8f5','#ebf4ef','#f6faf8']}),
- lavender:Object.assign({},LIGHT,{n:'Lavender',a:'#7c3aed',a2:'#3b82f6',rgb:'124,58,237',bg:['#f6f4fc','#efeaf9','#faf8fe']})};
-const TSTYLE={midnight:['float','aurora'],graphite:['dock','grid'],ocean:['island','waves'],forest:['soft','particles'],royal:['bold','pulse'],crimson:['bold','sweep'],amber:['soft','embers'],daylight:['float','calm'],mint:['soft','waves'],lavender:['island','pulse']};
-const LAYN={float:'Floating',dock:'Dock',island:'Island',soft:'Airy',bold:'Bold'},ANN={aurora:'Aurora',grid:'Grid',waves:'Waves',particles:'Particles',pulse:'Pulse',sweep:'Sweep',embers:'Embers',calm:'Calm'},LAYR={float:'50%',dock:'8px',island:'50%',soft:'16px',bold:'11px'};
+ lavender:Object.assign({},LIGHT,{n:'Lavender',a:'#7c3aed',a2:'#3b82f6',rgb:'124,58,237',bg:['#f6f4fc','#efeaf9','#faf8fe']}),
+ vice:Object.assign({},DARK,{n:'GTA VI',a:'#ff3d9a',a2:'#ffb02e',rgb:'255,61,154',bg:['#12051f','#1d0a30','#160727'],ga:.34,pa:.3})};
+const TSTYLE={midnight:['float','aurora'],graphite:['dock','grid'],ocean:['island','waves'],forest:['soft','particles'],royal:['bold','pulse'],crimson:['bold','sweep'],amber:['soft','embers'],daylight:['float','calm'],mint:['soft','waves'],lavender:['island','pulse'],vice:['bold','vice']};
+const LAYN={float:'Floating',dock:'Dock',island:'Island',soft:'Airy',bold:'Bold'},ANN={aurora:'Aurora',grid:'Grid',waves:'Waves',particles:'Particles',pulse:'Pulse',sweep:'Sweep',embers:'Embers',calm:'Calm',vice:'Sunset'},LAYR={float:'50%',dock:'8px',island:'50%',soft:'16px',bold:'11px'};
 const OLDT={cobalt:'midnight',structure:'amber',cyan:'ocean',violet:'royal',emerald:'forest',crimson:'crimson',amber:'amber',rose:'crimson',lime:'forest',arctic:'graphite'};
 const hexRgb=h=>{h=h.replace('#','');return parseInt(h.slice(0,2),16)+','+parseInt(h.slice(2,4),16)+','+parseInt(h.slice(4,6),16)};
 function theme(n){
