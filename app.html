@@ -625,7 +625,7 @@ html[data-an=calm] body::after,html[data-an=calm] body::before{animation:none}
 <p>Always check your broker's price before you trade, and set your entry, stop loss and targets from it.</p></div></details>
 <details class="gd" id="gdSyn" style="display:none"><summary><span class="gn">11</span>Synthetic indices</summary><div class="gb">
 <p>Use the <b>Markets | Synthetics</b> switch above the symbol box on the <b>Indicator</b> page, and at the top of the <b>Scanner</b>, to move between normal markets and <b>Synthetic indices</b> from Deriv: Volatility, Boom and Crash, Step and Jump. When you switch, the symbol box starts empty so you just type the symbol you want, and each side keeps its own scanner list. They trade 24 hours a day, 7 days a week, including weekends.</p>
-<p>Their prices are generated, so news and real buyers and sellers do not move them. The zones, trade plans and the scanner still work on them, but treat the signals as <b>experimental</b>. Strategies that depend on real sessions or volume (PO3, ORB, VWAP and Order flow) are switched off for them.</p>
+<p>Their prices are generated, so news and real buyers and sellers do not move them. The zones, trade plans and the scanner still work on them, but treat the signals as <b>experimental</b>. Strategies that depend on real sessions or volume (PO3, ORB, VWAP and Order flow) are switched off for them. In their place the <b>Price action</b> strategy appears in the Scanner when Synthetics is selected: it looks for a pin bar, an engulfing candle or an inside bar break at a support or resistance level the price has tested before, and it ignores Boom, Crash and Jump spike candles.</p>
 <p>They support the M1 to D1 timeframes and need no data key. Always use your stop loss, because these markets can move very fast.</p></div></details>
 
 <div class="note" style="text-align:center;padding:4px 6px 14px">SignalsPro is a tool to help you see the market. It is not financial advice, and you are responsible for your own trades.</div>
@@ -805,7 +805,7 @@ function synDatalist(){const dl=$('syms');if(!dl)return;if(!STDOPT)STDOPT=[...dl
  (syn?SYN.map(x=>[x.c,x.n]):STDOPT.map(v=>[v,''])).forEach(([v,l])=>{const o=document.createElement('option');o.value=v;if(l)o.label=l;o.dataset.syn=syn?1:'';dl.appendChild(o)})}
 const wlKey=()=>S.mkt==='syn'&&synAllowed()?'wlSyn':'wl';
 function mktUI(){const ok=synAllowed(),m=S.mkt==='syn'&&ok?'syn':'std';document.querySelectorAll('.mkn').forEach(e=>{e.style.display=m==='syn'?'':'none'});document.querySelectorAll('.mk').forEach(e=>{e.classList.toggle('on',ok);e.querySelectorAll('button').forEach(b=>b.classList.toggle('sel',b.dataset.m===m))})}
-function mktSync(){synDatalist();mktUI();const syn=S.mkt==='syn'&&synAllowed(),w=$('scWl'),si=$('symIn');
+function mktSync(){synDatalist();mktUI();try{strChips()}catch(e){}const syn=S.mkt==='syn'&&synAllowed(),w=$('scWl'),si=$('symIn');
  if(w){w.value=S[wlKey()]?S[wlKey()].split(',').join(', '):'';w.placeholder=syn?'Tap to pick, or type e.g. V75, Boom 1000':'Tap to pick, or type e.g. EUR/USD, BTC/USD'}
  if(si)si.placeholder=syn?'Type a synthetic, e.g. V75 or Boom 1000':'Symbol e.g. EUR/USD';
  if($('scPick')&&$('scPick').style.display!=='none')pickRender()}
@@ -1540,6 +1540,52 @@ function scDraw(){
  $('scLatest').onclick=()=>{if(SC){SC.VO=0;scDraw()}};$('scZi').onclick=()=>{if(SC){SC.VN*=.75;view();scDraw()}};$('scZo').onclick=()=>{if(SC){SC.VN*=1.33;view();scDraw()}};
  $('scChX').onclick=scClose;})();
 addEventListener('resize',()=>scDraw());
+// Advanced price action (synthetics only): pin bar, engulfing or inside-bar break at a tested support / resistance level, read with market structure and the EMA trend
+const synKind=sym=>{const k=synKey(sym)||'';return/^BOOM/.test(k)?'boom':/^CRASH/.test(k)?'crash':''};
+function sPA(sym,d,hd){
+ const{o,h,l,c,n}=d,f=v=>v.toFixed(d.dec);
+ if(!isSyn(sym))return noTrade(sym,d,'pa','Advanced price action is built for synthetic indices.');
+ if(n<120)return noTrade(sym,d,'pa','Not enough data');
+ // robust candle size: the median ignores the Boom, Crash and Jump spikes
+ const rg=[];for(let i=1;i<=60;i++)rg.push(h[i]-l[i]);rg.sort((a,b)=>a-b);
+ const med=rg[30]||1e-9,atr=Math.max(med*1.25,1e-9),kind=synKind(sym);
+ if([1,2,3].some(i=>h[i]-l[i]>4.5*med))return noTrade(sym,d,'pa','A spike candle just printed. Wait for price to settle.');
+ // levels: swing highs and lows that price has respected more than once
+ const sw=swings(d,3),lv=[];
+ sw.H.concat(sw.L).filter(x=>x.i>=4&&x.i<=300).forEach(x=>{const g=lv.find(z=>Math.abs(z.v-x.v)<=.35*atr);
+  if(g){g.v=(g.v*g.t+x.v)/(g.t+1);g.t++;g.i=Math.max(g.i,x.i)}else lv.push({v:x.v,t:1,i:x.i})});
+ // trend: structure first (HH+HL or LH+LL), then the EMA 20 / 50
+ const H2=sw.H.filter(x=>x.i>=1).slice(0,2),L2=sw.L.filter(x=>x.i>=1).slice(0,2);let st=0;
+ if(H2.length>1&&L2.length>1){if(H2[0].v>H2[1].v&&L2[0].v>L2[1].v)st=1;else if(H2[0].v<H2[1].v&&L2[0].v<L2[1].v)st=-1}
+ const cs=c.slice(0,300),e20=ema(cs,20),e50=ema(cs,50),et=Math.abs(e20-e50)<.3*atr?0:e20>e50?1:-1,tr=st!==0?st:et;
+ const tl=(st===1?'Higher highs and higher lows':st===-1?'Lower highs and lower lows':et===1?'EMA 20 above EMA 50':et===-1?'EMA 20 below EMA 50':'No clear trend');
+ // the trigger candle is the last closed candle
+ const body=Math.abs(c[1]-o[1]),r1=h[1]-l[1],lw=Math.min(o[1],c[1])-l[1],uw=h[1]-Math.max(o[1],c[1]);let pat=null;
+ if(r1>=.5*atr){
+  if(lw>=2*body&&lw>=.6*r1&&uw<=.25*r1)pat={side:'BUY',n:'Bullish pin bar',k:8};
+  else if(uw>=2*body&&uw>=.6*r1&&lw<=.25*r1)pat={side:'SELL',n:'Bearish pin bar',k:8}}
+ if(!pat){const pb=Math.abs(c[2]-o[2]);
+  if(c[1]>o[1]&&c[2]<o[2]&&c[1]>=o[2]&&o[1]<=c[2]&&body>=pb&&body>=.6*atr)pat={side:'BUY',n:'Bullish engulfing',k:9};
+  else if(c[1]<o[1]&&c[2]>o[2]&&c[1]<=o[2]&&o[1]>=c[2]&&body>=pb&&body>=.6*atr)pat={side:'SELL',n:'Bearish engulfing',k:9}}
+ if(!pat&&h[2]<=h[3]&&l[2]>=l[3]&&(h[3]-l[3])>=.8*atr){
+  if(c[1]>h[3])pat={side:'BUY',n:'Inside bar break up',k:7};else if(c[1]<l[3])pat={side:'SELL',n:'Inside bar break down',k:7}}
+ if(!pat){
+  const near=lv.filter(z=>z.t>=2&&Math.abs(z.v-c[0])<=.8*atr).sort((a,b)=>Math.abs(a.v-c[0])-Math.abs(b.v-c[0]))[0];
+  if(near)return mkRes(sym,d,'pa',{v:'WATCH',trend:'Price action · '+tl,cmsg:'Price is at a level tested '+near.t+' times ('+f(near.v)+'). Waiting for a pin bar, an engulfing candle or an inside bar break.'});
+  return noTrade(sym,d,'pa','No price action pattern at a key level');}
+ const bull=pat.side==='BUY',ib=/Inside/.test(pat.n),
+  ref=bull?Math.min(l[1],l[2],ib?l[3]:Infinity):Math.max(h[1],h[2],ib?h[3]:-Infinity),
+  z=lv.filter(x=>Math.abs(x.v-ref)<=.4*atr).sort((a,b)=>b.t-a.t||Math.abs(a.v-ref)-Math.abs(b.v-ref))[0];
+ if(!z)return noTrade(sym,d,'pa',pat.n+' formed away from any key level');
+ if(tr!==0&&(bull?tr<0:tr>0)&&z.t<3)return noTrade(sym,d,'pa',pat.n+' goes against the trend and the level is not strong enough');
+ const zlo=z.v-.3*atr,zhi=z.v+.3*atr,sl=bull?Math.min(l[1],l[2],zlo)-.25*atr:Math.max(h[1],h[2],zhi)+.25*atr,
+  ext=(bull?sw.H:sw.L).map(x=>x.v).concat(lv.map(x=>x.v)),
+  E=evalZone(pat.side,zlo,zhi,sl,ext,d,atr,null);
+ let q=6+pat.k+Math.min(6,(z.t-1)*3)+(tr===(bull?1:-1)?5:0)+(st!==0&&st===et&&tr===(bull?1:-1)?2:0);
+ if(kind==='boom')q+=bull?-3:4;else if(kind==='crash')q+=bull?4:-3;   // Boom drifts down between spikes, Crash drifts up
+ q=Math.max(0,Math.min(25,q));
+ OVX={boxes:[{n:'Key level ('+z.t+(z.t===1?' touch)':' touches)'),i0:Math.min(n-1,z.i),i1:0,lo:zlo,hi:zhi,c:bull?GRN:RED}],lv:[{n:'Key level',v:z.v,c:'#3b82f6'}],mk:[{i:1,side:bull?'up':'dn',n:pat.n}]};
+ return fin(sym,d,'pa',E,q,'Price action · '+tl,pat.n+' at '+f(z.v)+', a level tested '+(z.t===1?'once':z.t+' times')+'.'+(kind==='boom'?' Boom drifts down between spikes.':kind==='crash'?' Crash drifts up between spikes.':''),hd)}
 const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:(s,d,hd)=>isIdx(s)?noTrade(s,d,'po3','Power of 3 needs a 24-hour market, so it is not used on indices.'):S.stf==='H4'?noTrade(s,d,'po3','Power of 3 is an intraday setup. Use Scalp or Day trade.'):rate(s,d,null,hd)},
  smc:{n:'SMC',d:'Liquidity sweep, break of structure, then entry at the order block.',fn:sSMC},
  fvg:{n:'FVG',d:'Entry on the first retest of an untested fair value gap.',fn:sFVG},
@@ -1550,14 +1596,18 @@ const STRATS={po3:{n:'PO3',d:'Asian range sweep, then a break of structure.',fn:
  ichi:{n:'Ichimoku',d:'Trade with the cloud, entry on a pullback to Tenkan and Kijun.',fn:sICHI},
  vol:{n:'Volatility',d:'ATR expansion with rising ADX, entry on the retest of the breakout.',fn:sVOL},
  mr:{n:'Mean reversion',d:'Bollinger band pierce with an extreme RSI, targeting the middle band.',fn:sMR},
- of:{n:'Order flow',d:'Estimated volume pressure: high-volume absorption at swing levels plus a delta estimate. Needs volume (NDX, DJI, crypto).',fn:sOF}};
+ of:{n:'Order flow',d:'Estimated volume pressure: high-volume absorption at swing levels plus a delta estimate. Needs volume (NDX, DJI, crypto).',fn:sOF},
+ pa:{n:'Price action',d:'Advanced price action for synthetics: pin bar, engulfing or inside bar break at a tested support or resistance level, in line with the trend.',fn:sPA,syn:true}};
 ['po3','orb','vwap','of'].forEach(k=>{const f=STRATS[k].fn;STRATS[k].fn=(sy,d,hd)=>isSyn(sy)?noTrade(sy,d,k,STRATS[k].n+' relies on real trading sessions or volume, so it is not used on synthetic indices.'):f(sy,d,hd)});
 const sl=r=>(r.strat&&STRATS[r.strat]?' · '+STRATS[r.strat].n:'')+synSub(r.sym);
 if(!Array.isArray(S.strats)||!S.strats.length||S.strats.some(k=>!STRATS[k]))S.strats=['po3'];
-function strChips(){$('scStrat').innerHTML=Object.keys(STRATS).map(k=>`<button class="${S.strats.includes(k)?'on':''}" onclick="togStrat('${k}')">${STRATS[k].n}</button>`).join('')+`<button class="${S.strats.length===Object.keys(STRATS).length?'on':''}" onclick="allStrat()">All</button>`;
- $('scDesc').textContent=S.strats.map(k=>STRATS[k].n+': '+STRATS[k].d).join('  ')}
-function togStrat(k){const i=S.strats.indexOf(k);if(i>=0){if(S.strats.length>1)S.strats.splice(i,1)}else S.strats.push(k);save();strChips()}
-function allStrat(){S.strats=Object.keys(STRATS);save();strChips()}
+const stratOK=k=>!!STRATS[k]&&(!STRATS[k].syn||(S.mkt==='syn'&&synAllowed()));
+const stratKeys=()=>Object.keys(STRATS).filter(stratOK);
+function strChips(){if(!S.strats.some(stratOK)){S.strats.push('po3');save()}
+ $('scStrat').innerHTML=stratKeys().map(k=>`<button class="${S.strats.includes(k)?'on':''}" onclick="togStrat('${k}')">${STRATS[k].n}</button>`).join('')+`<button class="${stratKeys().every(k=>S.strats.includes(k))?'on':''}" onclick="allStrat()">All</button>`;
+ $('scDesc').textContent=S.strats.filter(stratOK).map(k=>STRATS[k].n+': '+STRATS[k].d).join('  ')}
+function togStrat(k){const i=S.strats.indexOf(k);if(i>=0){if(S.strats.filter(stratOK).length>1)S.strats.splice(i,1)}else S.strats.push(k);save();strChips()}
+function allStrat(){S.strats=stratKeys();save();strChips()}
 const RS=new Set();
 const ring=(sc,glow,key)=>{const C=2*Math.PI*18,off=C*(1-Math.max(0,Math.min(100,sc))/100),col=sc>=70?'var(--buy)':sc>=50?'var(--accent)':'var(--wait)',seen=RS.has(key);RS.add(key);
  return `<span class="sring${glow?' glow':''}${seen?' seen':''}" role="img" aria-label="Score ${sc} out of 100" style="--C:${C.toFixed(1)};--o:${off.toFixed(1)};--col:${col}"><svg viewBox="0 0 44 44"><circle cx="22" cy="22" r="18" class="rt"/><circle cx="22" cy="22" r="18" class="rv"/></svg><b>${sc}</b></span>`};
@@ -1603,7 +1653,7 @@ async function scan(auto){
   while(true){$('scSt').textContent=`Scanning ${list[i]} (${i+1}/${list.length})…`;
    try{const d=await load(list[i],S.stf);if(!isFree(list[i]))addCred();let hd=null;
     if(S.htf&&HT[S.stf]){try{await sleep(S.src==='twelve'&&!isFree(list[i])?8000:300);const d2=await load(list[i],HT[S.stf]);if(!isFree(list[i]))addCred();hd=htfDir(d2)}catch(_){hd=null}}
-    const sel=S.strats.filter(k=>STRATS[k]),rs=sel.map(k=>{OVX=null;try{const r=Object.assign(STRATS[k].fn(list[i],d,hd),{strat:k});if(!r.ov&&OVX)r.ov=OVX;return r}catch(err){return noTrade(list[i],d,k,'Could not run this strategy')}});
+    const sel=S.strats.filter(stratOK).length?S.strats.filter(stratOK):['po3'],rs=sel.map(k=>{OVX=null;try{const r=Object.assign(STRATS[k].fn(list[i],d,hd),{strat:k});if(!r.ov&&OVX)r.ov=OVX;return r}catch(err){return noTrade(list[i],d,k,'Could not run this strategy')}});
     {const zz=(d.c[0]-d.c[Math.min(48,d.c.length-1)])/((atr7(d.h,d.l,d.c,d.n)[0]||1e-9)*Math.sqrt(Math.min(48,d.c.length-1)||1));rs.forEach(r=>{r.z=zz;if(isFree(list[i]))r.idx=true})}SCS[list[i]]={d,rs,tf:S.stf,sty:(STYLES[S.style]||{}).n||'',t:Date.now()};try{trkUpdate(list[i],d,rs)}catch(e){}
     if(rs.length>1){const use=rs.filter(r=>r.v!=='NO TRADE');if(use.length)use.forEach(r=>out.push(r));else out.push(Object.assign({},rs[0],{why:'No setup on any picked strategy',strat:'all'}))}else out.push(rs[0]);break}
    catch(e){if(/minute/i.test(e.message)&&tries++<1){$('scSt').textContent='Minute limit hit, waiting 30 seconds…';await sleep(30000);continue}
